@@ -14,16 +14,13 @@ dependencies {
     implementation(libs.ktor.server.resources)
 
 
-    val exposedVersion : String = "0.44.0"
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.crypt)
+    implementation(libs.exposed.dao)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.kotlin.datetime)
 
-    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-
-    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
-
-    implementation("com.h2database:h2:2.2.224")
+    implementation(libs.h2)
 
 }
 

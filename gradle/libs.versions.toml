@@ -1,5 +1,6 @@
 [versions]
 
+h2 = "2.2.224"
 kotlin = "1.9.10"
 agp = "8.1.0"
 compose = "1.5.1"
@@ -18,12 +19,14 @@ kotlinx-datetime = "0.4.1"
 multiplatformSettings = "1.0.0"
 koin = "3.4.3"
 slf4j = "2.0.9"
+exposed = "0.44.0"
 
 [libraries]
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 compose-uitooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-uitooling" }
+h2 = { module = "com.h2database:h2", version.ref = "h2" }
 libres = { module = "io.github.skeptick.libres:libres-compose", version.ref = "libres" }
 composeImageLoader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "composeImageLoader" }
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
@@ -43,6 +46,12 @@ ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor"
 ktor-server-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
 ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-server-resources = { module = "io.ktor:ktor-server-resources", version.ref = "ktor" }
+
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-crypt = { module = "org.jetbrains.exposed:exposed-crypt", version.ref = "exposed" }
+exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
 
 slf4j = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
