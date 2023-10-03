@@ -17,10 +17,10 @@ kotlin {
 
     jvm("desktop")
 
-    js {
-        browser()
-        binaries.executable()
-    }
+    //js {
+    //    browser()
+    //    binaries.executable()
+    //}
 
     listOf(
         iosX64(),
@@ -59,10 +59,10 @@ kotlin {
             }
         }
 
-        val jsMain by getting {
-            dependencies {
-            }
-        }
+        //val jsMain by getting {
+        //    dependencies {
+        //    }
+        //}
 
         val iosMain by getting {
             dependencies {
