@@ -2,5 +2,17 @@ package ua.ukma.edu.danki.models
 
 import io.ktor.resources.*
 
-@Resource("/hello")
-class Articles(val sort: String? = "new")
+@Resource("/collections")
+class GetCollectionsCards(val sort: String? = "new")
+
+
+
+enum class CollectionSortParam {
+    ByName, ByDate
+}
+
+@Resource("/collections/")
+class GetCollection(val sort: CollectionSortParam)
+
+@Resource("/articles")
+class Articles()

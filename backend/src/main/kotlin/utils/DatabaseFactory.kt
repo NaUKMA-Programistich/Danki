@@ -1,12 +1,11 @@
 package utils
 
 import models.Card
-import models.CardCollection
 import models.CardCollections
 import models.Cards
+import models.Users
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
@@ -19,20 +18,10 @@ object DatabaseFactory {
         transaction(database) {
             SchemaUtils.create(Cards)
             SchemaUtils.create(CardCollections)
-
-            var hehe = Card.new {
-                term = "hello"
-                definition = "there"
-            }
+            SchemaUtils.create(Users)
 
         }
 
 
-        println("Database successful")
-        transaction {
-            //Card.all().forEach {
-            //    println("${it.term} ${it.definition}")
-            //}
-        }
     }
 }
