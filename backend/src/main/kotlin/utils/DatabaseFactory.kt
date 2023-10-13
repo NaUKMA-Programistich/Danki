@@ -1,6 +1,5 @@
 package utils
 
-import models.Card
 import models.CardCollections
 import models.Cards
 import models.Users
