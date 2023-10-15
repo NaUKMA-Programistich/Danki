@@ -25,7 +25,7 @@ fun Routing.authControllers() {
     }
 
     post<UserRegisterRequest>("register") {
-        val response = UserRegisterResponse(service.registerUser(it))
+        val response = UserRegisterResponse(service.registerUser(it) != null)
         if (!response.success)
             call.respond(HttpStatusCode.BadRequest, response)
         else
