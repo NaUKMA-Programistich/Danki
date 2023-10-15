@@ -16,6 +16,8 @@ dependencies {
 
     implementation(libs.ktor.server.auth)
     implementation(libs.ktor.server.auth.jwt)
+    implementation(libs.ktor.server.validation)
+    implementation(libs.ktor.server.status.pages)
 
     implementation(libs.exposed.core)
     implementation(libs.exposed.crypt)
@@ -25,7 +27,6 @@ dependencies {
 
     implementation(libs.h2)
     implementation(libs.jbcrypt)
-
 }
 
 

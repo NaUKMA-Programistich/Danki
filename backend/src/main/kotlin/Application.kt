@@ -8,6 +8,8 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.requestvalidation.*
+import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -44,6 +46,14 @@ private fun Application.module() {
     }
     install(ContentNegotiation) {
         json()
+    }
+    install(StatusPages) {
+        exception<RequestValidationException> { call, cause ->
+            call.respond(HttpStatusCode.BadRequest, cause.reasons.joinToString())
+        }
+        exception<Throwable> { call, cause ->
+            call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
+        }
     }
     install(Resources)
     routing {
