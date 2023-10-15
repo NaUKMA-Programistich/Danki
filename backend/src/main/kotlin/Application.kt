@@ -13,8 +13,10 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import ua.ukma.edu.danki.models.ErrorMsg
 import utils.DatabaseFactory
 import utils.JwtConfig
+import validation.validateUserRequests
 
 private const val PORT = 8080
 private const val JWT_SECRET = "secret"
@@ -40,7 +42,7 @@ private fun Application.module() {
             verifier(JwtConfig.verifier)
             validate { JwtConfig.validate(it) }
             challenge { _, _ ->
-                call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
+                call.respond(HttpStatusCode.Unauthorized, ErrorMsg("Token is not valid or has expired"))
             }
         }
     }
@@ -49,11 +51,14 @@ private fun Application.module() {
     }
     install(StatusPages) {
         exception<RequestValidationException> { call, cause ->
-            call.respond(HttpStatusCode.BadRequest, cause.reasons.joinToString())
+            call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.reasons.joinToString()))
         }
         exception<Throwable> { call, cause ->
-            call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
+            call.respond(HttpStatusCode.InternalServerError, ErrorMsg("500: $cause"))
         }
+    }
+    install(RequestValidation) {
+        validateUserRequests()
     }
     install(Resources)
     routing {

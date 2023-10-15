@@ -10,7 +10,6 @@ import utils.JwtConfig
 import utils.PasswordEncoder
 import utils.impl.PasswordEncoderImpl
 
-// TODO validation and such
 class UserServiceImpl : UserService {
     private val passwordEncoder: PasswordEncoder = PasswordEncoderImpl
 
