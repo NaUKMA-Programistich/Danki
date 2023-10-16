@@ -14,16 +14,16 @@ interface CardCollectionService {
         limit: Int,
         sort: CollectionSortParam,
         ascending: Boolean
-    ): List<CardCollection>;
+    ): List<CardCollection>
 
     @Throws(IllegalAccessException::class)
     fun removeCollections(user: User, collections: List<UUID>)
 
     fun updateCollection(user: User, collection: CardCollection)
 
-    fun createCollection(user: User);
+    fun createCollection(user: User)
 
-    fun readCollection(collection: UUID);
+    fun readCollection(collection: UUID)
 
 }
 
