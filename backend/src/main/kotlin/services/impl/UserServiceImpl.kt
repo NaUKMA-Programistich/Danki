@@ -1,6 +1,8 @@
 package services.impl
 
 import exceptions.EmailTakenException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import models.User
 import models.Users
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -16,7 +18,7 @@ class UserServiceImpl : UserService {
 
     override suspend fun authenticateUser(userAuthRequest: UserAuthRequest): String? {
         val existingUser =
-            transaction { User.find { Users.email eq userAuthRequest.email }.singleOrNull() } ?: return null
+            getExistingUser(userAuthRequest.email) ?: return null
         return if (passwordEncoder.isSame(userAuthRequest.password, existingUser.password))
             JwtConfig.makeToken(userAuthRequest)
         else
@@ -24,15 +26,28 @@ class UserServiceImpl : UserService {
     }
 
     override suspend fun registerUser(userRegisterRequest: UserRegisterRequest) {
-        val existingUser = transaction { User.find { Users.email eq userRegisterRequest.email }.singleOrNull() }
+        val existingUser = getExistingUser(userRegisterRequest.email)
         if (existingUser != null)
             throw EmailTakenException("Email has already been taken")
+        createNewUser(userRegisterRequest)
+    }
 
-        transaction {
-            User.new {
-                username = userRegisterRequest.username
-                email = userRegisterRequest.email
-                password = passwordEncoder.encode(userRegisterRequest.password)
+    private suspend fun createNewUser(userRegisterRequest: UserRegisterRequest) {
+        withContext(Dispatchers.IO) {
+            transaction {
+                User.new {
+                    username = userRegisterRequest.username
+                    email = userRegisterRequest.email
+                    password = passwordEncoder.encode(userRegisterRequest.password)
+                }
+            }
+        }
+    }
+
+    private suspend fun getExistingUser(email: String): User? {
+        return withContext(Dispatchers.IO) {
+            transaction {
+                User.find { Users.email eq email }.singleOrNull()
             }
         }
     }
