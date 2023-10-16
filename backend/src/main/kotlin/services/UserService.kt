@@ -12,7 +12,7 @@ interface UserService {
 
     /**
      * @param userRegisterRequest - object with info of the user to be registered
-     * @return whether user is successfully registered
+     * @throws UserRegistrationException
      */
-    suspend fun registerUser(userRegisterRequest: UserRegisterRequest): Boolean
+    suspend fun registerUser(userRegisterRequest: UserRegisterRequest)
 }

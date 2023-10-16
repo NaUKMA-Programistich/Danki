@@ -1,5 +1,6 @@
 package services.impl
 
+import exceptions.EmailTakenException
 import models.User
 import models.Users
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -22,10 +23,10 @@ class UserServiceImpl : UserService {
             null
     }
 
-    override suspend fun registerUser(userRegisterRequest: UserRegisterRequest): Boolean {
+    override suspend fun registerUser(userRegisterRequest: UserRegisterRequest) {
         val existingUser = transaction { User.find { Users.email eq userRegisterRequest.email }.singleOrNull() }
         if (existingUser != null)
-            return false
+            throw EmailTakenException("Email has already been taken")
 
         transaction {
             User.new {
@@ -34,6 +35,5 @@ class UserServiceImpl : UserService {
                 password = passwordEncoder.encode(userRegisterRequest.password)
             }
         }
-        return true
     }
 }

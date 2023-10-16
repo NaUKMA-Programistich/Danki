@@ -17,17 +17,14 @@ fun Routing.authControllers() {
     post<UserAuthRequest>("login") {
         val response = UserAuthResponse(service.authenticateUser(it))
         if (response.jwt == null)
-            call.respond(HttpStatusCode.BadRequest, ErrorMsg(INCORRECT_CREDENTIALS_MESSAGE))
+            respondWithBadRequestError(call, ErrorMsg(INCORRECT_CREDENTIALS_MESSAGE))
         else
             call.respond(response)
     }
 
     post<UserRegisterRequest>("register") {
-        val response = UserRegisterResponse(service.registerUser(it))
-        if (!response.success)
-            call.respond(HttpStatusCode.BadRequest, response)
-        else
-            call.respond(response)
+        service.registerUser(it)
+        call.respond(UserRegisterResponse(true))
     }
 
     authenticate("auth-jwt") {
@@ -41,4 +38,8 @@ fun Routing.authControllers() {
     get("/hello-world") {
         call.respondText("Hello indeed!")
     }
+}
+
+private suspend fun respondWithBadRequestError(call: ApplicationCall, msg: Any) {
+    call.respond(HttpStatusCode.BadRequest, msg)
 }

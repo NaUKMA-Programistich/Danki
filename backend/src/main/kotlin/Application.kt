@@ -1,5 +1,7 @@
 import controllers.authControllers
 import controllers.cardCollectionsControllers
+import exceptions.BadRequestException
+import exceptions.UserRegistrationException
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -52,6 +54,12 @@ private fun Application.module() {
     install(StatusPages) {
         exception<RequestValidationException> { call, cause ->
             call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.reasons.joinToString()))
+        }
+        exception<UserRegistrationException> { call, cause ->
+            call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.message ?: "Unable to register user"))
+        }
+        exception<BadRequestException> { call, cause ->
+            call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.message ?: "Bad request"))
         }
         exception<Throwable> { call, cause ->
             call.respond(HttpStatusCode.InternalServerError, ErrorMsg("500: $cause"))
