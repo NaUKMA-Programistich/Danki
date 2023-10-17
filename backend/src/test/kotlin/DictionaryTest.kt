@@ -1,18 +1,14 @@
-import dictionary.Dictionary
-import java.nio.file.Path
+import io.ktor.client.request.*
+import io.ktor.server.testing.*
 import kotlin.test.Test
 
 class DictionaryTest {
+
     @Test
-    fun test() {
-        val dir = Path.of("./src/main/resources/data")
-        val dict = Dictionary.fromDirectory(dir.toString())
+    fun controllerTest() = testApplication {
 
-        val terms = dict.findTerms("app", 4)
+        startApplication()
 
-        println(terms)
-        val definition = dict.unwrapTerm(terms[0])
-
-        println(definition)
+        val response = client.get("/")
     }
 }

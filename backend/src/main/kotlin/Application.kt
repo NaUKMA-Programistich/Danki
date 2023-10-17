@@ -1,7 +1,8 @@
+import controllers.authControllers
 import controllers.cardCollectionsControllers
+import controllers.dictionaryController
 import exceptions.BadRequestException
 import exceptions.UserRegistrationException
-import controllers.dictionaryController
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -12,27 +13,19 @@ import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.logging.*
-import io.ktor.server.netty.Netty
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ua.ukma.edu.danki.models.ErrorMsg
-import io.ktor.server.routing.get
-import kotlinx.serialization.json.buildJsonObject
-import services.DictionaryServiceImpl
-import ua.ukma.edu.danki.models.SimpleDto
 import utils.DatabaseFactory
 import utils.JwtConfig
 import validation.validateUserRequests
-import java.nio.file.Path
 
 private const val PORT = 8080
 private const val JWT_SECRET = "secret"
 private const val JWT_ISSUER = "https://Danki"
 private const val VALIDITY_IN_MS = 36000000L
+const val DICTIONARY_PATH  = "./src/resources/data"
 
 
 fun main() {

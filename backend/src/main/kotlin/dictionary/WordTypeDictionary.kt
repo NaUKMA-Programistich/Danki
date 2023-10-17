@@ -15,7 +15,6 @@ import kotlin.io.path.Path
 typealias Reader = RandomAccessReader
 
 
-
 class WordTypeDictionary(
     val indexData: Reader,
     val indexReference: Reader,
@@ -164,20 +163,14 @@ class EofError : Error()
 
 
 fun RandomAccessReader.readU64(): ULong {
-    val gi =
-        (readByte().toULong() shl 56) or
-                (readByte().toULong() shl 48) or
-                (readByte().toULong() shl 40) or
-                (readByte().toULong() shl 32) or
-                (readByte().toULong() shl 24) or
-                (readByte().toULong() shl 16) or
-                (readByte().toULong() shl 8) or
-                (readByte().toULong())
-
-    //println(gi)
-
-    return gi
-    //TODO()
+    return (readByte().toULong() shl 56) or
+            (readByte().toULong() shl 48) or
+            (readByte().toULong() shl 40) or
+            (readByte().toULong() shl 32) or
+            (readByte().toULong() shl 24) or
+            (readByte().toULong() shl 16) or
+            (readByte().toULong() shl 8) or
+            (readByte().toULong())
 }
 
 @Throws(EofError::class)

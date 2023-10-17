@@ -6,7 +6,7 @@ import ua.ukma.edu.danki.models.dictionary.PartialTerm
 
 interface DictionaryService {
 
-    fun getWordsFor(input: String): List<PartialTerm>;
+    fun getWordsFor(input: String, count: Int): List<PartialTerm>;
 
-    fun definitionFor(word: String): FullTerm;
+    fun definitionFor(term: PartialTerm): FullTerm;
 }
