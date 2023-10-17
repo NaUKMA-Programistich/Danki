@@ -1,7 +1,9 @@
 package services
 
+import models.User
 import ua.ukma.edu.danki.models.UserAuthRequest
 import ua.ukma.edu.danki.models.UserRegisterRequest
+import java.util.UUID
 
 interface UserService {
     /**
@@ -15,4 +17,10 @@ interface UserService {
      * @throws UserRegistrationException
      */
     suspend fun registerUser(userRegisterRequest: UserRegisterRequest)
+
+    /**
+     * @param uuid - id of the user to find
+     * @return user, null if not found
+     */
+    suspend fun findUser(uuid: UUID): User?
 }

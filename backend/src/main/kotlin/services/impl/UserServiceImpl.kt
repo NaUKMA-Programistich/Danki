@@ -10,13 +10,14 @@ import utils.DatabaseFactory
 import utils.JwtConfig
 import utils.PasswordEncoder
 import utils.impl.PasswordEncoderImpl
+import java.util.*
 
 class UserServiceImpl : UserService {
     private val passwordEncoder: PasswordEncoder = PasswordEncoderImpl
 
     override suspend fun authenticateUser(userAuthRequest: UserAuthRequest): String? {
         val existingUser =
-            getExistingUser(userAuthRequest.email) ?: return null
+            getExistingUserByEmail(userAuthRequest.email) ?: return null
         return if (passwordEncoder.isSame(userAuthRequest.password, existingUser.password))
             JwtConfig.makeToken(userAuthRequest)
         else
@@ -24,10 +25,14 @@ class UserServiceImpl : UserService {
     }
 
     override suspend fun registerUser(userRegisterRequest: UserRegisterRequest) {
-        val existingUser = getExistingUser(userRegisterRequest.email)
+        val existingUser = getExistingUserByEmail(userRegisterRequest.email)
         if (existingUser != null)
             throw EmailTakenException("Email has already been taken")
         createNewUser(userRegisterRequest)
+    }
+
+    override suspend fun findUser(uuid: UUID): User? {
+        return getExistingUserById(uuid)
     }
 
     private suspend fun createNewUser(userRegisterRequest: UserRegisterRequest) {
@@ -40,9 +45,15 @@ class UserServiceImpl : UserService {
         }
     }
 
-    private suspend fun getExistingUser(email: String): User? {
+    private suspend fun getExistingUserByEmail(email: String): User? {
         return DatabaseFactory.dbQuery {
             User.find { Users.email eq email }.singleOrNull()
+        }
+    }
+
+    private suspend fun getExistingUserById(uuid: UUID): User? {
+        return DatabaseFactory.dbQuery {
+            User.find { Users.id eq uuid }.singleOrNull()
         }
     }
 }
