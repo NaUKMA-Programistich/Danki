@@ -1,0 +1,18 @@
+ktor:
+  deployment:
+    port: 8080
+  application:
+    modules:
+      - ua.ukma.edu.danki.ApplicationKt.module
+jwt:
+  secret:
+    "secret"
+  issuer:
+    "https://Danki"
+  validity:
+    36000000
+db:
+  driver:
+    "org.h2.Driver"
+  url:
+    "jdbc:h2:file:./build/db"
