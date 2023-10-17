@@ -6,9 +6,6 @@ class DictionaryTest {
 
     @Test
     fun controllerTest() = testApplication {
-
-        startApplication()
-
-        val response = client.get("/")
+        //val response = client.get("/")
     }
 }

@@ -127,11 +127,11 @@ class WordTypeDictionary(
                     min = mid; break@loop;
                 }
 
-                comp > 0 && min != max -> {
+                min != max -> {
                     max = mid - 1
                 }
 
-                comp > 1 -> break@loop
+                else -> break@loop
             }
         }
 
