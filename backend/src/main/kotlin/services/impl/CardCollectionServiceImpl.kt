@@ -4,10 +4,12 @@ import kotlinx.coroutines.runBlocking
 import models.CardCollection
 import models.CardCollections
 import models.User
+import models.UserCardCollections
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.select
 import services.CardCollectionService
 import ua.ukma.edu.danki.models.CollectionSortParam
 import utils.DatabaseFactory
@@ -22,18 +24,20 @@ class CardCollectionServiceImpl : CardCollectionService {
         ascending: Boolean
     ): List<CardCollection> {
         return runBlocking {
-            getCollections(sort, ascending, limit, offset)
+            getCollectionsOfUser(user, sort, ascending, limit, offset)
         }
     }
 
-    private suspend fun getCollections(
+    private suspend fun getCollectionsOfUser(
+        user: User,
         sort: CollectionSortParam,
         ascending: Boolean,
         limit: Int,
         offset: Int
     ) = DatabaseFactory.dbQuery {
-        CardCollections
-            .selectAll()
+        UserCardCollections
+            .innerJoin(CardCollections)
+            .select(where = UserCardCollections.user eq user.id)
             .orderBy(getSortColumn(sort), if (ascending) SortOrder.ASC else SortOrder.DESC)
             .limit(limit, offset.toLong())
             .map {
