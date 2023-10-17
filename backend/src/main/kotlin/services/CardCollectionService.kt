@@ -1,5 +1,6 @@
 package services
 
+import exceptions.IllegalAccessException
 import models.CardCollection
 import models.User
 import ua.ukma.edu.danki.models.CollectionSortParam
