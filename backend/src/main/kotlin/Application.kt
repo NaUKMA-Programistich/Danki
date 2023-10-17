@@ -25,7 +25,7 @@ private const val PORT = 8080
 private const val JWT_SECRET = "secret"
 private const val JWT_ISSUER = "https://Danki"
 private const val VALIDITY_IN_MS = 36000000L
-const val DICTIONARY_PATH  = "./src/resources/data"
+const val DICTIONARY_PATH  = "./src/main/resources/dictionary-data"
 
 
 fun main() {

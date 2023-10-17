@@ -5,7 +5,6 @@ import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.routing.get
 import services.DictionaryService
 import services.DictionaryServiceImpl
 import ua.ukma.edu.danki.models.dictionary.DictionarySuggestions
@@ -17,7 +16,7 @@ fun Routing.dictionaryController() {
     val dictionaryServiceFactory: () -> DictionaryService = { DictionaryServiceImpl(DICTIONARY_PATH) }
 
     get<GetDictionarySuggestions> {
-        val result = dictionaryServiceFactory().getWordsFor(it.input, it.count)
+        val result = dictionaryServiceFactory().getSuggestionsFor(it.input, it.count)
         call.respond(DictionarySuggestions(result))
     }
 
