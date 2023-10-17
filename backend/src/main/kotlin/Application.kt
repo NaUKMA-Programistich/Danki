@@ -1,9 +1,11 @@
 import controllers.cardCollectionsControllers
+import controllers.dictionaryController
 import io.ktor.http.*
 import io.ktor.resources.*
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.*
 import io.ktor.server.engine.embeddedServer
+import io.ktor.server.logging.*
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.resources.*
@@ -12,8 +14,10 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.*
 import io.ktor.server.routing.get
 import kotlinx.serialization.json.buildJsonObject
+import services.DictionaryServiceImpl
 import ua.ukma.edu.danki.models.SimpleDto
 import utils.DatabaseFactory
+import java.nio.file.Path
 
 private const val PORT = 8080
 
@@ -29,8 +33,11 @@ private fun Application.module() {
     install(ContentNegotiation) {
         json()
     }
+
+
     install(Resources)
     routing {
         cardCollectionsControllers()
+        dictionaryController()
     }
 }

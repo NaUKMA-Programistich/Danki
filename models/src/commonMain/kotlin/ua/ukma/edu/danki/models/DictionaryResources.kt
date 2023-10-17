@@ -9,5 +9,3 @@ data class DictionarySuggestions(val suggestions: List<String>)
 
 @Resource("/dictionary/term/{term}")
 data class GetTermDefinition(val term: String)
-
-data class TermDefinitions(val term: String)

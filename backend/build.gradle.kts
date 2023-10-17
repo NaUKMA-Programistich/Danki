@@ -13,6 +13,9 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.resources)
 
+    testImplementation(libs.ktor.server.testing)
+    testImplementation(libs.kotlin.test)
+
 
     implementation(libs.exposed.core)
     implementation(libs.exposed.crypt)
