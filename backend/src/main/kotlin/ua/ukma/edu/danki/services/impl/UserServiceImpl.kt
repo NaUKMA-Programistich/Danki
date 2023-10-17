@@ -35,6 +35,10 @@ class UserServiceImpl : UserService {
         return getExistingUserById(uuid)
     }
 
+    override suspend fun findUser(email: String): User? {
+        return getExistingUserByEmail(email)
+    }
+
     private suspend fun createNewUser(userRegisterRequest: UserRegisterRequest) {
         DatabaseFactory.dbQuery {
             User.new {

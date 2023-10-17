@@ -6,14 +6,12 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import ua.ukma.edu.danki.services.UserService
-import ua.ukma.edu.danki.services.impl.UserServiceImpl
 import ua.ukma.edu.danki.models.*
+import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.utils.consts.INCORRECT_CREDENTIALS_MESSAGE
 
 
-fun Routing.authControllers() {
-    val service: UserService = UserServiceImpl()
+fun Routing.authControllers(service: UserService) {
     post<UserAuthRequest>("login") {
         val response = UserAuthResponse(service.authenticateUser(it))
         if (response.jwt == null)

@@ -27,8 +27,15 @@ dependencies {
 
     implementation(libs.h2)
     implementation(libs.jbcrypt)
+
+    testImplementation(kotlin("test"))
+    testImplementation(libs.mockk)
+    testImplementation(libs.ktor.server.test.host)
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
 
 application {
     mainClass = "ApplicationKt"

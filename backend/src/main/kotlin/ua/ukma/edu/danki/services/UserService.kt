@@ -23,4 +23,10 @@ interface UserService {
      * @return user, null if not found
      */
     suspend fun findUser(uuid: UUID): User?
+
+    /**
+     * @param email - email of the user to find
+     * @return user, null if not found
+     */
+    suspend fun findUser(email: String): User?
 }

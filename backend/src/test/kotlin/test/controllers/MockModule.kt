@@ -1,11 +1,10 @@
-package ua.ukma.edu.danki
+package test.controllers
 
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.statuspages.*
@@ -17,15 +16,13 @@ import ua.ukma.edu.danki.controllers.cardCollectionsControllers
 import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.UserRegistrationException
 import ua.ukma.edu.danki.models.ErrorMsg
-import ua.ukma.edu.danki.services.impl.CardCollectionServiceImpl
-import ua.ukma.edu.danki.services.impl.UserServiceImpl
+import ua.ukma.edu.danki.services.CardCollectionService
+import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.utils.DatabaseFactory
 import ua.ukma.edu.danki.utils.JwtConfig
 import ua.ukma.edu.danki.validation.validateUserRequests
 
-fun main(args: Array<String>) = EngineMain.main(args)
-
-fun Application.module() {
+fun Application.mockModule(cardCollectionServiceMock: CardCollectionService, userServiceMock: UserService) {
     DatabaseFactory.init(
         environment.config.property("db.driver").getString(),
         environment.config.property("db.url").getString()
@@ -34,7 +31,7 @@ fun Application.module() {
         environment.config.property("jwt.secret").getString(),
         environment.config.property("jwt.issuer").getString(),
         environment.config.property("jwt.validity").getString().toLong(),
-        UserServiceImpl()
+        userServiceMock
     )
     install(Authentication) {
         jwt("auth-jwt") {
@@ -67,8 +64,7 @@ fun Application.module() {
     }
     install(Resources)
     routing {
-        // this counts as DI, right?
-        cardCollectionsControllers(CardCollectionServiceImpl(), UserServiceImpl())
-        authControllers(UserServiceImpl())
+        cardCollectionsControllers(cardCollectionServiceMock, userServiceMock)
+        authControllers(userServiceMock)
     }
 }

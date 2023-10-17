@@ -21,6 +21,7 @@ koin = "3.4.3"
 slf4j = "2.0.9"
 exposed = "0.44.0"
 jbcrypt = "0.4"
+mockk = "1.13.8"
 
 [libraries]
 
@@ -53,6 +54,7 @@ ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = 
 ktor-server-resources = { module = "io.ktor:ktor-server-resources", version.ref = "ktor" }
 ktor-server-auth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
 ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt", version.ref = "ktor" }
+ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
 
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposed-crypt = { module = "org.jetbrains.exposed:exposed-crypt", version.ref = "exposed" }
@@ -61,6 +63,8 @@ exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "e
 exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
 
 slf4j = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+
+mockk = {module = "io.mockk:mockk", version.ref="mockk"}
 
 [plugins]
 
