@@ -17,6 +17,8 @@ import ua.ukma.edu.danki.controllers.cardCollectionsControllers
 import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.UserRegistrationException
 import ua.ukma.edu.danki.models.ErrorMsg
+import ua.ukma.edu.danki.services.impl.CardCollectionServiceImpl
+import ua.ukma.edu.danki.services.impl.UserServiceImpl
 import ua.ukma.edu.danki.utils.DatabaseFactory
 import ua.ukma.edu.danki.utils.JwtConfig
 import ua.ukma.edu.danki.validation.validateUserRequests
@@ -64,7 +66,8 @@ fun Application.module() {
     }
     install(Resources)
     routing {
-        cardCollectionsControllers()
+        // this counts as DI, right?
+        cardCollectionsControllers(CardCollectionServiceImpl(), UserServiceImpl())
         authControllers()
     }
 }
