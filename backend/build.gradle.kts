@@ -10,9 +10,14 @@ dependencies {
     implementation(libs.ktor.json)
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.negotiation)
+    implementation(libs.ktor.server.yaml)
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.resources)
 
+    implementation(libs.ktor.server.auth)
+    implementation(libs.ktor.server.auth.jwt)
+    implementation(libs.ktor.server.validation)
+    implementation(libs.ktor.server.status.pages)
     testImplementation(libs.ktor.server.testing)
     testImplementation(libs.kotlin.test)
 
@@ -24,7 +29,7 @@ dependencies {
     implementation(libs.exposed.kotlin.datetime)
 
     implementation(libs.h2)
-
+    implementation(libs.jbcrypt)
 }
 
 
