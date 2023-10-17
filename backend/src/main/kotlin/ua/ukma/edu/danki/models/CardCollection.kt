@@ -1,4 +1,4 @@
-package models
+package ua.ukma.edu.danki.models
 
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
@@ -9,7 +9,6 @@ import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentTimestamp
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
-import ua.ukma.edu.danki.models.CardCollectionDTO
 import java.util.*
 
 object CardCollections : LongIdTable() {

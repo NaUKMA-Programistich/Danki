@@ -1,6 +1,6 @@
-package services
+package ua.ukma.edu.danki.services
 
-import models.User
+import ua.ukma.edu.danki.models.User
 import ua.ukma.edu.danki.models.UserAuthRequest
 import ua.ukma.edu.danki.models.UserRegisterRequest
 import java.util.UUID

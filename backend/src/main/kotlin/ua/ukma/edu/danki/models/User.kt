@@ -1,4 +1,4 @@
-package models
+package ua.ukma.edu.danki.models
 
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass

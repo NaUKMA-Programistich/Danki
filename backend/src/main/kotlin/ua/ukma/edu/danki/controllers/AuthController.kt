@@ -1,4 +1,4 @@
-package controllers
+package ua.ukma.edu.danki.controllers
 
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -6,10 +6,10 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import services.UserService
-import services.impl.UserServiceImpl
+import ua.ukma.edu.danki.services.UserService
+import ua.ukma.edu.danki.services.impl.UserServiceImpl
 import ua.ukma.edu.danki.models.*
-import utils.consts.INCORRECT_CREDENTIALS_MESSAGE
+import ua.ukma.edu.danki.utils.consts.INCORRECT_CREDENTIALS_MESSAGE
 
 
 fun Routing.authControllers() {

@@ -1,4 +1,4 @@
-package services
+package ua.ukma.edu.danki.services
 
 import ua.ukma.edu.danki.models.TermDefinitions
 

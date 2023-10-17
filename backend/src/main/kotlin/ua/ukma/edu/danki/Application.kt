@@ -1,7 +1,9 @@
-import controllers.authControllers
-import controllers.cardCollectionsControllers
-import exceptions.BadRequestException
-import exceptions.UserRegistrationException
+package ua.ukma.edu.danki
+
+import ua.ukma.edu.danki.controllers.authControllers
+import ua.ukma.edu.danki.controllers.cardCollectionsControllers
+import ua.ukma.edu.danki.exceptions.BadRequestException
+import ua.ukma.edu.danki.exceptions.UserRegistrationException
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -16,9 +18,9 @@ import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ua.ukma.edu.danki.models.ErrorMsg
-import utils.DatabaseFactory
-import utils.JwtConfig
-import validation.validateUserRequests
+import ua.ukma.edu.danki.utils.DatabaseFactory
+import ua.ukma.edu.danki.utils.JwtConfig
+import ua.ukma.edu.danki.validation.validateUserRequests
 
 private const val PORT = 8080
 private const val JWT_SECRET = "secret"

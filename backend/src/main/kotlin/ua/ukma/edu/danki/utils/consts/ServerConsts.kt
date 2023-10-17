@@ -1,4 +1,4 @@
-package utils.consts
+package ua.ukma.edu.danki.utils.consts
 
 const val INCORRECT_CREDENTIALS_MESSAGE: String = "Incorrect email or password"
 const val USER_NOT_FOUND_MESSAGE: String = "User not found"

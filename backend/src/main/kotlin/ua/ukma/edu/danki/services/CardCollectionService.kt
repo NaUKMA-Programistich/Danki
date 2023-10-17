@@ -1,8 +1,8 @@
-package services
+package ua.ukma.edu.danki.services
 
-import exceptions.IllegalAccessException
-import models.CardCollection
-import models.User
+import ua.ukma.edu.danki.exceptions.IllegalAccessException
+import ua.ukma.edu.danki.models.CardCollection
+import ua.ukma.edu.danki.models.User
 import ua.ukma.edu.danki.models.CardCollectionDTO
 import ua.ukma.edu.danki.models.CollectionSortParam
 import java.util.UUID

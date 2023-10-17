@@ -1,6 +1,6 @@
-package exceptions
+package ua.ukma.edu.danki.exceptions
 
-import utils.consts.ILLEGAL_ACCESS_ATTEMPT_MESSAGE
+import ua.ukma.edu.danki.utils.consts.ILLEGAL_ACCESS_ATTEMPT_MESSAGE
 
 open class BadRequestException(msg: String) : Exception(msg)
 

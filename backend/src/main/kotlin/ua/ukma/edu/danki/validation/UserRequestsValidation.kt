@@ -1,10 +1,10 @@
-package validation
+package ua.ukma.edu.danki.validation
 
 import io.ktor.server.plugins.requestvalidation.*
 import ua.ukma.edu.danki.models.UserAuthRequest
 import ua.ukma.edu.danki.models.UserRegisterRequest
-import utils.consts.INCORRECT_CREDENTIALS_MESSAGE
-import utils.isEmailValid
+import ua.ukma.edu.danki.utils.consts.INCORRECT_CREDENTIALS_MESSAGE
+import ua.ukma.edu.danki.utils.isEmailValid
 
 fun RequestValidationConfig.validateUserRequests() {
     validate<UserAuthRequest> { body ->

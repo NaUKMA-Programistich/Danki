@@ -1,4 +1,4 @@
-package utils
+package ua.ukma.edu.danki.utils
 
 import java.util.regex.Pattern
 

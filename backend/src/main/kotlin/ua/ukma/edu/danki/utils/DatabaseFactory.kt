@@ -1,9 +1,9 @@
-package utils
+package ua.ukma.edu.danki.utils
 
 import kotlinx.coroutines.Dispatchers
-import models.CardCollections
-import models.Cards
-import models.Users
+import ua.ukma.edu.danki.models.CardCollections
+import ua.ukma.edu.danki.models.Cards
+import ua.ukma.edu.danki.models.Users
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction

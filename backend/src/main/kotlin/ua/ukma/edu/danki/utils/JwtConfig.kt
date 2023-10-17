@@ -1,10 +1,10 @@
-package utils
+package ua.ukma.edu.danki.utils
 
 import com.auth0.jwt.*
 import com.auth0.jwt.algorithms.*
 import io.ktor.server.auth.jwt.*
-import models.User
-import models.Users
+import ua.ukma.edu.danki.models.User
+import ua.ukma.edu.danki.models.Users
 import org.jetbrains.exposed.sql.transactions.transaction
 import ua.ukma.edu.danki.models.UserAuthRequest
 import java.util.*
@@ -17,9 +17,9 @@ object JwtConfig {
 
     fun init(secret: String, issuer: String, validityInMs: Long) {
         _verifier = null
-        this.secret = secret
-        this.issuer = issuer
-        this.validityInMs = validityInMs
+        JwtConfig.secret = secret
+        JwtConfig.issuer = issuer
+        JwtConfig.validityInMs = validityInMs
     }
 
     fun makeToken(user: UserAuthRequest): String = JWT.create()

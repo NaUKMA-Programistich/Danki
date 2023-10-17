@@ -1,19 +1,19 @@
-package controllers
+package ua.ukma.edu.danki.controllers
 
-import exceptions.BadRequestException
-import exceptions.ResourceNotFoundException
+import ua.ukma.edu.danki.exceptions.BadRequestException
+import ua.ukma.edu.danki.exceptions.ResourceNotFoundException
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import services.CardCollectionService
-import services.UserService
-import services.impl.CardCollectionServiceImpl
-import services.impl.UserServiceImpl
+import ua.ukma.edu.danki.services.CardCollectionService
+import ua.ukma.edu.danki.services.UserService
+import ua.ukma.edu.danki.services.impl.CardCollectionServiceImpl
+import ua.ukma.edu.danki.services.impl.UserServiceImpl
 import ua.ukma.edu.danki.models.CollectionSortParam
 import ua.ukma.edu.danki.models.ListOfCollectionsResponse
-import utils.consts.USER_NOT_FOUND_MESSAGE
+import ua.ukma.edu.danki.utils.consts.USER_NOT_FOUND_MESSAGE
 import java.util.*
 
 

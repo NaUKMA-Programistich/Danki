@@ -1,19 +1,19 @@
-package services.impl
+package ua.ukma.edu.danki.services.impl
 
 import kotlinx.coroutines.runBlocking
-import models.CardCollection
-import models.CardCollections
-import models.User
-import models.UserCardCollections
+import ua.ukma.edu.danki.models.CardCollection
+import ua.ukma.edu.danki.models.CardCollections
+import ua.ukma.edu.danki.models.User
+import ua.ukma.edu.danki.models.UserCardCollections
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.select
-import services.CardCollectionService
+import ua.ukma.edu.danki.services.CardCollectionService
 import ua.ukma.edu.danki.models.CardCollectionDTO
 import ua.ukma.edu.danki.models.CollectionSortParam
-import utils.DatabaseFactory
+import ua.ukma.edu.danki.utils.DatabaseFactory
 import java.util.*
 
 class CardCollectionServiceImpl : CardCollectionService {

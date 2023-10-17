@@ -1,15 +1,15 @@
-package services.impl
+package ua.ukma.edu.danki.services.impl
 
-import exceptions.EmailTakenException
-import models.User
-import models.Users
-import services.UserService
+import ua.ukma.edu.danki.exceptions.EmailTakenException
+import ua.ukma.edu.danki.models.User
+import ua.ukma.edu.danki.models.Users
+import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.models.UserAuthRequest
 import ua.ukma.edu.danki.models.UserRegisterRequest
-import utils.DatabaseFactory
-import utils.JwtConfig
-import utils.PasswordEncoder
-import utils.impl.PasswordEncoderImpl
+import ua.ukma.edu.danki.utils.DatabaseFactory
+import ua.ukma.edu.danki.utils.JwtConfig
+import ua.ukma.edu.danki.utils.PasswordEncoder
+import ua.ukma.edu.danki.utils.impl.PasswordEncoderImpl
 import java.util.*
 
 class UserServiceImpl : UserService {
