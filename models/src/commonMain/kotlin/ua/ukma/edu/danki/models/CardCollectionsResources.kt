@@ -1,6 +1,7 @@
 package ua.ukma.edu.danki.models
 
 import io.ktor.resources.*
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -26,7 +27,7 @@ data class CardCollectionDTO(
     @SerialName("name")
     val name: String,
     @SerialName("last_modified")
-    val lastModified: LocalDateTime
+    val lastModified: Instant
 )
 
 @Serializable
