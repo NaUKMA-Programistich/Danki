@@ -21,12 +21,12 @@ class Articles()
 
 @Serializable
 data class CardCollectionDTO(
+    @SerialName("id")
+    val id: Long,
     @SerialName("name")
     val name: String,
     @SerialName("last_modified")
-    val lastModified: LocalDateTime,
-    @SerialName("id")
-    val id: String
+    val lastModified: LocalDateTime
 )
 
 @Serializable

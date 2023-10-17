@@ -9,6 +9,7 @@ import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
+import ua.ukma.edu.danki.models.CardCollectionDTO
 import java.util.UUID
 
 object CardCollections : LongIdTable() {
@@ -22,6 +23,10 @@ class CardCollection(id: EntityID<Long>) : LongEntity(id) {
 
     var name by CardCollections.name
     var lastModified by CardCollections.lastModified
+
+    fun toCardCollectionDTO(): CardCollectionDTO {
+        return CardCollectionDTO(this.id.value, this.name, this.lastModified)
+    }
 }
 
 

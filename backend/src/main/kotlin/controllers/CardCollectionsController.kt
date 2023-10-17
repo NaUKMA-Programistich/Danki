@@ -11,7 +11,6 @@ import services.CardCollectionService
 import services.UserService
 import services.impl.CardCollectionServiceImpl
 import services.impl.UserServiceImpl
-import ua.ukma.edu.danki.models.CardCollectionDTO
 import ua.ukma.edu.danki.models.CollectionSortParam
 import ua.ukma.edu.danki.models.ListOfCollectionsResponse
 import utils.consts.USER_NOT_FOUND_MESSAGE
@@ -43,9 +42,7 @@ fun Routing.cardCollectionsControllers() {
 
                 val user = userService.findUser(userId) ?: throw ResourceNotFoundException(USER_NOT_FOUND_MESSAGE)
 
-                val collections = cardCollectionService.getCollections(user, offset, limit, sort, ascending).map {
-                    CardCollectionDTO(it.name, it.lastModified, it.id.toString())
-                }
+                val collections = cardCollectionService.getCollections(user, offset, limit, sort, ascending)
                 call.respond(ListOfCollectionsResponse(collections))
             }
         }

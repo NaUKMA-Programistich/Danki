@@ -3,6 +3,7 @@ package services
 import exceptions.IllegalAccessException
 import models.CardCollection
 import models.User
+import ua.ukma.edu.danki.models.CardCollectionDTO
 import ua.ukma.edu.danki.models.CollectionSortParam
 import java.util.UUID
 
@@ -15,7 +16,7 @@ interface CardCollectionService {
         limit: Int,
         sort: CollectionSortParam,
         ascending: Boolean
-    ): List<CardCollection>
+    ): List<CardCollectionDTO>
 
     @Throws(IllegalAccessException::class)
     fun removeCollections(user: User, collections: List<UUID>)

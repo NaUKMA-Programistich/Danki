@@ -11,6 +11,7 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.select
 import services.CardCollectionService
+import ua.ukma.edu.danki.models.CardCollectionDTO
 import ua.ukma.edu.danki.models.CollectionSortParam
 import utils.DatabaseFactory
 import java.util.*
@@ -22,7 +23,7 @@ class CardCollectionServiceImpl : CardCollectionService {
         limit: Int,
         sort: CollectionSortParam,
         ascending: Boolean
-    ): List<CardCollection> {
+    ): List<CardCollectionDTO> {
         return runBlocking {
             getCollectionsOfUser(user, sort, ascending, limit, offset)
         }
@@ -41,7 +42,7 @@ class CardCollectionServiceImpl : CardCollectionService {
             .orderBy(getSortColumn(sort), if (ascending) SortOrder.ASC else SortOrder.DESC)
             .limit(limit, offset.toLong())
             .map {
-                mapResultRowToCardCollection(it)
+                mapResultRowToCardCollection(it).toCardCollectionDTO()
             }
     }
 
