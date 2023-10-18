@@ -35,7 +35,7 @@ object UserCardCollections : UUIDTable() {
     val user = reference("user", Users)
     val own = bool("own").default(true)
     val shared = bool("shared").default(false)
-
+    val favorite = bool("favorite").default(false)
 }
 
 class UserCardCollection(id: EntityID<UUID>) : UUIDEntity(id) {
