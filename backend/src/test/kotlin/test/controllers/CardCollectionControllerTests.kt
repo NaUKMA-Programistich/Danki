@@ -63,6 +63,7 @@ class CardCollectionsControllerTests {
         }.body<String>()).jwt
 
         val link: String = href(ResourcesFormat(), GetUserCollections(userId.toString()))
+        println(link)
         val response = client.get(link) {
             headers {
                 append("Authorization", "Bearer $loginToken")

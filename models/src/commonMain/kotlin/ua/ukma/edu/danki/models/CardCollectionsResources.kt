@@ -13,7 +13,7 @@ enum class CollectionSortParam {
     ByName, ByDate
 }
 
-@Resource("/collections/?userId={userId}&offset={offset}&limit={limit}&sort={sort}&ascending={ascending}")
+@Resource("/collections")
 data class GetUserCollections(
     val userId: String,
     val sort: CollectionSortParam = CollectionSortParam.ByDate,
