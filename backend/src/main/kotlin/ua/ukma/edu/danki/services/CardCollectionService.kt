@@ -19,13 +19,13 @@ interface CardCollectionService {
     ): List<UserCardCollectionDTO>
 
     @Throws(IllegalAccessException::class)
-    fun removeCollections(user: User, collections: List<UUID>)
+    fun removeCollections(email: String, collections: List<UUID>)
 
     fun updateCollection(user: User, collection: CardCollection)
 
     fun createCollection(email: String, name: String): UUID
 
-    fun readCollection(collection: UUID)
+    fun readCollection(collection: UUID): UserCardCollectionDTO
 
 }
 

@@ -61,7 +61,7 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
         }
     }
 
-    override fun removeCollections(user: User, collections: List<UUID>) {
+    override fun removeCollections(email: String, collections: List<UUID>) {
         TODO("Not yet implemented")
     }
 
@@ -79,8 +79,17 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
         }
     }
 
-    override fun readCollection(collection: UUID) {
-        TODO("Not yet implemented")
+    override fun readCollection(collection: UUID): UserCardCollectionDTO {
+        return runBlocking {
+            DatabaseFactory.dbQuery {
+                UserCardCollections
+                    .innerJoin(CardCollections)
+                    .select(where = UserCardCollections.id eq collection)
+                    .map {
+                        mapResultRowToCardCollectionDTO(it)
+                    }.single()
+            }
+        }
     }
 
     private suspend fun createNewCollection(nameOfNewCollection: String, userOwner: User): UserCardCollection {
