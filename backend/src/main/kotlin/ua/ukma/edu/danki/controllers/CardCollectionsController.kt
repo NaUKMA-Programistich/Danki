@@ -43,6 +43,12 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
             call.respond(CreateCardCollectionResponse(uuidOfCreatedRelation.toString()))
         }
 
+        post<UpdateCollectionRequest>("/collections/") {
+            val email = call.extractEmailFromJWT()
+            //val uuidOfCreatedRelation = cardCollectionService.updateCollection(email, it.name)
+            call.respond(GenericBooleanResponse(true))
+        }
+
         post<DeleteCollectionsRequest>("/collections/delete") {
             val user = extractUserFromJWT(userService)
             try {

@@ -1,9 +1,6 @@
 package ua.ukma.edu.danki.services
 
-import ua.ukma.edu.danki.models.CardCollection
-import ua.ukma.edu.danki.models.CollectionSortParam
-import ua.ukma.edu.danki.models.User
-import ua.ukma.edu.danki.models.UserCardCollectionDTO
+import ua.ukma.edu.danki.models.*
 import java.util.*
 
 
@@ -19,7 +16,7 @@ interface CardCollectionService {
 
     fun removeCollections(user: User, collections: List<UUID>)
 
-    fun updateCollection(user: User, collection: CardCollection)
+    fun updateCollection(user: User, cardCollection: InternalCardCollectionDTO)
 
     fun createCollection(email: String, name: String): UUID
 

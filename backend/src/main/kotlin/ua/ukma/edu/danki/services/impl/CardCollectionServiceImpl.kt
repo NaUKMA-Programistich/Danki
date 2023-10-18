@@ -71,7 +71,7 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
         }
     }
 
-    override fun updateCollection(user: User, collection: CardCollection) {
+    override fun updateCollection(user: User, cardCollection: InternalCardCollectionDTO) {
         TODO("Not yet implemented")
     }
 

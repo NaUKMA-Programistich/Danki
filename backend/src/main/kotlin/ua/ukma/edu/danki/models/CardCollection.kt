@@ -33,6 +33,16 @@ object UserCardCollections : UUIDTable() {
     val favorite = bool("favorite").default(false)
 }
 
+data class InternalCardCollectionDTO(
+    val uuid: UUID,
+    val user: UUID,
+    val collection: Long,
+    val name: String,
+    val own: Boolean,
+    val shared: Boolean,
+    val favorite: Boolean
+)
+
 class UserCardCollection(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<UserCardCollection>(UserCardCollections)
 
