@@ -19,8 +19,13 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
     authenticate("auth-jwt") {
         get<GetUserCollections> {
             val params = call.parameters
+            val email = call.extractEmailFromJWT()
+            val ownCollectionsWanted = params["userId"] == null
             val userId = try {
-                UUID.fromString(params["userId"])
+                if (ownCollectionsWanted)
+                    UUID.fromString(params["userId"])
+                else
+                    (userService.findUser(email) ?: throw ResourceNotFoundException(USER_NOT_FOUND_MESSAGE)).id.value
             } catch (e: IllegalArgumentException) {
                 throw BadRequestException("Invalid UUID")
             }
@@ -34,8 +39,6 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
                 "ByDate" -> CollectionSortParam.ByDate
                 else -> CollectionSortParam.ByName
             }
-
-            val email = call.extractEmailFromJWT()
 
             val user = userService.findUser(userId) ?: throw ResourceNotFoundException(USER_NOT_FOUND_MESSAGE)
 

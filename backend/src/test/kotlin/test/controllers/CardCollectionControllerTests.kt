@@ -35,6 +35,7 @@ class CardCollectionsControllerTests {
         // Mock responses for the service calls
         val userId = UUID.randomUUID()
         val user = mockk<User>()
+        every { user.id.value } returns userId
         every { user.email } returns "email@email.com"
         every { user.password } returns "pass"
         coEvery { userService.findUser(userId) } returns user
