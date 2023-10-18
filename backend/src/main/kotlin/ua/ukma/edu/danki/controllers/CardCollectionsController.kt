@@ -20,7 +20,7 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
         get<GetUserCollections> {
             val params = call.parameters
             val email = call.extractEmailFromJWT()
-            val ownCollectionsWanted = params["userId"] == null
+            val ownCollectionsWanted = params["userId"] != null
             val userId = try {
                 if (ownCollectionsWanted)
                     UUID.fromString(params["userId"])
