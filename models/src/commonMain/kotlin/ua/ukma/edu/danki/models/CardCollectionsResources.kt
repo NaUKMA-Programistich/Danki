@@ -13,11 +13,9 @@ enum class CollectionSortParam {
     ByName, ByDate
 }
 
-// userId can be null, if you want to get collections of the user whose JWT is passed
-// Current implementation will not allow you to get anybody else's collections anyway...
+// Returns collections of the authenticated user
 @Resource("/collections")
 data class GetUserCollections(
-    val userId: String? = null,
     val sort: CollectionSortParam = CollectionSortParam.ByDate,
     val offset: Int = 0,
     val limit: Int = 0,

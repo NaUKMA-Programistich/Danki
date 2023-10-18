@@ -71,7 +71,7 @@ class CardCollectionsControllerTests {
             setBody(Json.encodeToString(UserAuthRequest(user.email, user.password)))
         }.body<String>()).jwt
 
-        val link: String = href(ResourcesFormat(), GetUserCollections(userId.toString()))
+        val link: String = href(ResourcesFormat(), GetUserCollections())
         println(link)
         val response = client.get(link) {
             headers {
