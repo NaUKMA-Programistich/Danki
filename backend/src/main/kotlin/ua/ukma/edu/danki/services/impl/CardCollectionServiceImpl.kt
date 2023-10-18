@@ -40,15 +40,16 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
             .orderBy(getSortColumn(sort), if (ascending) SortOrder.ASC else SortOrder.DESC)
             .limit(limit, offset.toLong())
             .map {
-                mapResultRowToCardCollection(it).toCardCollectionDTO()
+                mapResultRowToCardCollectionDTO(it)
             }
     }
 
-    private fun mapResultRowToCardCollection(it: ResultRow): CardCollection {
-        val cardCollection = CardCollection(it[CardCollections.id])
-        cardCollection.name = it[CardCollections.name]
-        cardCollection.lastModified = it[CardCollections.lastModified]
-        return cardCollection
+    private fun mapResultRowToCardCollectionDTO(it: ResultRow): CardCollectionDTO {
+        return CardCollectionDTO(
+            it[CardCollections.id].value,
+            it[CardCollections.name],
+            it[CardCollections.lastModified]
+        )
     }
 
     private fun getSortColumn(sort: CollectionSortParam): Column<*> {

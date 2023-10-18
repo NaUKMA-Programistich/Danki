@@ -66,6 +66,7 @@ fun Application.module() {
         }
         exception<Throwable> { call, cause ->
             call.respond(HttpStatusCode.InternalServerError, ErrorMsg("500: $cause"))
+            cause.printStackTrace()
         }
     }
     install(RequestValidation) {
