@@ -4,6 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import ua.ukma.edu.danki.DICTIONARY_PATH
 import ua.ukma.edu.danki.services.impl.DictionaryServiceImpl
 import ua.ukma.edu.danki.models.dictionary.DictionarySuggestions
 import ua.ukma.edu.danki.models.dictionary.GetDictionarySuggestions

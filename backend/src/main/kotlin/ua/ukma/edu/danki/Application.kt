@@ -14,6 +14,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ua.ukma.edu.danki.controllers.authControllers
 import ua.ukma.edu.danki.controllers.cardCollectionsControllers
+import ua.ukma.edu.danki.controllers.dictionaryController
 import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.UserRegistrationException
 import ua.ukma.edu.danki.models.ErrorMsg
@@ -22,6 +23,8 @@ import ua.ukma.edu.danki.services.impl.UserServiceImpl
 import ua.ukma.edu.danki.utils.DatabaseFactory
 import ua.ukma.edu.danki.utils.JwtConfig
 import ua.ukma.edu.danki.validation.validateUserRequests
+
+const val DICTIONARY_PATH = "./src/main/resources/dictionary-data"
 
 fun main(args: Array<String>) = EngineMain.main(args)
 
@@ -70,5 +73,6 @@ fun Application.module() {
         // this counts as DI, right?
         cardCollectionsControllers(CardCollectionServiceImpl(), UserServiceImpl())
         authControllers(UserServiceImpl())
+        dictionaryController()
     }
 }
