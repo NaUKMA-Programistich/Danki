@@ -16,10 +16,7 @@ object DatabaseFactory {
         val database = Database.connect(jdbcUrl, driverClassName)
 
         transaction(database) {
-            SchemaUtils.create(Cards)
-            SchemaUtils.create(CardCollections)
-            SchemaUtils.create(Users)
-            SchemaUtils.create(UserCardCollections)
+            SchemaUtils.createMissingTablesAndColumns(Cards, CardCollections, Users, UserCardCollections)
         }
     }
 

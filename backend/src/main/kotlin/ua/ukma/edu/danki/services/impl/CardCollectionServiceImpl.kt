@@ -21,7 +21,7 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
         limit: Int,
         sort: CollectionSortParam,
         ascending: Boolean
-    ): List<CardCollectionDTO> {
+    ): List<UserCardCollectionDTO> {
         return runBlocking {
             getCollectionsOfUser(user, sort, ascending, limit, offset)
         }
@@ -44,11 +44,13 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
             }
     }
 
-    private fun mapResultRowToCardCollectionDTO(it: ResultRow): CardCollectionDTO {
-        return CardCollectionDTO(
-            it[CardCollections.id].value,
+    private fun mapResultRowToCardCollectionDTO(it: ResultRow): UserCardCollectionDTO {
+        return UserCardCollectionDTO(
+            it[UserCardCollections.id].value.toString(),
             it[CardCollections.name],
-            it[CardCollections.lastModified]
+            it[CardCollections.lastModified],
+            it[UserCardCollections.own],
+            it[UserCardCollections.favorite]
         )
     }
 

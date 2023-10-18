@@ -10,7 +10,7 @@ jwt:
   issuer:
     "https://Danki"
   validity:
-    36000000
+    3600000000
 db:
   driver:
     "org.h2.Driver"

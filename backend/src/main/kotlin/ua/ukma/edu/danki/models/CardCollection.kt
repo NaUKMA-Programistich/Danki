@@ -22,15 +22,10 @@ class CardCollection(id: EntityID<Long>) : LongEntity(id) {
 
     var name by CardCollections.name
     var lastModified by CardCollections.lastModified
-
-    fun toCardCollectionDTO(): CardCollectionDTO {
-        return CardCollectionDTO(this.id.value, this.name, this.lastModified)
-    }
 }
 
 
 object UserCardCollections : UUIDTable() {
-
     val collection = reference("card_collection", CardCollections)
     val user = reference("user", Users)
     val own = bool("own").default(true)
@@ -45,6 +40,6 @@ class UserCardCollection(id: EntityID<UUID>) : UUIDEntity(id) {
     var user by UserCardCollections.user
     var own by UserCardCollections.own
     var shared by UserCardCollections.shared
-
+    var favorite by UserCardCollections.favorite
 }
 

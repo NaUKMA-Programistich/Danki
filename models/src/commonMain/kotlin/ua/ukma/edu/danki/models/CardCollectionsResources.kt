@@ -29,13 +29,15 @@ data class GetUserCollections(
 class Articles()
 
 @Serializable
-data class CardCollectionDTO(
+data class UserCardCollectionDTO(
     @SerialName("id")
-    val id: Long,
+    val id: String,
     @SerialName("name")
     val name: String,
     @SerialName("last_modified")
-    val lastModified: Instant
+    val lastModified: Instant,
+    val own: Boolean,
+    val favorite: Boolean
 )
 
 @Serializable
@@ -53,5 +55,5 @@ data class CreateCardCollectionResponse(
 @Serializable
 data class ListOfCollectionsResponse(
     @SerialName("collections")
-    val cardCollections: List<CardCollectionDTO>
+    val cardCollections: List<UserCardCollectionDTO>
 )

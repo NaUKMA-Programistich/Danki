@@ -46,8 +46,16 @@ class CardCollectionsControllerTests {
         coEvery { userService.authenticateUser(UserAuthRequest("email@email.com", "pass")) } returns jwt
 
         val collections = listOf(
-            CardCollectionDTO(1, "Collection1", Clock.System.now()),
-            CardCollectionDTO(2, "Collection2", Clock.System.now())
+            UserCardCollectionDTO(
+                UUID.randomUUID().toString(), "Collection1", Clock.System.now(),
+                own = false,
+                favorite = false
+            ),
+            UserCardCollectionDTO(
+                UUID.randomUUID().toString(), "Collection2", Clock.System.now(),
+                own = false,
+                favorite = false
+            )
         )
         coEvery {
             cardCollectionService.getCollections(any(), any(), any(), any(), any())
