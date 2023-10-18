@@ -8,9 +8,7 @@ import io.ktor.server.resources.*
 import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.IllegalAccessException
 import ua.ukma.edu.danki.exceptions.ResourceNotFoundException
-import ua.ukma.edu.danki.models.CollectionSortParam
-import ua.ukma.edu.danki.models.GetUserCollections
-import ua.ukma.edu.danki.models.ListOfCollectionsResponse
+import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.CardCollectionService
 import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.utils.consts.USER_NOT_FOUND_MESSAGE
@@ -45,6 +43,12 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
 
             val collections = cardCollectionService.getCollections(user, offset, limit, sort, ascending)
             call.respond(ListOfCollectionsResponse(collections))
+        }
+
+        post<CreateCardCollectionRequest>("/collections/") {
+            val email = call.extractEmailFromJWT()
+            val uuidOfCreatedRelation = cardCollectionService.createCollection(email, it.name)
+            call.respond(CreateCardCollectionResponse(uuidOfCreatedRelation.toString()))
         }
     }
 }

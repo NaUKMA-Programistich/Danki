@@ -43,6 +43,12 @@ data class CreateCardCollectionRequest(
 )
 
 @Serializable
+data class CreateCardCollectionResponse(
+    @SerialName("uuid")
+    val uuid: String
+)
+
+@Serializable
 data class ListOfCollectionsResponse(
     @SerialName("collections")
     val cardCollections: List<CardCollectionDTO>

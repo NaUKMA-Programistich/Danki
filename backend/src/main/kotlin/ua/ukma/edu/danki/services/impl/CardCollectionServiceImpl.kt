@@ -66,13 +66,13 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
         TODO("Not yet implemented")
     }
 
-    override fun createCollection(email: String, name: String) {
-        runBlocking {
+    override fun createCollection(email: String, name: String): UUID {
+        return runBlocking {
             createNewCollection(
                 name,
                 userService.findUser(email)
                     ?: throw IllegalAccessException("User trying to create the collection does not exist in the system")
-            )
+            ).id.value
         }
     }
 
@@ -80,8 +80,8 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
         TODO("Not yet implemented")
     }
 
-    private suspend fun createNewCollection(nameOfNewCollection: String, userOwner: User) {
-        DatabaseFactory.dbQuery {
+    private suspend fun createNewCollection(nameOfNewCollection: String, userOwner: User): UserCardCollection {
+        return DatabaseFactory.dbQuery {
             val createdCollection = CardCollection.new {
                 name = nameOfNewCollection
                 lastModified = Clock.System.now()
