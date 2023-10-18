@@ -5,12 +5,15 @@ import io.ktor.server.auth.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.ResourceNotFoundException
 import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.CardCollectionService
 import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.utils.consts.USER_NOT_FOUND_MESSAGE
 import ua.ukma.edu.danki.utils.extractEmailFromJWT
+import java.lang.IllegalArgumentException
+import java.util.*
 
 fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionService, userService: UserService) {
     authenticate("auth-jwt") {
@@ -38,6 +41,18 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
             val email = call.extractEmailFromJWT()
             val uuidOfCreatedRelation = cardCollectionService.createCollection(email, it.name)
             call.respond(CreateCardCollectionResponse(uuidOfCreatedRelation.toString()))
+        }
+
+        post<DeleteCollectionsRequest>("/collections/delete") {
+            val user = userService.findUser(call.extractEmailFromJWT()) ?: throw ResourceNotFoundException(
+                USER_NOT_FOUND_MESSAGE
+            )
+            try {
+                cardCollectionService.removeCollections(user, it.collections.map { uuid -> UUID.fromString(uuid) })
+                call.respond(GenericBooleanResponse(true))
+            } catch (e: IllegalArgumentException) {
+                throw BadRequestException("Malformed ids of collections provided")
+            }
         }
     }
 }

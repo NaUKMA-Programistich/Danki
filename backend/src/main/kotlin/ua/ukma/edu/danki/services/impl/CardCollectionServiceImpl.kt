@@ -2,11 +2,9 @@ package ua.ukma.edu.danki.services.impl
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.select
+import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.IllegalAccessException
 import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.CardCollectionService
@@ -61,8 +59,16 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
         }
     }
 
-    override fun removeCollections(email: String, collections: List<UUID>) {
-        TODO("Not yet implemented")
+    override fun removeCollections(user: User, collections: List<UUID>) {
+        runBlocking {
+            DatabaseFactory.dbQuery {
+                collections.forEach {
+                    val collection = readCollection(user, it)
+                        ?: throw BadRequestException("One or more of the collections requested for deletion could not be found")
+                    UserCardCollections.deleteWhere { UserCardCollections.id eq UUID.fromString(collection.id) }
+                }
+            }
+        }
     }
 
     override fun updateCollection(user: User, collection: CardCollection) {
@@ -79,15 +85,19 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
         }
     }
 
-    override fun readCollection(collection: UUID): UserCardCollectionDTO {
+    override fun readCollection(user: User, collection: UUID): UserCardCollectionDTO? {
         return runBlocking {
             DatabaseFactory.dbQuery {
                 UserCardCollections
                     .innerJoin(CardCollections)
-                    .select(where = UserCardCollections.id eq collection)
+                    .select(
+                        where = (UserCardCollections.id eq collection)
+                            .and
+                                (UserCardCollections.user eq user.id)
+                    )
                     .map {
                         mapResultRowToCardCollectionDTO(it)
-                    }.single()
+                    }.singleOrNull()
             }
         }
     }

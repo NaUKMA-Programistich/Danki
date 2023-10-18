@@ -8,7 +8,6 @@ import kotlinx.serialization.Serializable
 @Resource("/collections")
 class GetCollectionsCards(val sort: String? = "new")
 
-
 enum class CollectionSortParam {
     ByName, ByDate
 }
@@ -36,6 +35,12 @@ data class UserCardCollectionDTO(
     val lastModified: Instant,
     val own: Boolean,
     val favorite: Boolean
+)
+
+@Serializable
+data class DeleteCollectionsRequest(
+    @SerialName("collections")
+    val collections: List<String>
 )
 
 @Serializable

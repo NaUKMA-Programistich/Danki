@@ -1,11 +1,10 @@
 package ua.ukma.edu.danki.services
 
-import ua.ukma.edu.danki.exceptions.IllegalAccessException
 import ua.ukma.edu.danki.models.CardCollection
+import ua.ukma.edu.danki.models.CollectionSortParam
 import ua.ukma.edu.danki.models.User
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
-import ua.ukma.edu.danki.models.CollectionSortParam
-import java.util.UUID
+import java.util.*
 
 
 interface CardCollectionService {
@@ -18,14 +17,13 @@ interface CardCollectionService {
         ascending: Boolean
     ): List<UserCardCollectionDTO>
 
-    @Throws(IllegalAccessException::class)
-    fun removeCollections(email: String, collections: List<UUID>)
+    fun removeCollections(user: User, collections: List<UUID>)
 
     fun updateCollection(user: User, collection: CardCollection)
 
     fun createCollection(email: String, name: String): UUID
 
-    fun readCollection(collection: UUID): UserCardCollectionDTO
+    fun readCollection(user: User, collection: UUID): UserCardCollectionDTO?
 
 }
 
