@@ -1,5 +1,6 @@
 import controllers.authControllers
 import controllers.cardCollectionsControllers
+import controllers.dictionaryController
 import exceptions.BadRequestException
 import exceptions.UserRegistrationException
 import io.ktor.http.*
@@ -24,6 +25,7 @@ private const val PORT = 8080
 private const val JWT_SECRET = "secret"
 private const val JWT_ISSUER = "https://Danki"
 private const val VALIDITY_IN_MS = 36000000L
+const val DICTIONARY_PATH  = "./src/main/resources/dictionary-data"
 
 
 fun main() {
@@ -71,6 +73,7 @@ private fun Application.module() {
     install(Resources)
     routing {
         cardCollectionsControllers()
+        dictionaryController()
         authControllers()
     }
 }
