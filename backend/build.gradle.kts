@@ -18,8 +18,6 @@ dependencies {
     implementation(libs.ktor.server.auth.jwt)
     implementation(libs.ktor.server.validation)
     implementation(libs.ktor.server.status.pages)
-    testImplementation(libs.ktor.server.testing)
-    testImplementation(libs.kotlin.test)
 
 
     implementation(libs.exposed.core)

@@ -1,4 +1,4 @@
-package dictionary
+package ua.ukma.edu.danki.dictionary
 
 import io.ktor.utils.io.bits.*
 import ua.ukma.edu.danki.models.dictionary.PartialTerm

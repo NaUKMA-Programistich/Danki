@@ -1,8 +1,9 @@
-package services
+package ua.ukma.edu.danki.services.impl
 
-import dictionary.Dictionary
+import ua.ukma.edu.danki.dictionary.Dictionary
 import ua.ukma.edu.danki.models.dictionary.FullTerm
 import ua.ukma.edu.danki.models.dictionary.PartialTerm
+import ua.ukma.edu.danki.services.DictionaryService
 
 class DictionaryServiceImpl(directoryPath: String) : DictionaryService {
     private val dictionary: Dictionary = Dictionary.fromDirectory(directoryPath)

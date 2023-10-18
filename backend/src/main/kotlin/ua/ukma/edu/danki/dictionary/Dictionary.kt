@@ -1,4 +1,4 @@
-package dictionary
+package ua.ukma.edu.danki.dictionary
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
