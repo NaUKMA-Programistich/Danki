@@ -5,6 +5,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.pipeline.*
 import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.ResourceNotFoundException
 import ua.ukma.edu.danki.models.*
@@ -19,9 +20,8 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
     authenticate("auth-jwt") {
         get<GetUserCollections> {
             val params = call.parameters
-            val email = call.extractEmailFromJWT()
 
-            val user = userService.findUser(email) ?: throw ResourceNotFoundException(USER_NOT_FOUND_MESSAGE)
+            val user = extractUserFromJWT(userService)
 
             val offset = params["offset"]?.toInt() ?: 0
             val limit = params["limit"]?.toInt() ?: 10
@@ -44,9 +44,7 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
         }
 
         post<DeleteCollectionsRequest>("/collections/delete") {
-            val user = userService.findUser(call.extractEmailFromJWT()) ?: throw ResourceNotFoundException(
-                USER_NOT_FOUND_MESSAGE
-            )
+            val user = extractUserFromJWT(userService)
             try {
                 cardCollectionService.removeCollections(user, it.collections.map { uuid -> UUID.fromString(uuid) })
                 call.respond(GenericBooleanResponse(true))
@@ -56,3 +54,9 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
         }
     }
 }
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.extractUserFromJWT(
+    userService: UserService
+) = userService.findUser(call.extractEmailFromJWT()) ?: throw ResourceNotFoundException(
+    USER_NOT_FOUND_MESSAGE
+)
