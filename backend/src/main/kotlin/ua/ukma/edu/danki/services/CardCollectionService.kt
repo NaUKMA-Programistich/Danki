@@ -23,7 +23,7 @@ interface CardCollectionService {
 
     fun updateCollection(user: User, collection: CardCollection)
 
-    fun createCollection(user: User)
+    fun createCollection(email: String, name: String)
 
     fun readCollection(collection: UUID)
 

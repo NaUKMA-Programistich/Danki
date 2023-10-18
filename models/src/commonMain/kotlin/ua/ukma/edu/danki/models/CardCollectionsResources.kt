@@ -37,6 +37,12 @@ data class CardCollectionDTO(
 )
 
 @Serializable
+data class CreateCardCollectionRequest(
+    @SerialName("name")
+    val name: String
+)
+
+@Serializable
 data class ListOfCollectionsResponse(
     @SerialName("collections")
     val cardCollections: List<CardCollectionDTO>

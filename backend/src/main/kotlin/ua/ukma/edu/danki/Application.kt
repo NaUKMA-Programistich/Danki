@@ -74,7 +74,7 @@ fun Application.module() {
     install(Resources)
     routing {
         // this counts as DI, right?
-        cardCollectionsControllers(CardCollectionServiceImpl(), UserServiceImpl())
+        cardCollectionsControllers(CardCollectionServiceImpl(UserServiceImpl()), UserServiceImpl())
         authControllers(UserServiceImpl())
         dictionaryController()
     }

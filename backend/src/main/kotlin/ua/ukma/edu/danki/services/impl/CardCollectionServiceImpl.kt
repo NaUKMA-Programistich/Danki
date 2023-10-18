@@ -1,22 +1,20 @@
 package ua.ukma.edu.danki.services.impl
 
 import kotlinx.coroutines.runBlocking
-import ua.ukma.edu.danki.models.CardCollection
-import ua.ukma.edu.danki.models.CardCollections
-import ua.ukma.edu.danki.models.User
-import ua.ukma.edu.danki.models.UserCardCollections
+import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.select
+import ua.ukma.edu.danki.exceptions.IllegalAccessException
+import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.CardCollectionService
-import ua.ukma.edu.danki.models.CardCollectionDTO
-import ua.ukma.edu.danki.models.CollectionSortParam
+import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.utils.DatabaseFactory
 import java.util.*
 
-class CardCollectionServiceImpl : CardCollectionService {
+class CardCollectionServiceImpl(val userService: UserService) : CardCollectionService {
     override fun getCollections(
         user: User,
         offset: Int,
@@ -68,11 +66,32 @@ class CardCollectionServiceImpl : CardCollectionService {
         TODO("Not yet implemented")
     }
 
-    override fun createCollection(user: User) {
-        TODO("Not yet implemented")
+    override fun createCollection(email: String, name: String) {
+        runBlocking {
+            createNewCollection(
+                name,
+                userService.findUser(email)
+                    ?: throw IllegalAccessException("User trying to create the collection does not exist in the system")
+            )
+        }
     }
 
     override fun readCollection(collection: UUID) {
         TODO("Not yet implemented")
+    }
+
+    private suspend fun createNewCollection(nameOfNewCollection: String, userOwner: User) {
+        DatabaseFactory.dbQuery {
+            val createdCollection = CardCollection.new {
+                name = nameOfNewCollection
+                lastModified = Clock.System.now()
+            }
+            UserCardCollection.new {
+                own = true
+                user = userOwner.id
+                collection = createdCollection.id
+                shared = false
+            }
+        }
     }
 }
