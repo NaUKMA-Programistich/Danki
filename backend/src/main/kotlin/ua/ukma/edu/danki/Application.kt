@@ -55,6 +55,9 @@ fun Application.module() {
         exception<RequestValidationException> { call, cause ->
             call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.reasons.joinToString()))
         }
+        exception<IllegalAccessException> { call, cause ->
+            call.respond(HttpStatusCode.Forbidden, ErrorMsg(cause.message ?: "Unable to register user"))
+        }
         exception<UserRegistrationException> { call, cause ->
             call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.message ?: "Unable to register user"))
         }

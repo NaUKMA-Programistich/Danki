@@ -2,7 +2,6 @@ package ua.ukma.edu.danki.models
 
 import io.ktor.resources.*
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,8 +13,15 @@ enum class CollectionSortParam {
     ByName, ByDate
 }
 
-@Resource("/collections/")
-class GetCollection(val sort: CollectionSortParam)
+@Resource("/collections/?userId={userId}&offset={offset}&limit={limit}&sort={sort}&ascending={ascending}")
+data class GetUserCollections(
+    val userId: String,
+    val sort: CollectionSortParam = CollectionSortParam.ByDate,
+    val offset: Int = 0,
+    val limit: Int = 0,
+    val ascending: Boolean = true
+)
+
 
 @Resource("/articles")
 class Articles()
