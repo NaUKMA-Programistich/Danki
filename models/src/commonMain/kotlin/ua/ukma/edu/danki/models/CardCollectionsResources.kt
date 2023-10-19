@@ -58,7 +58,11 @@ data class CreateCardCollectionResponse(
 )
 
 @Serializable
-data class UpdateCollectionRequest(val uuid: String, val favorite: Boolean, val name: String? = null)
+data class UpdateCollectionRequest(
+    val uuid: String,
+    val favorite: Boolean,
+    val name: String? = null
+)
 
 @Serializable
 data class ListOfCollectionsResponse(
