@@ -58,7 +58,7 @@ class CardCollectionsControllerTests {
             )
         )
         coEvery {
-            cardCollectionService.getCollections(any(), any(), any(), any(), any())
+            cardCollectionService.getCollections(any(), any(), any(), any(), any(), any())
         } returns collections
 
         application {

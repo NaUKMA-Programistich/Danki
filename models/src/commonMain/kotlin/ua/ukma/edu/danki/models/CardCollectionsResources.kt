@@ -13,9 +13,11 @@ enum class CollectionSortParam {
 }
 
 // Returns collections of the authenticated user
+// favorite property set to false will return all collections, true - only the ones listed as favorite
 @Resource("/collections")
 data class GetUserCollections(
     val sort: CollectionSortParam = CollectionSortParam.ByDate,
+    val favorite: Boolean = false,
     val offset: Int = 0,
     val limit: Int = 0,
     val ascending: Boolean = true

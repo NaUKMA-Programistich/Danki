@@ -27,13 +27,14 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
             val limit = params["limit"]?.toInt() ?: 10
             val sortParam = params["sort"] ?: "ByDate"
             val ascending = params["ascending"]?.toBoolean() ?: true
+            val favorite = params["favorite"]?.toBoolean() ?: false
 
             val sort = when (sortParam) {
                 "ByDate" -> CollectionSortParam.ByDate
                 else -> CollectionSortParam.ByName
             }
 
-            val collections = cardCollectionService.getCollections(user, offset, limit, sort, ascending)
+            val collections = cardCollectionService.getCollections(user, offset, limit, sort, ascending, favorite)
             call.respond(ListOfCollectionsResponse(collections))
         }
 

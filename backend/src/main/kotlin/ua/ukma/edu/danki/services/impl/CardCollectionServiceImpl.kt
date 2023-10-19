@@ -18,9 +18,13 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
         offset: Int,
         limit: Int,
         sort: CollectionSortParam,
-        ascending: Boolean
+        ascending: Boolean,
+        favorite: Boolean
     ): List<UserCardCollectionDTO> {
-        return getCollectionsOfUser(user, sort, ascending, limit, offset).map { it.toUserCardCollectionDTO() }
+        return if (!favorite)
+            getCollectionsOfUser(user, sort, ascending, limit, offset, favorite).map { it.toUserCardCollectionDTO() }
+        else
+            getCollectionsOfUser(user, sort, ascending, limit, offset, favorite).map { it.toUserCardCollectionDTO() }
     }
 
     private suspend fun getCollectionsOfUser(
@@ -28,17 +32,33 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
         sort: CollectionSortParam,
         ascending: Boolean,
         limit: Int,
-        offset: Int
-    ) = DatabaseFactory.dbQuery {
-        UserCardCollections
-            .innerJoin(CardCollections)
-            .select(where = UserCardCollections.user eq user.id)
-            .orderBy(getSortColumn(sort), if (ascending) SortOrder.ASC else SortOrder.DESC)
-            .limit(limit, offset.toLong())
-            .map {
-                mapResultRowToCardCollectionDTO(it)
+        offset: Int,
+        favorite: Boolean
+    ): List<InternalCardCollectionDTO> {
+        if (favorite)
+            return DatabaseFactory.dbQuery {
+                UserCardCollections
+                    .innerJoin(CardCollections)
+                    .select(where = (UserCardCollections.user eq user.id).and(UserCardCollections.favorite eq true))
+                    .orderBy(getSortColumn(sort), if (ascending) SortOrder.ASC else SortOrder.DESC)
+                    .limit(limit, offset.toLong())
+                    .map {
+                        mapResultRowToCardCollectionDTO(it)
+                    }
+            }
+        else
+            return DatabaseFactory.dbQuery {
+                UserCardCollections
+                    .innerJoin(CardCollections)
+                    .select(where = (UserCardCollections.user eq user.id))
+                    .orderBy(getSortColumn(sort), if (ascending) SortOrder.ASC else SortOrder.DESC)
+                    .limit(limit, offset.toLong())
+                    .map {
+                        mapResultRowToCardCollectionDTO(it)
+                    }
             }
     }
+
 
     private fun mapResultRowToCardCollectionDTO(it: ResultRow): InternalCardCollectionDTO {
         return InternalCardCollectionDTO(

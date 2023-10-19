@@ -11,7 +11,8 @@ interface CardCollectionService {
         offset: Int,
         limit: Int,
         sort: CollectionSortParam,
-        ascending: Boolean
+        ascending: Boolean,
+        favorite: Boolean
     ): List<UserCardCollectionDTO>
 
     suspend fun removeCollections(user: User, collections: List<UUID>)
