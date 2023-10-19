@@ -79,9 +79,12 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
                 ?: throw ResourceNotFoundException("Collection for which update was requested was not found")
             val existingUserCardCollection = UserCardCollection.findById(cardCollection.uuid)
                 ?: throw ResourceNotFoundException("Collection for which update was requested was not found")
-
             if (existingUserCardCollection.user.value != owner.id.value)
                 throw IllegalAccessException("Users can only modify their own collections")
+            if (!existingUserCardCollection.own && cardCollection.shared != existingUserCardCollection.shared)
+                throw IllegalAccessException("Users can only share their own collections")
+            if (!existingUserCardCollection.own && cardCollection.name != existingCardCollection.name)
+                throw IllegalAccessException("Users can only rename their own collections")
 
             existingCardCollection.name = cardCollection.name
             existingCardCollection.lastModified = cardCollection.lastModified
