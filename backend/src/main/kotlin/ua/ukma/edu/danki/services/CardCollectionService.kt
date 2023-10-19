@@ -27,5 +27,6 @@ interface CardCollectionService {
 
     suspend fun readCollection(user: User, collection: UUID): InternalCardCollectionDTO?
 
+    suspend fun setLastUpdatedAsNow(id: Long)
 }
 

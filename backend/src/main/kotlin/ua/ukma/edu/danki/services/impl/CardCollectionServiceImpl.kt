@@ -160,9 +160,11 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
             if (!existingUserCardCollection.own && cardCollection.name != existingCardCollection.name)
                 throw IllegalAccessException("Users can only rename their own collections")
 
-            existingCardCollection.name = cardCollection.name
-            existingCardCollection.lastModified = cardCollection.lastModified
-            existingCardCollection.flush()
+            if (existingUserCardCollection.own) {
+                existingCardCollection.name = cardCollection.name
+                existingCardCollection.lastModified = cardCollection.lastModified
+                existingCardCollection.flush()
+            }
 
             existingUserCardCollection.own = cardCollection.own
             existingUserCardCollection.shared = cardCollection.shared
@@ -192,6 +194,13 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
                     mapResultRowToCardCollectionDTO(it)
                 }.singleOrNull()
         }
+    }
+
+    override suspend fun setLastUpdatedAsNow(id: Long) {
+        val existingCardCollection = CardCollection.findById(id)
+            ?: throw ResourceNotFoundException("Collection for which update was requested was not found")
+        existingCardCollection.lastModified = Clock.System.now()
+        existingCardCollection.flush()
     }
 
     private suspend fun createNewCollection(nameOfNewCollection: String, userOwner: User): UserCardCollection {
