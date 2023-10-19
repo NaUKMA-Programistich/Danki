@@ -43,9 +43,15 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
             call.respond(CreateCardCollectionResponse(uuidOfCreatedRelation.toString()))
         }
 
-        post<UpdateCollectionRequest>("/collections/") {
-            val email = call.extractEmailFromJWT()
-            //val uuidOfCreatedRelation = cardCollectionService.updateCollection(email, it.name)
+        put<UpdateCollectionRequest>("/collections/") {
+            val user = extractUserFromJWT(userService)
+            val internalCardCollectionDTO: InternalCardCollectionDTO =
+                cardCollectionService.readCollection(user, UUID.fromString(it.uuid)) ?: throw ResourceNotFoundException(
+                    "Collection requested for update was not found"
+                )
+            internalCardCollectionDTO.name = it.name ?: internalCardCollectionDTO.name
+            internalCardCollectionDTO.favorite = it.favorite
+            cardCollectionService.updateCollection(internalCardCollectionDTO)
             call.respond(GenericBooleanResponse(true))
         }
 

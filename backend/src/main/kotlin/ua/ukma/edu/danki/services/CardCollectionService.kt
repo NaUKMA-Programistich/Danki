@@ -6,7 +6,7 @@ import java.util.*
 
 interface CardCollectionService {
 
-    fun getCollections(
+    suspend fun getCollections(
         user: User,
         offset: Int,
         limit: Int,
@@ -14,13 +14,13 @@ interface CardCollectionService {
         ascending: Boolean
     ): List<UserCardCollectionDTO>
 
-    fun removeCollections(user: User, collections: List<UUID>)
+    suspend fun removeCollections(user: User, collections: List<UUID>)
 
-    fun updateCollection(user: User, cardCollection: InternalCardCollectionDTO)
+    suspend fun updateCollection(cardCollection: InternalCardCollectionDTO)
 
-    fun createCollection(email: String, name: String): UUID
+    suspend fun createCollection(email: String, name: String): UUID
 
-    fun readCollection(user: User, collection: UUID): InternalCardCollectionDTO?
+    suspend fun readCollection(user: User, collection: UUID): InternalCardCollectionDTO?
 
 }
 

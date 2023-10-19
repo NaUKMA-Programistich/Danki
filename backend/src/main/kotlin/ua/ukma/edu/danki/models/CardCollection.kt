@@ -38,11 +38,11 @@ data class InternalCardCollectionDTO(
     val uuid: UUID,
     val user: UUID,
     val collection: Long,
-    val name: String,
-    val own: Boolean,
-    val shared: Boolean,
-    val favorite: Boolean,
-    val lastModified: Instant
+    var name: String,
+    var own: Boolean,
+    var shared: Boolean,
+    var favorite: Boolean,
+    var lastModified: Instant
 )
 
 fun InternalCardCollectionDTO.toUserCardCollectionDTO(): UserCardCollectionDTO {
