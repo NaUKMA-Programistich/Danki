@@ -17,6 +17,8 @@ interface CardCollectionService {
 
     suspend fun getSharedCollection(user: User, id: Long): UserCardCollectionDTO
 
+    suspend fun shareCollection(user: User, collection: UUID): Long
+
     suspend fun removeCollections(user: User, collections: List<UUID>)
 
     suspend fun updateCollection(cardCollection: InternalCardCollectionDTO)

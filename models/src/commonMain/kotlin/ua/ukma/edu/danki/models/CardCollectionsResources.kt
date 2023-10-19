@@ -65,6 +65,21 @@ data class UpdateCollectionRequest(
 )
 
 @Serializable
+data class ShareCollectionRequest(
+    val uuid: String
+)
+
+@Serializable
+data class ShareCollectionResponse(
+    val id: Long
+)
+
+@Serializable
+data class ReadSharedCollectionRequest(
+    val id: Long
+)
+
+@Serializable
 data class ListOfCollectionsResponse(
     @SerialName("collections")
     val cardCollections: List<UserCardCollectionDTO>

@@ -13,6 +13,7 @@ import ua.ukma.edu.danki.services.CardCollectionService
 import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.utils.consts.USER_NOT_FOUND_MESSAGE
 import ua.ukma.edu.danki.utils.extractEmailFromJWT
+import ua.ukma.edu.danki.utils.toUUID
 import java.lang.IllegalArgumentException
 import java.util.*
 
@@ -64,6 +65,17 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
             } catch (e: IllegalArgumentException) {
                 throw BadRequestException("Malformed ids of collections provided")
             }
+        }
+
+        post<ShareCollectionRequest>("/collections/share") {
+            val user = extractUserFromJWT(userService)
+            val id = cardCollectionService.shareCollection(user, it.uuid.toUUID())
+            call.respond(ShareCollectionResponse(id))
+        }
+
+        post<ReadSharedCollectionRequest>("/collections/share") {
+            val user = extractUserFromJWT(userService)
+            call.respond(cardCollectionService.getSharedCollection(user, it.id))
         }
     }
 }

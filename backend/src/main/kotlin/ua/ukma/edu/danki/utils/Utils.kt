@@ -3,6 +3,7 @@ package ua.ukma.edu.danki.utils
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import java.util.*
 import java.util.regex.Pattern
 
 fun isEmailValid(email: String): Boolean {
@@ -23,4 +24,8 @@ fun JWTPrincipal.extractEmail(): String {
 fun ApplicationCall.extractEmailFromJWT(): String {
     val principal = principal<JWTPrincipal>()
     return principal!!.extractEmail()
+}
+
+fun String.toUUID(): UUID {
+    return UUID.fromString(this)
 }

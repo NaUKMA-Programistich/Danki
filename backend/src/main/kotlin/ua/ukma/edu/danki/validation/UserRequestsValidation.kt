@@ -4,8 +4,7 @@ import io.ktor.server.plugins.requestvalidation.*
 import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.utils.consts.INCORRECT_CREDENTIALS_MESSAGE
 import ua.ukma.edu.danki.utils.isEmailValid
-import java.lang.IllegalArgumentException
-import java.util.UUID
+import java.util.*
 
 fun RequestValidationConfig.validateUserRequests() {
     validate<UserAuthRequest> { body ->
@@ -41,6 +40,15 @@ fun RequestValidationConfig.validateUserRequests() {
         if (body.name.isBlank())
             ValidationResult.Invalid("Name cannot be blank")
         ValidationResult.Valid
+    }
+
+    validate<ShareCollectionRequest> { body ->
+        try {
+            UUID.fromString(body.uuid)
+            ValidationResult.Valid
+        } catch (e: IllegalArgumentException) {
+            ValidationResult.Invalid("Invalid UUID")
+        }
     }
 
     validate<DeleteCollectionsRequest> { body ->

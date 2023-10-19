@@ -59,6 +59,14 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
         return responseDto!!.toUserCardCollectionDTO()
     }
 
+    override suspend fun shareCollection(user: User, collection: UUID): Long {
+        val existingCollection = readCollection(user, collection)
+            ?: throw ResourceNotFoundException("Could not find collection by specified id")
+        existingCollection.shared = true
+        updateCollection(existingCollection)
+        return existingCollection.collection
+    }
+
     private suspend fun getCollectionsOfUser(
         user: User,
         sort: CollectionSortParam,
