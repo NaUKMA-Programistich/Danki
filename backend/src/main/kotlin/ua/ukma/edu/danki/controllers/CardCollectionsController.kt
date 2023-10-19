@@ -73,7 +73,7 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
             call.respond(ShareCollectionResponse(id))
         }
 
-        post<ReadSharedCollectionRequest>("/collections/share") {
+        post<ReadSharedCollectionRequest>("/collections/get-shared") {
             val user = extractUserFromJWT(userService)
             call.respond(cardCollectionService.getSharedCollection(user, it.id))
         }

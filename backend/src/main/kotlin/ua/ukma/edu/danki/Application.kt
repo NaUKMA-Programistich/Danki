@@ -64,6 +64,9 @@ fun Application.module() {
         exception<BadRequestException> { call, cause ->
             call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.message ?: "Bad request"))
         }
+        exception<io.ktor.server.plugins.BadRequestException> { call, cause ->
+            call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.message ?: "Bad request"))
+        }
         exception<Throwable> { call, cause ->
             call.respond(HttpStatusCode.InternalServerError, ErrorMsg("500: $cause"))
             cause.printStackTrace()
