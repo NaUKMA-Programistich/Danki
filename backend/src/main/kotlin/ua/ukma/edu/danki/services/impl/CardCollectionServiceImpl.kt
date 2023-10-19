@@ -166,7 +166,6 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
                 existingCardCollection.flush()
             }
 
-            existingUserCardCollection.own = cardCollection.own
             existingUserCardCollection.shared = cardCollection.shared
             existingUserCardCollection.favorite = cardCollection.favorite
             existingUserCardCollection.flush()
