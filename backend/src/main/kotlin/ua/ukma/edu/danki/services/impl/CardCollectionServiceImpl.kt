@@ -42,6 +42,20 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
                 }.singleOrNull()
                 ?: throw ResourceNotFoundException("No owned collection could be found by specified id")
         }
+        val existingEntries = DatabaseFactory.dbQuery {
+            UserCardCollections
+                .innerJoin(CardCollections)
+                .select(
+                    where = (CardCollections.id eq id)
+                        .and
+                            (UserCardCollections.user eq user.id)
+                )
+                .map {
+                    mapResultRowToCardCollectionDTO(it)
+                }
+        }
+        if (existingEntries.isNotEmpty())
+            throw IllegalAccessException("User already has this collection")
         if (!sharedCollection.shared)
             throw IllegalAccessException("Owner has not shared this collection")
 
