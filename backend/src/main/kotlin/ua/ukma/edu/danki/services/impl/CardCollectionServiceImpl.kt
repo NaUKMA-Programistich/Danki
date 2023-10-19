@@ -22,9 +22,41 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
         favorite: Boolean
     ): List<UserCardCollectionDTO> {
         return if (!favorite)
-            getCollectionsOfUser(user, sort, ascending, limit, offset, favorite).map { it.toUserCardCollectionDTO() }
+            getCollectionsOfUser(user, sort, ascending, limit, offset, false).map { it.toUserCardCollectionDTO() }
         else
-            getCollectionsOfUser(user, sort, ascending, limit, offset, favorite).map { it.toUserCardCollectionDTO() }
+            getCollectionsOfUser(user, sort, ascending, limit, offset, true).map { it.toUserCardCollectionDTO() }
+    }
+
+    override suspend fun getSharedCollection(user: User, id: Long): UserCardCollectionDTO {
+        // find an existing owner entry for this collection
+        val sharedCollection = DatabaseFactory.dbQuery {
+            UserCardCollections
+                .innerJoin(CardCollections)
+                .select(
+                    where = (CardCollections.id eq id)
+                        .and
+                            (UserCardCollections.own eq true)
+                )
+                .map {
+                    mapResultRowToCardCollectionDTO(it)
+                }.singleOrNull()
+                ?: throw ResourceNotFoundException("No owned collection could be found by specified id")
+        }
+        if (!sharedCollection.shared)
+            throw IllegalAccessException("Owner has not shared this collection")
+
+        val collectionItself = CardCollection.findById(id)
+            ?: throw ResourceNotFoundException("No collection could be found by specified id")
+        val userCardCollectionEntry = DatabaseFactory.dbQuery {
+            UserCardCollection.new {
+                own = false
+                this.user = user.id
+                collection = collectionItself.id
+                shared = true
+            }
+        }
+        val responseDto = readCollection(user, userCardCollectionEntry.id.value)
+        return responseDto!!.toUserCardCollectionDTO()
     }
 
     private suspend fun getCollectionsOfUser(

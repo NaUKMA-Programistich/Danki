@@ -15,6 +15,8 @@ interface CardCollectionService {
         favorite: Boolean
     ): List<UserCardCollectionDTO>
 
+    suspend fun getSharedCollection(user: User, id: Long): UserCardCollectionDTO
+
     suspend fun removeCollections(user: User, collections: List<UUID>)
 
     suspend fun updateCollection(cardCollection: InternalCardCollectionDTO)
