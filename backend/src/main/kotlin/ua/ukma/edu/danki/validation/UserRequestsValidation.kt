@@ -24,15 +24,11 @@ fun RequestValidationConfig.validateUserRequests() {
     }
 
     validate<UpdateCollectionRequest> { body ->
-        if (body.name.isNullOrBlank())
-            ValidationResult.Invalid("Name cannot be blank")
-        else {
-            try {
-                UUID.fromString(body.uuid)
-                ValidationResult.Valid
-            } catch (e: IllegalArgumentException) {
-                ValidationResult.Invalid("Invalid UUID")
-            }
+        try {
+            UUID.fromString(body.uuid)
+            ValidationResult.Valid
+        } catch (e: IllegalArgumentException) {
+            ValidationResult.Invalid("Invalid UUID")
         }
     }
 
