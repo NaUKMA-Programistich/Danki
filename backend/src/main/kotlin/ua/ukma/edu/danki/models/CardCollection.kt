@@ -8,6 +8,7 @@ import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentTimestamp
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import java.util.*
@@ -27,8 +28,8 @@ class CardCollection(id: EntityID<Long>) : LongEntity(id) {
 
 
 object UserCardCollections : UUIDTable() {
-    val collection = reference("card_collection", CardCollections)
-    val user = reference("user", Users)
+    val collection = reference("card_collection", CardCollections, onDelete = ReferenceOption.CASCADE)
+    val user = reference("user", Users, onDelete = ReferenceOption.CASCADE)
     val own = bool("own").default(true)
     val shared = bool("shared").default(false)
     val favorite = bool("favorite").default(false)

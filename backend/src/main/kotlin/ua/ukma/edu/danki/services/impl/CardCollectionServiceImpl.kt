@@ -139,7 +139,10 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
             collections.forEach {
                 val collection = readCollection(user, it)
                     ?: throw BadRequestException("One or more of the collections requested for deletion could not be found")
-                UserCardCollections.deleteWhere { UserCardCollections.id eq collection.uuid }
+                if (collection.own)
+                    CardCollections.deleteWhere { CardCollections.id eq collection.collection }
+                else
+                    UserCardCollections.deleteWhere { UserCardCollections.id eq collection.uuid }
             }
         }
     }
