@@ -20,7 +20,7 @@ interface CardCollectionService {
 
     fun createCollection(email: String, name: String): UUID
 
-    fun readCollection(user: User, collection: UUID): UserCardCollectionDTO?
+    fun readCollection(user: User, collection: UUID): InternalCardCollectionDTO?
 
 }
 

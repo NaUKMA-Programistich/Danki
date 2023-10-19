@@ -1,5 +1,6 @@
 package ua.ukma.edu.danki.models
 
+import kotlinx.datetime.Instant
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.UUIDEntity
@@ -40,8 +41,13 @@ data class InternalCardCollectionDTO(
     val name: String,
     val own: Boolean,
     val shared: Boolean,
-    val favorite: Boolean
+    val favorite: Boolean,
+    val lastModified: Instant
 )
+
+fun InternalCardCollectionDTO.toUserCardCollectionDTO(): UserCardCollectionDTO {
+    return UserCardCollectionDTO(this.uuid.toString(), this.name, this.lastModified, this.own, this.favorite)
+}
 
 class UserCardCollection(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<UserCardCollection>(UserCardCollections)

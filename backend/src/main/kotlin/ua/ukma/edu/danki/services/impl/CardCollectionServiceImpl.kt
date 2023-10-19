@@ -12,7 +12,7 @@ import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.utils.DatabaseFactory
 import java.util.*
 
-class CardCollectionServiceImpl(val userService: UserService) : CardCollectionService {
+class CardCollectionServiceImpl(private val userService: UserService) : CardCollectionService {
     override fun getCollections(
         user: User,
         offset: Int,
@@ -21,7 +21,7 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
         ascending: Boolean
     ): List<UserCardCollectionDTO> {
         return runBlocking {
-            getCollectionsOfUser(user, sort, ascending, limit, offset)
+            getCollectionsOfUser(user, sort, ascending, limit, offset).map { it.toUserCardCollectionDTO() }
         }
     }
 
@@ -42,13 +42,16 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
             }
     }
 
-    private fun mapResultRowToCardCollectionDTO(it: ResultRow): UserCardCollectionDTO {
-        return UserCardCollectionDTO(
-            it[UserCardCollections.id].value.toString(),
-            it[CardCollections.name],
-            it[CardCollections.lastModified],
-            it[UserCardCollections.own],
-            it[UserCardCollections.favorite]
+    private fun mapResultRowToCardCollectionDTO(it: ResultRow): InternalCardCollectionDTO {
+        return InternalCardCollectionDTO(
+            uuid = it[UserCardCollections.id].value,
+            user = it[UserCardCollections.user].value,
+            collection = it[CardCollections.id].value,
+            favorite = it[UserCardCollections.favorite],
+            lastModified = it[CardCollections.lastModified],
+            own = it[UserCardCollections.own],
+            shared = it[UserCardCollections.shared],
+            name = it[CardCollections.name]
         )
     }
 
@@ -65,7 +68,7 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
                 collections.forEach {
                     val collection = readCollection(user, it)
                         ?: throw BadRequestException("One or more of the collections requested for deletion could not be found")
-                    UserCardCollections.deleteWhere { UserCardCollections.id eq UUID.fromString(collection.id) }
+                    UserCardCollections.deleteWhere { UserCardCollections.id eq collection.uuid }
                 }
             }
         }
@@ -85,7 +88,7 @@ class CardCollectionServiceImpl(val userService: UserService) : CardCollectionSe
         }
     }
 
-    override fun readCollection(user: User, collection: UUID): UserCardCollectionDTO? {
+    override fun readCollection(user: User, collection: UUID): InternalCardCollectionDTO? {
         return runBlocking {
             DatabaseFactory.dbQuery {
                 UserCardCollections
