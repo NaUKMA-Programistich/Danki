@@ -59,9 +59,9 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
         if (!sharedCollection.shared)
             throw IllegalAccessException("Owner has not shared this collection")
 
-        val collectionItself = CardCollection.findById(id)
-            ?: throw ResourceNotFoundException("No collection could be found by specified id")
         val userCardCollectionEntry = DatabaseFactory.dbQuery {
+            val collectionItself = CardCollection.findById(id)
+                ?: throw ResourceNotFoundException("No collection could be found by specified id")
             UserCardCollection.new {
                 own = false
                 this.user = user.id
