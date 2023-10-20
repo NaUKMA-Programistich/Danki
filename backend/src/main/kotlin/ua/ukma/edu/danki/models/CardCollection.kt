@@ -33,6 +33,13 @@ object UserCardCollections : UUIDTable() {
     val own = bool("own").default(true)
     val shared = bool("shared").default(false)
     val favorite = bool("favorite").default(false)
+    val hidden = bool("hidden").default(false)
+    val type = enumeration<CollectionType>("type").default(CollectionType.Normal)
+}
+
+enum class CollectionType {
+    Normal,
+    Recents
 }
 
 data class InternalCardCollectionDTO(
@@ -58,5 +65,7 @@ class UserCardCollection(id: EntityID<UUID>) : UUIDEntity(id) {
     var own by UserCardCollections.own
     var shared by UserCardCollections.shared
     var favorite by UserCardCollections.favorite
+    var hidden by UserCardCollections.hidden
+    var type by UserCardCollections.type
 }
 
