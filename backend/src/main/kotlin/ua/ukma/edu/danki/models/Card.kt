@@ -16,6 +16,6 @@ class Card(id: EntityID<Long>) : LongEntity(id) {
 
     var term by Cards.term
     var definition by Cards.definition
-    var collection by CardCollection optionalReferencedOn Cards.collection
+    var collection by Cards.collection
 
 }

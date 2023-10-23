@@ -29,12 +29,12 @@ class CardCollection(id: EntityID<Long>) : LongEntity(id) {
 
 object UserCardCollections : UUIDTable() {
     val collection = reference("card_collection", CardCollections, onDelete = ReferenceOption.CASCADE)
-    val user = reference("user", Users, onDelete = ReferenceOption.CASCADE)
+    val user = reference("app-user", Users, onDelete = ReferenceOption.CASCADE)
     val own = bool("own").default(true)
     val shared = bool("shared").default(false)
     val favorite = bool("favorite").default(false)
     val hidden = bool("hidden").default(false)
-    val type = enumeration<CollectionType>("type").default(CollectionType.Normal)
+    val type = enumeration<CollectionType>("collection-type").default(CollectionType.Normal)
 }
 
 enum class CollectionType {

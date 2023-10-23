@@ -15,3 +15,9 @@ data class GetTermDefinition(val term: PartialTerm)
 
 @Serializable
 data class TermDefinition(val term: FullTerm)
+
+@Resource("/dictionary/card-suggestion/{input}")
+data class GetCardSuggestion(val input: String)
+
+@Serializable
+data class CardSuggestionResult(val term: FullTerm?)

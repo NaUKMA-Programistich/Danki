@@ -169,4 +169,34 @@ class Dictionary(
         }
 
     }
+
+    fun findFullTerm(input: String) : Optional<FullTerm> {
+        fun firstTerms(dict: WordTypeDictionary, lowerBound: String): Optional<PartialTerm> {
+            return dict.term(lowerBound)
+        }
+
+        return runBlocking(Dispatchers.IO) {
+            val searchStart = listOf(
+                noun, verb, adjective, adverb
+            ).map {
+                async(Dispatchers.IO) { firstTerms(it, input) }
+            }.awaitAll().filter {
+                if (it.isEmpty)
+                    false
+                else
+                    it.get().term == input
+            }.map { it.get() }
+
+
+            if(searchStart.isEmpty())
+                return@runBlocking Optional.empty()
+
+            val partialTerm =  searchStart.reduce { left, right ->
+                left.combine(right)
+            }
+
+
+            Optional.of(unwrapTerm(partialTerm))
+        }
+    }
 }
