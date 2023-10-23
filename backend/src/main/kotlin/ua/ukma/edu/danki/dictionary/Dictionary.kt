@@ -42,7 +42,7 @@ class Dictionary(
 
     fun dataAt(wordType: WordType, index: ULong): UnwrappedData {
         val dict = getDictionary(wordType)
-        dict.relationReference.moveTo((index * 8UL).toLong());
+        dict.relationReference.moveTo((index * 8UL).toLong())
         val position = dict.relationReference.readU64()
         dict.relationData.moveTo(position.toLong())
 
@@ -151,7 +151,7 @@ class Dictionary(
 
                         for (j in values.indices) {
                             if (j == min.get()) {
-                                continue;
+                                continue
                             }
 
                             if (values[j].first.map { it.term == term.term }.orElse(false)) {
