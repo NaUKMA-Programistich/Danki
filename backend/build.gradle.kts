@@ -18,8 +18,6 @@ dependencies {
     implementation(libs.ktor.server.auth.jwt)
     implementation(libs.ktor.server.validation)
     implementation(libs.ktor.server.status.pages)
-    testImplementation(libs.ktor.server.testing)
-    testImplementation(libs.kotlin.test)
 
 
     implementation(libs.exposed.core)
@@ -30,8 +28,15 @@ dependencies {
 
     implementation(libs.h2)
     implementation(libs.jbcrypt)
+
+    testImplementation(kotlin("test"))
+    testImplementation(libs.mockk)
+    testImplementation(libs.ktor.server.test.host)
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
 
 application {
     mainClass = "ApplicationKt"

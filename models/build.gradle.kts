@@ -38,6 +38,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.server.resources)
+                implementation(libs.kotlinx.datetime)
             }
         }
 
