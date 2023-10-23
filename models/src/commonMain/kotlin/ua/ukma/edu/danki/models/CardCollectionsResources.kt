@@ -23,10 +23,6 @@ data class GetUserCollections(
     val ascending: Boolean = true
 )
 
-
-@Resource("/articles")
-class Articles()
-
 @Serializable
 data class UserCardCollectionDTO(
     @SerialName("id")
@@ -38,6 +34,16 @@ data class UserCardCollectionDTO(
     val own: Boolean,
     val favorite: Boolean
 )
+
+
+@Resource("/recent")
+class GetRecentCollection()
+
+@Serializable
+/* data */ class RecentCollectionResponse(
+    // TODO
+)
+
 
 @Serializable
 data class DeleteCollectionsRequest(
