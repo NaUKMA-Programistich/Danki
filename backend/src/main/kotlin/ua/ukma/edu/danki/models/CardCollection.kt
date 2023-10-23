@@ -50,7 +50,9 @@ data class InternalCardCollectionDTO(
     var own: Boolean,
     var shared: Boolean,
     var favorite: Boolean,
-    var lastModified: Instant
+    var lastModified: Instant,
+    var removable: Boolean,
+    var hidden: Boolean
 )
 
 fun InternalCardCollectionDTO.toUserCardCollectionDTO(): UserCardCollectionDTO {

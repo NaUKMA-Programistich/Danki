@@ -1,11 +1,9 @@
 package ua.ukma.edu.danki.services.impl
 
+import org.jetbrains.exposed.dao.id.EntityID
 import ua.ukma.edu.danki.exceptions.EmailTakenException
-import ua.ukma.edu.danki.models.User
-import ua.ukma.edu.danki.models.Users
+import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.UserService
-import ua.ukma.edu.danki.models.UserAuthRequest
-import ua.ukma.edu.danki.models.UserRegisterRequest
 import ua.ukma.edu.danki.utils.DatabaseFactory
 import ua.ukma.edu.danki.utils.JwtConfig
 import ua.ukma.edu.danki.utils.PasswordEncoder
@@ -41,11 +39,25 @@ class UserServiceImpl : UserService {
 
     private suspend fun createNewUser(userRegisterRequest: UserRegisterRequest) {
         DatabaseFactory.dbQuery {
-            User.new {
+            val createdUser = User.new {
                 username = userRegisterRequest.username
                 email = userRegisterRequest.email
                 password = passwordEncoder.encode(userRegisterRequest.password)
             }
+            createRecentCardCollection(createdUser.id)
+        }
+    }
+
+    private fun createRecentCardCollection(userId: EntityID<UUID>) {
+        val cardCollection = CardCollection.new {
+           name = "Recent"
+        }
+
+        UserCardCollection.new {
+            user = userId
+            hidden = true
+            type = CollectionType.Recents
+            collection = cardCollection.id
         }
     }
 
