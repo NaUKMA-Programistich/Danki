@@ -92,19 +92,6 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
         }
     }
 
-    private suspend fun getRecentCollection(
-        user: User
-    ): InternalCardCollectionDTO {
-        return DatabaseFactory.dbQuery {
-            (UserCardCollections innerJoin CardCollections)
-                .select(where = (UserCardCollections.type eq CollectionType.Recents) and (UserCardCollections.user eq user.id))
-                .map {
-                    mapResultRowToCardCollectionDTO(it)
-                }.single()
-        }
-    }
-
-
     private fun mapResultRowToCardCollectionDTO(it: ResultRow): InternalCardCollectionDTO {
         return InternalCardCollectionDTO(
             uuid = it[UserCardCollections.id].value,
