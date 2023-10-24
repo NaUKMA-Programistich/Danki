@@ -8,14 +8,12 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
+import ru.alexgladkov.odyssey.core.configuration.DisplayType
+import ua.ukma.edu.danki.theme.mColors
 
 class AndroidApp : Application() {
     companion object {
@@ -36,18 +34,32 @@ class AppActivity : ComponentActivity() {
             val view = LocalView.current
             var isLightStatusBars by remember { mutableStateOf(false) }
             if (!view.isInEditMode) {
-                LaunchedEffect(isLightStatusBars) {
-                    val window = (view.context as Activity).window
-                    WindowCompat.setDecorFitsSystemWindows(window, false)
-                    window.statusBarColor = systemBarColor
-                    window.navigationBarColor = systemBarColor
-                    WindowCompat.getInsetsController(window, window.decorView).apply {
-                        isAppearanceLightStatusBars = isLightStatusBars
-                        isAppearanceLightNavigationBars = isLightStatusBars
-                    }
-                }
+                // TODO Resolve issue with Odyssey not rendering
+                //LaunchedEffect(isLightStatusBars) {
+                    //val window = (view.context as Activity).window
+                    //WindowCompat.setDecorFitsSystemWindows(window, false)
+                    //window.statusBarColor = systemBarColor
+                    //window.navigationBarColor = systemBarColor
+                    //WindowCompat.getInsetsController(window, window.decorView).apply {
+                    //    isAppearanceLightStatusBars = isLightStatusBars
+                    //    isAppearanceLightNavigationBars = isLightStatusBars
+                    //}
+                //}
             }
-            App(systemAppearance = { isLight -> isLightStatusBars = isLight })
+            val surfaceColor = mColors.surface
+            val configuration = remember {
+                OdysseyConfiguration(
+                    canvas = this,
+                        backgroundColor = surfaceColor,
+                    displayType = DisplayType.FullScreen,
+                    //backgroundColor = androidx.compose.
+
+                )
+            }
+            App(
+                systemAppearance = { isLight -> isLightStatusBars = isLight },
+                odysseyConfiguration = configuration
+            )
         }
     }
 }
