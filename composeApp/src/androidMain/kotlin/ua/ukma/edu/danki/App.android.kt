@@ -1,6 +1,5 @@
 package ua.ukma.edu.danki
 
-import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.graphics.Color
@@ -8,9 +7,11 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
 import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
 import ru.alexgladkov.odyssey.core.configuration.DisplayType
 import ua.ukma.edu.danki.theme.mColors

@@ -24,14 +24,14 @@ import ua.ukma.edu.danki.theme.LocalThemeIsDark
 data class AppState(
     val email: String,
     val password: String
-);
+)
 
 sealed interface AppEvent {
     data class SetEmail(val email: String) : AppEvent
     data class SetPassword(val password: String) : AppEvent
 }
 
-class AppViewModel() : ViewModel<AppState, Unit, AppEvent>(
+class AppViewModel : ViewModel<AppState, Unit, AppEvent>(
     AppState("", "")
 ) {
 
