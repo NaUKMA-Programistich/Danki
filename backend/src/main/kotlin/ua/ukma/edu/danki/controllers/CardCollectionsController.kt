@@ -80,7 +80,7 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
     }
 }
 
-private suspend fun PipelineContext<Unit, ApplicationCall>.extractUserFromJWT(
+suspend fun PipelineContext<Unit, ApplicationCall>.extractUserFromJWT(
     userService: UserService
 ) = userService.findUser(call.extractEmailFromJWT()) ?: throw ResourceNotFoundException(
     USER_NOT_FOUND_MESSAGE

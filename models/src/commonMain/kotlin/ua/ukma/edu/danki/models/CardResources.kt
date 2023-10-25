@@ -15,6 +15,9 @@ data class CardDTO
 )
 
 @Serializable
+data class ListOfCardsResponse(val cards: List<CardDTO>)
+
+@Serializable
 enum class CardSortParam {
     ByTerm, ByTimeAdded, ByLastModified
 }
