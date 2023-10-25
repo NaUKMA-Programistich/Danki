@@ -43,9 +43,17 @@ class CardServiceImpl(
 
     private fun throwIfUserCannotAccessCard(cardItself: Card, existingUser: User) {
         (UserCardCollections.innerJoin(CardCollections).select(
-            where = (CardCollections.id eq cardItself.id).and(UserCardCollections.user eq existingUser.id)
-        ).singleOrNull()
+            where = (CardCollections.id eq cardItself.collection).and(UserCardCollections.user eq existingUser.id)
+        ).firstOrNull()
             ?: throw IllegalAccessException("Given user cannot access this card, collection it belongs to is not in this user's records"))
+    }
+
+    private fun throwIfUserDoesNotOwnCard(cardItself: Card, existingUser: User) {
+        (UserCardCollections.innerJoin(CardCollections).select(
+            where = (CardCollections.id eq cardItself.collection).and(UserCardCollections.user eq existingUser.id)
+                .and(UserCardCollections.own eq true)
+        ).firstOrNull()
+            ?: throw IllegalAccessException("Given user does not own the card"))
     }
 
     private suspend fun getExistingUserOrThrow(user: UUID) =
