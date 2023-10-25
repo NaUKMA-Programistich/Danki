@@ -24,4 +24,14 @@ class Card(id: EntityID<Long>) : LongEntity(id) {
     var collection by Cards.collection
     val timeAdded by Cards.timeAdded
     var lastModified by Cards.lastModified
+
+    fun toCardDTO(): CardDTO {
+        return CardDTO(
+            term = this.term,
+            id = this.id.value,
+            definition = this.definition,
+            lastModified = this.lastModified,
+            timeAdded = this.timeAdded
+        )
+    }
 }

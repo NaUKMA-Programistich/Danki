@@ -1,5 +1,9 @@
 package ua.ukma.edu.danki.services.impl
 
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.select
+import ua.ukma.edu.danki.exceptions.IllegalAccessException
 import ua.ukma.edu.danki.exceptions.ResourceNotFoundException
 import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.CardCollectionService
@@ -13,7 +17,7 @@ class CardServiceImpl(
     private val cardCollectionService: CardCollectionService
 ) : CardService {
     override suspend fun createCard(card: CardDTO, user: UUID): Long {
-        userService.findUser(user) ?: throw ResourceNotFoundException("User not found")
+        getExistingUserOrThrow(user)
         val recents = cardCollectionService.getDefaultCollectionOfUser(user)
             ?: throw Exception("Internal server error, Recents collection for the specified user does not exist")
         val createdCard = DatabaseFactory.dbQuery {
@@ -28,9 +32,24 @@ class CardServiceImpl(
         return createdCard.id.value
     }
 
-    override suspend fun readCard(card: Long, user: UUID) {
-        TODO("Not yet implemented")
+    override suspend fun readCard(card: Long, user: UUID): CardDTO {
+        val existingUser = getExistingUserOrThrow(user)
+        return DatabaseFactory.dbQuery {
+            val cardItself = Card.findById(card) ?: throw ResourceNotFoundException("No such card found")
+            throwIfUserCannotAccessCard(cardItself, existingUser)
+            cardItself.toCardDTO()
+        }
     }
+
+    private fun throwIfUserCannotAccessCard(cardItself: Card, existingUser: User) {
+        (UserCardCollections.innerJoin(CardCollections).select(
+            where = (CardCollections.id eq cardItself.id).and(UserCardCollections.user eq existingUser.id)
+        ).singleOrNull()
+            ?: throw IllegalAccessException("Given user cannot access this card, collection it belongs to is not in this user's records"))
+    }
+
+    private suspend fun getExistingUserOrThrow(user: UUID) =
+        userService.findUser(user) ?: throw ResourceNotFoundException("User not found")
 
     override suspend fun deleteCards(card: List<CardDTO>, user: UUID) {
         TODO("Not yet implemented")

@@ -1,10 +1,18 @@
 package ua.ukma.edu.danki.models
 
 import io.ktor.resources.*
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CardDTO(val id: Long? = null, val term: String, val definition: String)
+data class CardDTO
+    (
+    val id: Long? = null,
+    val term: String,
+    val definition: String,
+    val timeAdded: Instant? = null,
+    val lastModified: Instant? = null
+)
 
 @Serializable
 enum class CardSortParam {
