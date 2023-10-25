@@ -9,6 +9,7 @@ interface CardService {
     suspend fun readCard(card: Long, user: UUID): CardDTO
     suspend fun deleteCards(cardDTOS: List<CardDTO>, user: UUID)
     suspend fun updateCard(card: CardDTO, user: UUID)
+    suspend fun moveCardToCollection(card: Long, user: UUID, collection: UUID)
     suspend fun readCollectionCards(
         collection: UUID,
         offset: Int,

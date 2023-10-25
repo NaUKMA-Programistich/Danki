@@ -1,5 +1,6 @@
 package ua.ukma.edu.danki.services.impl
 
+import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
@@ -46,8 +47,7 @@ class CardServiceImpl(
         DatabaseFactory.dbQuery {
             cardDTOS.forEach {
                 val cardItself =
-                    Card.findById(it.id ?: throw ResourceNotFoundException("One the cards was not found"))
-                        ?: throw ResourceNotFoundException("One the cards was not found")
+                    findCardByDtoOrThrow(it, "One the cards was not found")
                 throwIfUserDoesNotOwnCard(cardItself, existingUser)
                 cardItself.delete()
             }
@@ -55,7 +55,29 @@ class CardServiceImpl(
     }
 
     override suspend fun updateCard(card: CardDTO, user: UUID) {
-        TODO("Not yet implemented")
+        DatabaseFactory.dbQuery {
+            val existingUser = getExistingUserOrThrow(user)
+            val cardItself = findCardByDtoOrThrow(card, "No card was found by provided id")
+            throwIfUserDoesNotOwnCard(cardItself, existingUser)
+            cardItself.term = card.term
+            cardItself.lastModified = Clock.System.now()
+            cardItself.definition = card.definition
+            cardItself.flush()
+        }
+    }
+
+    override suspend fun moveCardToCollection(card: Long, user: UUID, collection: UUID) {
+        DatabaseFactory.dbQuery {
+            val existingUser = getExistingUserOrThrow(user)
+            val cardItself = findCardByIdOrThrow(card, "No card was found by provided id")
+            throwIfUserDoesNotOwnCard(cardItself, existingUser)
+            val collectionDTO = cardCollectionService.readCollection(existingUser, collection)
+                ?: throw ResourceNotFoundException("No such collection found for user")
+            val collectionItself = CardCollection.findById(collectionDTO.collection)
+                ?: throw ResourceNotFoundException("No such collection found for user")
+            cardItself.collection = collectionItself.id
+            cardItself.flush()
+        }
     }
 
     override suspend fun readCollectionCards(
@@ -83,6 +105,14 @@ class CardServiceImpl(
         ).firstOrNull()
             ?: throw IllegalAccessException("Given user does not own the card"))
     }
+
+    private fun findCardByDtoOrThrow(it: CardDTO, msg: String) =
+        (Card.findById(it.id ?: throw ResourceNotFoundException(msg))
+            ?: throw ResourceNotFoundException(msg))
+
+    private fun findCardByIdOrThrow(it: Long, msg: String) =
+        (Card.findById(it)
+            ?: throw ResourceNotFoundException(msg))
 
     private suspend fun getExistingUserOrThrow(user: UUID) =
         userService.findUser(user) ?: throw ResourceNotFoundException("User not found")
