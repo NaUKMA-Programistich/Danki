@@ -34,9 +34,17 @@ class CardServiceImpl(
 
     override suspend fun createCardInCollection(card: CardDTO, collection: UUID, user: UUID): Long {
         return DatabaseFactory.dbQuery {
-            val id = createCard(card, user)
-            moveCardToCollection(id, user, collection)
-            id
+            val userEntity = getExistingUserOrThrow(user)
+            val userCollectionWeAreAddingCardsTo = cardCollectionService.readCollection(userEntity, collection)
+                ?: throw ResourceNotFoundException("Specified collection does not exist")
+            val collectionItself = CardCollection.findById(userCollectionWeAreAddingCardsTo.collection)
+                ?: throw Exception("Internal server error: data inconsistency issue, user record references non-existent collection")
+            val insertedCard = Card.new {
+                term = card.term
+                definition = card.definition
+                this.collection = collectionItself.id
+            }
+            insertedCard.id.value
         }
     }
 

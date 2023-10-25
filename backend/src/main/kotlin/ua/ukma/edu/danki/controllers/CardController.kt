@@ -36,7 +36,7 @@ fun Routing.cardController(cardService: CardService, userService: UserService) {
             call.respond(CardCreatedResponse(cardService.createCard(it, user.id.value)))
         }
 
-        post<CreateCardInCollectionRequest>("/cards/new") {
+        post<CreateCardInCollectionRequest>("/cards/new/to-collection") {
             val user = extractUserFromJWT(userService)
             call.respond(
                 CardCreatedResponse(
