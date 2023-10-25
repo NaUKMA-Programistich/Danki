@@ -1,4 +1,4 @@
-package zlagoda.ukma.edu.ua.core.flow
+package ua.ukma.edu.danki.flow
 
 interface Cancelable {
     fun cancel()

@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import zlagoda.ukma.edu.ua.core.flow.KMMSharedFlow
-import zlagoda.ukma.edu.ua.core.flow.KMMStateFlow
+import ua.ukma.edu.danki.flow.KMMSharedFlow
+import ua.ukma.edu.danki.flow.KMMStateFlow
 
 abstract class ViewModel<State, Action, Event>(initialState: State) : KViewModel() {
     private val _viewStates = MutableStateFlow(initialState)
