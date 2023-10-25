@@ -41,6 +41,34 @@ class CardServiceImpl(
         }
     }
 
+    override suspend fun deleteCards(cardDTOS: List<CardDTO>, user: UUID) {
+        val existingUser = getExistingUserOrThrow(user)
+        DatabaseFactory.dbQuery {
+            cardDTOS.forEach {
+                val cardItself =
+                    Card.findById(it.id ?: throw ResourceNotFoundException("One the cards was not found"))
+                        ?: throw ResourceNotFoundException("One the cards was not found")
+                throwIfUserDoesNotOwnCard(cardItself, existingUser)
+                cardItself.delete()
+            }
+        }
+    }
+
+    override suspend fun updateCard(card: CardDTO, user: UUID) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun readCollectionCards(
+        collection: UUID,
+        offset: Int,
+        limit: Int,
+        sort: CardSortParam,
+        ascending: Boolean,
+        user: UUID
+    ) {
+        TODO("Not yet implemented")
+    }
+
     private fun throwIfUserCannotAccessCard(cardItself: Card, existingUser: User) {
         (UserCardCollections.innerJoin(CardCollections).select(
             where = (CardCollections.id eq cardItself.collection).and(UserCardCollections.user eq existingUser.id)
@@ -58,23 +86,4 @@ class CardServiceImpl(
 
     private suspend fun getExistingUserOrThrow(user: UUID) =
         userService.findUser(user) ?: throw ResourceNotFoundException("User not found")
-
-    override suspend fun deleteCards(card: List<CardDTO>, user: UUID) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateCard(card: CardDTO, user: UUID) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun readCollectionCards(
-        collection: UUID,
-        offset: Int,
-        limit: Int,
-        sort: CardSortParam,
-        ascending: Boolean,
-        user: UUID
-    ) {
-        TODO("Not yet implemented")
-    }
 }
