@@ -6,6 +6,7 @@ import java.util.UUID
 
 interface CardService {
     suspend fun createCard(card: CardDTO, user: UUID): Long
+    suspend fun createCardInCollection(card: CardDTO, collection: UUID, user: UUID): Long
     suspend fun readCard(card: Long, user: UUID): CardDTO
     suspend fun deleteCards(cardDTOS: List<CardDTO>, user: UUID)
     suspend fun updateCard(card: CardDTO, user: UUID)

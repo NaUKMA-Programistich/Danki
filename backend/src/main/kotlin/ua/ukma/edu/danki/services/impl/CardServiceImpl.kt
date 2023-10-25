@@ -32,6 +32,14 @@ class CardServiceImpl(
         return createdCard.id.value
     }
 
+    override suspend fun createCardInCollection(card: CardDTO, collection: UUID, user: UUID): Long {
+        return DatabaseFactory.dbQuery {
+            val id = createCard(card, user)
+            moveCardToCollection(id, user, collection)
+            id
+        }
+    }
+
     override suspend fun readCard(card: Long, user: UUID): CardDTO {
         return DatabaseFactory.dbQuery {
             val existingUser = getExistingUserOrThrow(user)
