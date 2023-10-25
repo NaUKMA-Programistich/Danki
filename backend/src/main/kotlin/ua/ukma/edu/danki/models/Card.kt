@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.id.LongIdTable
 
 object Cards : LongIdTable() {
     val term = varchar("term", length = 50)
-    val definition = varchar("definition", length = 50)
+    val definition = text("definition")
     val collection = reference("card-collection", CardCollections).nullable()
 }
 
