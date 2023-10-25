@@ -56,7 +56,7 @@ fun Routing.cardController(cardService: CardService, userService: UserService) {
 
         post<DeleteCardsRequest>("/cards/delete") {
             val user = extractUserFromJWT(userService)
-            cardService.deleteCards(it.cardDTOS, user.id.value)
+            cardService.deleteCards(it.cardIds, user.id.value)
             call.respond(GenericBooleanResponse(true))
         }
 

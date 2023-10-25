@@ -57,12 +57,12 @@ class CardServiceImpl(
         }
     }
 
-    override suspend fun deleteCards(cardDTOS: List<CardDTO>, user: UUID) {
+    override suspend fun deleteCards(cardIds: List<Long>, user: UUID) {
         val existingUser = getExistingUserOrThrow(user)
         DatabaseFactory.dbQuery {
-            cardDTOS.forEach {
+            cardIds.forEach {
                 val cardItself =
-                    findCardByDtoOrThrow(it, "One the cards was not found")
+                    findCardByIdOrThrow(it, "One of the cards was not found")
                 throwIfUserDoesNotOwnCard(cardItself, existingUser)
                 cardItself.delete()
             }

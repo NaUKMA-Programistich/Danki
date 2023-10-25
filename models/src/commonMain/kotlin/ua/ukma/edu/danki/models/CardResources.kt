@@ -45,7 +45,7 @@ data class GetCard(
 )
 
 @Serializable
-data class DeleteCardsRequest(val cardDTOS: List<CardDTO>)
+data class DeleteCardsRequest(val cardIds: List<Long>)
 
 @Serializable
 data class MoveCardToCollectionRequest(val card: Long, val collection: String)
