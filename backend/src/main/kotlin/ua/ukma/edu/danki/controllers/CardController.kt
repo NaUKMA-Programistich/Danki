@@ -6,8 +6,7 @@ import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ua.ukma.edu.danki.exceptions.BadRequestException
-import ua.ukma.edu.danki.models.GetCardsOfCollection
-import ua.ukma.edu.danki.models.ListOfCardsResponse
+import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.CardService
 import ua.ukma.edu.danki.services.UserService
 import java.util.*
@@ -30,6 +29,36 @@ fun Routing.cardController(cardService: CardService, userService: UserService) {
             } catch (e: IllegalArgumentException) {
                 throw BadRequestException("Bad UUID")
             }
+        }
+
+        post<CardDTO>("/cards/new") {
+            val user = extractUserFromJWT(userService)
+            cardService.createCard(it, user.id.value)
+        }
+
+        post<CreateCardInCollectionRequest>("/cards/new") {
+            val user = extractUserFromJWT(userService)
+            cardService.createCardInCollection(it.card, UUID.fromString(it.collection), user.id.value)
+        }
+
+        get<GetCard> {
+            val user = extractUserFromJWT(userService)
+            cardService.readCard(it.card, user.id.value)
+        }
+
+        post<DeleteCardsRequest>("/cards/delete") {
+            val user = extractUserFromJWT(userService)
+            cardService.deleteCards(it.cardDTOS, user.id.value)
+        }
+
+        put<CardDTO>("/cards/update") {
+            val user = extractUserFromJWT(userService)
+            cardService.updateCard(it, user.id.value)
+        }
+
+        put<MoveCardToCollectionRequest>("/cards/move") {
+            val user = extractUserFromJWT(userService)
+            cardService.moveCardToCollection(it.card, user.id.value, UUID.fromString(it.collection))
         }
     }
 }

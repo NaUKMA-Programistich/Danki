@@ -31,3 +31,18 @@ data class GetCardsOfCollection(
     val sort: CardSortParam = CardSortParam.ByTimeAdded,
     val ascending: Boolean = true
 )
+
+@Serializable
+data class CreateCardInCollectionRequest(val card: CardDTO, val collection: String)
+
+// Returns CardDTO of the card by the given id if the logged-in user can access it
+@Resource("/card")
+data class GetCard(
+    val card: Long
+)
+
+@Serializable
+data class DeleteCardsRequest(val cardDTOS: List<CardDTO>)
+
+@Serializable
+data class MoveCardToCollectionRequest(val card: Long, val collection: String)
