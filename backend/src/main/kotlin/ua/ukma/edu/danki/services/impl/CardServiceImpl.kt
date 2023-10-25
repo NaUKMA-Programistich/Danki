@@ -1,9 +1,8 @@
 package ua.ukma.edu.danki.services.impl
 
 import kotlinx.datetime.Clock
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.select
 import ua.ukma.edu.danki.exceptions.IllegalAccessException
 import ua.ukma.edu.danki.exceptions.ResourceNotFoundException
 import ua.ukma.edu.danki.models.*
@@ -18,10 +17,10 @@ class CardServiceImpl(
     private val cardCollectionService: CardCollectionService
 ) : CardService {
     override suspend fun createCard(card: CardDTO, user: UUID): Long {
-        getExistingUserOrThrow(user)
-        val recents = cardCollectionService.getDefaultCollectionOfUser(user)
-            ?: throw Exception("Internal server error, Recents collection for the specified user does not exist")
         val createdCard = DatabaseFactory.dbQuery {
+            getExistingUserOrThrow(user)
+            val recents = cardCollectionService.getDefaultCollectionOfUser(user)
+                ?: throw Exception("Internal server error, Recents collection for the specified user does not exist")
             val collectionItself = CardCollection.findById(recents.collection)
                 ?: throw Exception("Internal server error, Recents collection for the specified user does not exist")
             Card.new {
@@ -34,8 +33,8 @@ class CardServiceImpl(
     }
 
     override suspend fun readCard(card: Long, user: UUID): CardDTO {
-        val existingUser = getExistingUserOrThrow(user)
         return DatabaseFactory.dbQuery {
+            val existingUser = getExistingUserOrThrow(user)
             val cardItself = Card.findById(card) ?: throw ResourceNotFoundException("No such card found")
             throwIfUserCannotAccessCard(cardItself, existingUser)
             cardItself.toCardDTO()
@@ -87,8 +86,36 @@ class CardServiceImpl(
         sort: CardSortParam,
         ascending: Boolean,
         user: UUID
-    ) {
-        TODO("Not yet implemented")
+    ): List<CardDTO> {
+        val existingUser = getExistingUserOrThrow(user)
+        val existingUserCollection = cardCollectionService.readCollection(existingUser, collection)
+            ?: throw ResourceNotFoundException("Collection entry for the user was not found")
+        return DatabaseFactory.dbQuery {
+            Cards.innerJoin(CardCollections).select(
+                where = CardCollections.id eq existingUserCollection.collection
+            ).orderBy(getSortColumn(sort), if (ascending) SortOrder.ASC else SortOrder.DESC)
+                .limit(limit, offset.toLong()).map {
+                    mapResultRowToCardDTO(it)
+                }
+        }
+    }
+
+    private fun getSortColumn(sort: CardSortParam): Column<*> {
+        return when (sort) {
+            CardSortParam.ByLastModified -> Cards.lastModified
+            CardSortParam.ByTerm -> Cards.term
+            CardSortParam.ByTimeAdded -> Cards.timeAdded
+        }
+    }
+
+    private fun mapResultRowToCardDTO(it: ResultRow): CardDTO {
+        return CardDTO(
+            term = it[Cards.term],
+            id = it[Cards.id].value,
+            definition = it[Cards.definition],
+            lastModified = it[Cards.lastModified],
+            timeAdded = it[Cards.timeAdded]
+        )
     }
 
     private fun throwIfUserCannotAccessCard(cardItself: Card, existingUser: User) {

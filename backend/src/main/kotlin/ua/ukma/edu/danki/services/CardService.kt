@@ -17,5 +17,5 @@ interface CardService {
         sort: CardSortParam,
         ascending: Boolean,
         user: UUID
-    )
+    ): List<CardDTO>
 }
