@@ -33,32 +33,43 @@ fun Routing.cardController(cardService: CardService, userService: UserService) {
 
         post<CardDTO>("/cards/new") {
             val user = extractUserFromJWT(userService)
-            cardService.createCard(it, user.id.value)
+            call.respond(CardCreatedResponse(cardService.createCard(it, user.id.value)))
         }
 
         post<CreateCardInCollectionRequest>("/cards/new") {
             val user = extractUserFromJWT(userService)
-            cardService.createCardInCollection(it.card, UUID.fromString(it.collection), user.id.value)
+            call.respond(
+                CardCreatedResponse(
+                    cardService.createCardInCollection(
+                        it.card,
+                        UUID.fromString(it.collection),
+                        user.id.value
+                    )
+                )
+            )
         }
 
         get<GetCard> {
             val user = extractUserFromJWT(userService)
-            cardService.readCard(it.card, user.id.value)
+            call.respond(cardService.readCard(it.card, user.id.value))
         }
 
         post<DeleteCardsRequest>("/cards/delete") {
             val user = extractUserFromJWT(userService)
             cardService.deleteCards(it.cardDTOS, user.id.value)
+            call.respond(GenericBooleanResponse(true))
         }
 
         put<CardDTO>("/cards/update") {
             val user = extractUserFromJWT(userService)
             cardService.updateCard(it, user.id.value)
+            call.respond(GenericBooleanResponse(true))
         }
 
         put<MoveCardToCollectionRequest>("/cards/move") {
             val user = extractUserFromJWT(userService)
             cardService.moveCardToCollection(it.card, user.id.value, UUID.fromString(it.collection))
+            call.respond(GenericBooleanResponse(true))
         }
     }
 }

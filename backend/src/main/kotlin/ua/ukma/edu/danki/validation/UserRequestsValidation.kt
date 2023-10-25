@@ -57,4 +57,22 @@ fun RequestValidationConfig.validateUserRequests() {
             ValidationResult.Invalid("One or more invalid UUIDs")
         }
     }
+
+    validate<CreateCardInCollectionRequest> { body ->
+        try {
+            UUID.fromString(body.collection)
+            ValidationResult.Valid
+        } catch (e: IllegalArgumentException) {
+            ValidationResult.Invalid("Card collection UUID provided is invalid")
+        }
+    }
+
+    validate<MoveCardToCollectionRequest> { body ->
+        try {
+            UUID.fromString(body.collection)
+            ValidationResult.Valid
+        } catch (e: IllegalArgumentException) {
+            ValidationResult.Invalid("Card collection UUID provided is invalid")
+        }
+    }
 }
