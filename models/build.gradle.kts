@@ -17,10 +17,10 @@ kotlin {
 
     jvm("desktop")
 
-    js {
-        browser()
-        binaries.executable()
-    }
+    //js {
+    //    browser()
+    //    binaries.executable()
+    //}
 
     listOf(
         iosX64(),
@@ -37,6 +37,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.server.resources)
+                implementation(libs.kotlinx.datetime)
             }
         }
 
@@ -58,10 +60,10 @@ kotlin {
             }
         }
 
-        val jsMain by getting {
-            dependencies {
-            }
-        }
+        //val jsMain by getting {
+        //    dependencies {
+        //    }
+        //}
 
         val iosMain by getting {
             dependencies {

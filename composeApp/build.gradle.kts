@@ -22,10 +22,10 @@ kotlin {
 
     jvm("desktop")
 
-    js {
-        browser()
-        binaries.executable()
-    }
+    //js {
+    //    browser()
+    //    binaries.executable()
+    //}
 
     listOf(
         iosX64(),
@@ -43,6 +43,7 @@ kotlin {
             dependencies {
                 implementation(compose.runtime)
                 implementation(compose.material3)
+
                 implementation(libs.libres)
                 implementation(libs.composeImageLoader)
                 implementation(libs.napier)
@@ -53,6 +54,17 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.multiplatformSettings)
                 implementation(libs.koin.core)
+
+
+                implementation(libs.viewmodel)
+                implementation(libs.viewmodel.compose)
+                implementation(libs.viewmodel.odyssey)
+
+                implementation(libs.navigation.core)
+                implementation(libs.navigation.compose)
+
+                implementation(libs.settings)
+                implementation(libs.klock.common)
 
                 implementation(project(":models"))
             }
@@ -79,14 +91,16 @@ kotlin {
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
                 implementation(libs.ktor.client.okhttp)
+
+                implementation(libs.klock.jvm)
             }
         }
 
-        val jsMain by getting {
-            dependencies {
-                implementation(compose.html.core)
-            }
-        }
+        //val jsMain by getting {
+        //    dependencies {
+        //        implementation(compose.html.core)
+        //    }
+        //}
 
         val iosMain by getting {
             dependencies {
@@ -131,16 +145,16 @@ compose.desktop {
     }
 }
 
-compose.experimental {
-    web.application {}
-}
+//compose.experimental {
+//    web.application {}
+//}
 
 libres {
     // https://github.com/Skeptick/libres#setup
 }
 tasks.getByPath("desktopProcessResources").dependsOn("libresGenerateResources")
 tasks.getByPath("desktopSourcesJar").dependsOn("libresGenerateResources")
-tasks.getByPath("jsProcessResources").dependsOn("libresGenerateResources")
+//tasks.getByPath("jsProcessResources").dependsOn("libresGenerateResources")
 
 buildConfig {
     // BuildConfig configuration here.
