@@ -8,7 +8,27 @@ import kotlin.time.Duration.Companion.hours
 
 class CollectionViewModel :
     ViewModel<CollectionState, CollectionAction, CollectionEvent>(initialState = CollectionState.Loading) {
+    private val mockData: List<UserCardCollectionDTO>
     init {
+        mockData = listOf(
+            UserCardCollectionDTO(
+                "UniqueID1", "first", Clock.System.now().minus(10.hours),
+                own = true, true
+            ),
+            UserCardCollectionDTO(
+                "UniqueID2", "second", Clock.System.now().minus(20.hours),
+                own = true, false
+            ),
+            UserCardCollectionDTO(
+                "UniqueID2", "third", Clock.System.now().minus(30.hours),
+                own = true, false
+            ),
+            UserCardCollectionDTO(
+                "UniqueID3", "forth", Clock.System.now().minus(1.hours),
+                own = false, true
+            ),
+        )
+
         withViewModelScope {
             getCollections()
         }
@@ -17,39 +37,34 @@ class CollectionViewModel :
     override fun obtainEvent(viewEvent: CollectionEvent) {
         when (viewEvent) {
             is CollectionEvent.SortList -> sort(viewEvent.sortParam)
+            CollectionEvent.ShowOnlyFavorites -> showOnlyFavorites()
         }
     }
-
 
     private fun getCollections() {
         withViewModelScope {
-            val mockData = listOf(
-                UserCardCollectionDTO(
-                    "UniqueID1", "first", Clock.System.now().minus(10.hours),
-                    own = true, true
-                ),
-                UserCardCollectionDTO(
-                    "UniqueID2", "second", Clock.System.now().minus(20.hours),
-                    own = true, false
-                ),
-                UserCardCollectionDTO(
-                    "UniqueID2", "third", Clock.System.now().minus(30.hours),
-                    own = true, false
-                ),
-                UserCardCollectionDTO(
-                    "UniqueID3", "forth", Clock.System.now().minus(1.hours),
-                    own = false, true
-                ),
-            )
-
             //TODO("collecting real data from db/server")
+
             setViewState(
-                CollectionState.CollectionList(mockData)
+                CollectionState.CollectionList(mockData, CollectionSortParam.ByName, false)
             )
         }
     }
 
+    private fun showOnlyFavorites() {
+        //TODO("get only favorites from server/localDB?")
+    }
+
     private fun sort(sortParam: CollectionSortParam) {
-        //TODO("sort collections")
+        withViewModelScope {
+            //TODO("get sorted collections from server/localDB?")
+
+            val state = viewStates().value
+            if (state !is CollectionState.CollectionList) return@withViewModelScope
+
+            setViewState(
+                CollectionState.CollectionList(mockData, sortParam, state.favoriteOnly)
+            )
+        }
     }
 }
