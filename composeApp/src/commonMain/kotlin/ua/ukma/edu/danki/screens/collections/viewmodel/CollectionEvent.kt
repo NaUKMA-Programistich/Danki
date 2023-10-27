@@ -1,16 +1,7 @@
 package ua.ukma.edu.danki.screens.collections.viewmodel
 
+import ua.ukma.edu.danki.models.CollectionSortParam
+
 sealed class CollectionEvent {
-    data class SortList(val sortingMethod: SortingMethod) : CollectionEvent()
-}
-
-enum class SortingMethod {
-    ByName,
-    ByDate;
-
-    override fun toString(): String {
-        if (this == ByName)
-            return "By name"
-        return "By date"
-    }
+    data class SortList(val sortParam: CollectionSortParam) : CollectionEvent()
 }

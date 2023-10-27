@@ -1,64 +1,69 @@
 package ua.ukma.edu.danki.screens.collections.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import ua.ukma.edu.danki.models.CollectionSortParam
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
-import ua.ukma.edu.danki.screens.collections.viewmodel.SortingMethod
+
 
 @Composable
 internal fun CollectionViewList(
     state: CollectionState.CollectionList,
     onEvent: (CollectionEvent) -> Unit
 ) {
-    var dropDownMenuExpanded by remember { mutableStateOf(false) }
-    var dropDownMenuCurrent by remember { mutableStateOf(SortingMethod.ByName) }
+    var menuExpanded by remember { mutableStateOf(false) }
+    var currentSortParam by remember { mutableStateOf(CollectionSortParam.ByName) }
 
-    Column {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Row {
-            Button(onClick = {}) { Text("Shared") }
-            Button(onClick = { dropDownMenuExpanded = true }) {
-                Text(dropDownMenuCurrent.toString())
+            Button(onClick = {}) { Text("Favorite") }
+            Button(onClick = { menuExpanded = true }) {
+                Text(currentSortParam.paramToString())
             }
             DropdownMenu(
-                expanded = dropDownMenuExpanded,
-                onDismissRequest = { dropDownMenuExpanded = false }
+                expanded = menuExpanded,
+                onDismissRequest = { menuExpanded = false }
             ) {
-                DropdownMenuItem(
-                    onClick = {
-                        if (dropDownMenuCurrent != SortingMethod.ByName) {
-                            onEvent(CollectionEvent.SortList(SortingMethod.ByName))
-                            dropDownMenuCurrent = SortingMethod.ByName
-                        }
-                        dropDownMenuExpanded = false
-                    },
-                    text = { Text("By name") }
-                )
-                DropdownMenuItem(
-                    onClick = {
-                        if (dropDownMenuCurrent != SortingMethod.ByDate) {
-                            onEvent(CollectionEvent.SortList(SortingMethod.ByDate))
-                            dropDownMenuCurrent = SortingMethod.ByDate
-                        }
-                        dropDownMenuExpanded = false
-                    },
-                    text = { Text("By date") }
-                )
+                enumValues<CollectionSortParam>().forEach {
+                    DropdownMenuItem(
+                        onClick = {
+                            onEvent(CollectionEvent.SortList(it))
+                            currentSortParam = it
+                            menuExpanded = false
+                        },
+                        text = { Text(it.paramToString()) },
+                        enabled = currentSortParam != it
+                    )
+                }
             }
         }
         LazyColumn {
             items(state.collections) { collection ->
                 Column {
-                    Text(collection.first)
-                    Text(collection.second.toString())
+                    Text(collection.lastModified.toString())
+                    Text(collection.name)
                 }
             }
+
         }
     }
+}
+
+fun CollectionSortParam.paramToString(): String {
+    if (this == CollectionSortParam.ByName)
+        return "By name"
+    return "By date"
 }
