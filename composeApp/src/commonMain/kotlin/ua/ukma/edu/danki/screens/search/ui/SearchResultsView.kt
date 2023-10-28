@@ -26,7 +26,7 @@ internal fun SearchResultsView(
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Header()
+            Header(onOpenHistory = { onEvent(SearchEvent.DisplayHistory) })
             Box(modifier = Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
                 SearchField(
                     input = state.input,
@@ -40,7 +40,9 @@ internal fun SearchResultsView(
 }
 
 @Composable
-private fun Header() {
+private fun Header(
+    onOpenHistory: () -> Unit
+) {
     var menuExpanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -62,7 +64,7 @@ private fun Header() {
             ) {
                 DropdownMenuItem(
                     onClick = {
-                        // TODO("open search history")
+                        onOpenHistory()
                         menuExpanded = false
                     },
                     text = { Text("History") }

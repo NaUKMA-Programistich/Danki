@@ -7,6 +7,7 @@ class SearchViewModel() : ViewModel<SearchState, SearchAction, SearchEvent>(init
         when (viewEvent) {
             is SearchEvent.ChangeInput -> processChangeInput(viewEvent.newInput)
             is SearchEvent.SelectWord -> processSelectWord(viewEvent.word)
+            is SearchEvent.DisplayHistory -> processDisplayHistory()
         }
     }
 
@@ -29,6 +30,12 @@ class SearchViewModel() : ViewModel<SearchState, SearchAction, SearchEvent>(init
     private fun processSelectWord(word: String) {
         withViewModelScope {
             // TODO("open screen with word definition")
+        }
+    }
+
+    private fun processDisplayHistory() {
+        withViewModelScope {
+            setViewAction(SearchAction.OpenHistory)
         }
     }
 

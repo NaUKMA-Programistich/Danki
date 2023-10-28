@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ua.ukma.edu.danki.screens.search.ui.SearchResultsView
+import ua.ukma.edu.danki.screens.search.viewmodel.SearchAction
 import ua.ukma.edu.danki.screens.search.viewmodel.SearchState
 import ua.ukma.edu.danki.screens.search.viewmodel.SearchViewModel
 
@@ -20,6 +21,7 @@ import ua.ukma.edu.danki.screens.search.viewmodel.SearchViewModel
 internal fun SearchScreen() {
     StoredViewModel(factory = { SearchViewModel() }) { viewModel ->
         val viewState by viewModel.viewStates().observeAsState()
+        val viewAction by viewModel.viewActions().observeAsState()
 
         when (val state = viewState) {
             is SearchState.SearchResults -> SearchResultsView(
@@ -29,9 +31,10 @@ internal fun SearchScreen() {
 
             SearchState.Loading -> {
                 // TODO("replace with ComposableLoading from another branch")
-                Box(modifier = Modifier.fillMaxSize(),
+                Box(
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
-                ){
+                ) {
                     CircularProgressIndicator(
                         modifier = Modifier
                             .size(120.dp)
@@ -39,6 +42,15 @@ internal fun SearchScreen() {
                     )
                 }
             }
+        }
+
+        when (val action = viewAction) {
+            is SearchAction.OpenHistory -> {
+                // TODO("navigate to history screen")
+                println("Navigate to history screen")
+            }
+
+            null -> {}
         }
     }
 }
