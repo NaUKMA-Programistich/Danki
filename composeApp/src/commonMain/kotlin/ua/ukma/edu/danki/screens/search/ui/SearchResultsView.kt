@@ -41,6 +41,7 @@ internal fun SearchResultsView(
 
 @Composable
 private fun Header() {
+    var menuExpanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -51,8 +52,22 @@ private fun Header() {
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.titleLarge
         )
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu")
+        Box {
+            IconButton(onClick = { menuExpanded = true }) {
+                Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu")
+            }
+            DropdownMenu(
+                expanded = menuExpanded,
+                onDismissRequest = { menuExpanded = false }
+            ) {
+                DropdownMenuItem(
+                    onClick = {
+                        // TODO("open search history")
+                        menuExpanded = false
+                    },
+                    text = { Text("History") }
+                )
+            }
         }
     }
 }
