@@ -1,10 +1,17 @@
 package ua.ukma.edu.danki.screens.collections.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.materialIcon
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,23 +34,42 @@ internal fun CollectionViewList(
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.width(304.dp)) {
-                FavoriteButton(onClick = { onEvent(CollectionEvent.ShowOnlyFavorites) })
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                FavoriteButton(favoriteOnlyIsOn = state.favoriteOnly, onClick = {
+                    if (!state.favoriteOnly)
+                        onEvent(CollectionEvent.ShowOnlyFavorites)
+                    else
+                        onEvent(CollectionEvent.ShowAll)
+                })
                 SortMenu(state, onEvent)
             }
             LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 items(state.collections) { collection ->
-                    Column {
+                    Column() {
                         Text(
                             collection.lastModified.timeToString(),
                             color = MaterialTheme.colorScheme.secondary,
                             style = MaterialTheme.typography.labelLarge
                         )
-                        Text(
-                            collection.name,
-                            color = Color.Black,
-                            style = MaterialTheme.typography.titleLarge
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                collection.name,
+                                color = Color.Black,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            IconButton(onClick = { onEvent(CollectionEvent.ChangeFavoriteStatus(collection.id)) }) {
+                                //TODO("Icons.Outlined.Star is not actually outlined
+                                // so now we use Favorite/FavoriteBorder")
+                                Icon(
+                                    if (collection.favorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                                    contentDescription = "Favorite button",
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -54,13 +80,24 @@ internal fun CollectionViewList(
 
 
 @Composable
-fun FavoriteButton(onClick: () -> Unit) {
-    OutlinedButton(
-        onClick = onClick,
-        shape = MaterialTheme.shapes.medium,
-    ) {
-        Text("Favorite", color = MaterialTheme.colorScheme.onSurfaceVariant)
-    }
+fun FavoriteButton(
+    favoriteOnlyIsOn: Boolean,
+    onClick: () -> Unit
+) {
+    if (favoriteOnlyIsOn)
+        Button(
+            onClick = onClick,
+            shape = MaterialTheme.shapes.medium,
+        ) {
+            Text("Favorite")
+        }
+    else
+        OutlinedButton(
+            onClick = onClick,
+            shape = MaterialTheme.shapes.medium,
+        ) {
+            Text("Favorite", color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
 }
 
 @Composable

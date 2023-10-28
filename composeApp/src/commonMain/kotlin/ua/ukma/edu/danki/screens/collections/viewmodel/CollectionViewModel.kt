@@ -1,6 +1,7 @@
 package ua.ukma.edu.danki.screens.collections.viewmodel
 
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import ua.ukma.edu.danki.core.viewmodel.ViewModel
 import ua.ukma.edu.danki.models.CollectionSortParam
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
@@ -9,22 +10,23 @@ import kotlin.time.Duration.Companion.hours
 class CollectionViewModel :
     ViewModel<CollectionState, CollectionAction, CollectionEvent>(initialState = CollectionState.Loading) {
     private val mockData: List<UserCardCollectionDTO>
+
     init {
         mockData = listOf(
             UserCardCollectionDTO(
-                "UniqueID1", "first", Clock.System.now().minus(10.hours),
+                "UniqueID1", "First", Clock.System.now().minus(10.hours),
                 own = true, true
             ),
             UserCardCollectionDTO(
-                "UniqueID2", "second", Clock.System.now().minus(20.hours),
+                "UniqueID2", "Second", Clock.System.now().minus(40.hours),
                 own = true, false
             ),
             UserCardCollectionDTO(
-                "UniqueID2", "third", Clock.System.now().minus(30.hours),
+                "UniqueID3", "third", Clock.System.now().minus(100.hours),
                 own = true, false
             ),
             UserCardCollectionDTO(
-                "UniqueID3", "forth", Clock.System.now().minus(1.hours),
+                "UniqueID4", "forth", Clock.System.now().minus(1.hours),
                 own = false, true
             ),
         )
@@ -36,8 +38,11 @@ class CollectionViewModel :
 
     override fun obtainEvent(viewEvent: CollectionEvent) {
         when (viewEvent) {
+            is CollectionEvent.ShowAll -> getCollections()
             is CollectionEvent.SortList -> sort(viewEvent.sortParam)
-            CollectionEvent.ShowOnlyFavorites -> showOnlyFavorites()
+            is CollectionEvent.ShowOnlyFavorites -> showOnlyFavorites()
+            is CollectionEvent.ChangeFavoriteStatus -> changeCollectionFavoriteStatus(viewEvent.id)
+
         }
     }
 
@@ -52,18 +57,65 @@ class CollectionViewModel :
     }
 
     private fun showOnlyFavorites() {
-        //TODO("get only favorites from server/localDB?")
-    }
-
-    private fun sort(sortParam: CollectionSortParam) {
         withViewModelScope {
-            //TODO("get sorted collections from server/localDB?")
+            //TODO("This implementation works, but maybe we should get only favorites from server/localDB?")
 
             val state = viewStates().value
             if (state !is CollectionState.CollectionList) return@withViewModelScope
 
             setViewState(
-                CollectionState.CollectionList(mockData, sortParam, state.favoriteOnly)
+                CollectionState.CollectionList(
+                    state.collections.filter { it.favorite },
+                    state.sortingParam,
+                    true
+                )
+            )
+        }
+    }
+
+    private fun sort(sortParam: CollectionSortParam) {
+        withViewModelScope {
+            //TODO("This implementation works, but maybe we should get sorted collections from server/localDB?")
+
+            val state = viewStates().value
+            if (state !is CollectionState.CollectionList) return@withViewModelScope
+
+            if (sortParam == CollectionSortParam.ByName)
+                setViewState(
+                    CollectionState.CollectionList(
+                        state.collections.sortedBy { it.name.lowercase() }, sortParam, state.favoriteOnly
+                    )
+                )
+            else
+                setViewState(
+                    CollectionState.CollectionList(
+                        state.collections.sortedBy { it.lastModified }, sortParam, state.favoriteOnly
+                    )
+                )
+        }
+    }
+
+    private fun changeCollectionFavoriteStatus(id: String) {
+        withViewModelScope {
+            //TODO("change collection favorite status in server/local db")
+            val state = viewStates().value
+            if (state !is CollectionState.CollectionList) return@withViewModelScope
+
+            setViewState(
+                CollectionState.CollectionList(
+                    state.collections.map {
+                        if (it.id == id)
+                            UserCardCollectionDTO(
+                                it.id,
+                                it.name,
+                                Clock.System.now(),
+                                it.own,
+                                !it.favorite
+                            )
+                        else
+                            it
+                    }, state.sortingParam, state.favoriteOnly
+                )
             )
         }
     }
