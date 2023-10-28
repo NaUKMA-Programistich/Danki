@@ -31,18 +31,18 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
         // find an existing owner entry for this collection
         val sharedCollection = DatabaseFactory.dbQuery {
             UserCardCollections.innerJoin(CardCollections).select(
-                    where = (CardCollections.id eq id).and(UserCardCollections.own eq true)
-                ).map {
-                    mapResultRowToCardCollectionDTO(it)
-                }.singleOrNull()
+                where = (CardCollections.id eq id).and(UserCardCollections.own eq true)
+            ).map {
+                mapResultRowToCardCollectionDTO(it)
+            }.singleOrNull()
                 ?: throw ResourceNotFoundException("No owned collection could be found by specified id")
         }
         val existingEntries = DatabaseFactory.dbQuery {
             UserCardCollections.innerJoin(CardCollections).select(
-                    where = (CardCollections.id eq id).and(UserCardCollections.user eq user.id)
-                ).map {
-                    mapResultRowToCardCollectionDTO(it)
-                }
+                where = (CardCollections.id eq id).and(UserCardCollections.user eq user.id)
+            ).map {
+                mapResultRowToCardCollectionDTO(it)
+            }
         }
         if (existingEntries.isNotEmpty()) throw IllegalAccessException("User already has this collection")
         if (!sharedCollection.shared) throw IllegalAccessException("Owner has not shared this collection")
@@ -64,6 +64,8 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
     override suspend fun shareCollection(user: User, collection: UUID): Long {
         val existingCollection = readCollection(user, collection)
             ?: throw ResourceNotFoundException("Could not find collection by specified id")
+        if (existingCollection.hidden)
+            throw IllegalAccessException("Couldn't share hidden collection")
         existingCollection.shared = true
         updateCollection(existingCollection)
         return existingCollection.collection
@@ -74,21 +76,21 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
     ): List<InternalCardCollectionDTO> {
         if (favorite) return DatabaseFactory.dbQuery {
             UserCardCollections.innerJoin(CardCollections).select(
-                    where = (UserCardCollections.user eq user.id) and (UserCardCollections.favorite eq true) and (UserCardCollections.hidden eq false)
-                ).orderBy(getSortColumn(sort), if (ascending) SortOrder.ASC else SortOrder.DESC)
+                where = (UserCardCollections.user eq user.id) and (UserCardCollections.favorite eq true) and (UserCardCollections.hidden eq false)
+            ).orderBy(getSortColumn(sort), if (ascending) SortOrder.ASC else SortOrder.DESC)
                 .limit(limit, offset.toLong()).map {
                     mapResultRowToCardCollectionDTO(it)
                 }
         }
         else return DatabaseFactory.dbQuery {
-            UserCardCollections.innerJoin(CardCollections).select(where = (UserCardCollections.user eq user.id))
+            UserCardCollections.innerJoin(CardCollections)
+                .select(where = (UserCardCollections.user eq user.id) and (UserCardCollections.hidden eq false))
                 .orderBy(getSortColumn(sort), if (ascending) SortOrder.ASC else SortOrder.DESC)
                 .limit(limit, offset.toLong()).map {
                     mapResultRowToCardCollectionDTO(it)
                 }
         }
     }
-
 
     private fun mapResultRowToCardCollectionDTO(it: ResultRow): InternalCardCollectionDTO {
         return InternalCardCollectionDTO(
@@ -99,7 +101,9 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
             lastModified = it[CardCollections.lastModified],
             own = it[UserCardCollections.own],
             shared = it[UserCardCollections.shared],
-            name = it[CardCollections.name]
+            name = it[CardCollections.name],
+            removable = it[UserCardCollections.type] != CollectionType.Recents,
+            hidden = it[UserCardCollections.hidden]
         )
     }
 
@@ -115,8 +119,8 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
             collections.forEach {
                 val collection = readCollection(user, it)
                     ?: throw BadRequestException("One or more of the collections requested for deletion could not be found")
-                if (collection.own) CardCollections.deleteWhere { CardCollections.id eq collection.collection }
-                else UserCardCollections.deleteWhere { UserCardCollections.id eq collection.uuid }
+                if (collection.removable && collection.own) CardCollections.deleteWhere { CardCollections.id eq collection.collection }
+                else if (collection.removable) UserCardCollections.deleteWhere { UserCardCollections.id eq collection.uuid }
             }
         }
     }
@@ -131,6 +135,8 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
             val existingUserCardCollection = UserCardCollection.findById(cardCollection.uuid)
                 ?: throw ResourceNotFoundException("Collection for which update was requested was not found")
             if (existingUserCardCollection.user.value != owner.id.value) throw IllegalAccessException("Users can only modify their own collections")
+            if (existingUserCardCollection.type == CollectionType.Recents)
+                throw IllegalAccessException("Users can't update Recent card collection")
             if (!existingUserCardCollection.own && cardCollection.shared != existingUserCardCollection.shared) throw IllegalAccessException(
                 "Users can only share their own collections"
             )
@@ -161,10 +167,20 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
     override suspend fun readCollection(user: User, collection: UUID): InternalCardCollectionDTO? {
         return DatabaseFactory.dbQuery {
             UserCardCollections.innerJoin(CardCollections).select(
-                    where = (UserCardCollections.id eq collection).and(UserCardCollections.user eq user.id)
-                ).map {
-                    mapResultRowToCardCollectionDTO(it)
-                }.singleOrNull()
+                where = (UserCardCollections.id eq collection).and(UserCardCollections.user eq user.id)
+            ).map {
+                mapResultRowToCardCollectionDTO(it)
+            }.singleOrNull()
+        }
+    }
+
+    override suspend fun getDefaultCollectionOfUser(user: UUID): InternalCardCollectionDTO? {
+        return DatabaseFactory.dbQuery {
+            UserCardCollections.innerJoin(CardCollections).select(
+                where = (UserCardCollections.user eq user).and(UserCardCollections.type eq CollectionType.Recents)
+            ).map {
+                mapResultRowToCardCollectionDTO(it)
+            }.singleOrNull()
         }
     }
 

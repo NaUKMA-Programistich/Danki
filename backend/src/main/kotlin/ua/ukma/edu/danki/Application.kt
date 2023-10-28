@@ -14,11 +14,13 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ua.ukma.edu.danki.controllers.authControllers
 import ua.ukma.edu.danki.controllers.cardCollectionsControllers
+import ua.ukma.edu.danki.controllers.cardController
 import ua.ukma.edu.danki.controllers.dictionaryController
 import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.UserRegistrationException
 import ua.ukma.edu.danki.models.ErrorMsg
 import ua.ukma.edu.danki.services.impl.CardCollectionServiceImpl
+import ua.ukma.edu.danki.services.impl.CardServiceImpl
 import ua.ukma.edu.danki.services.impl.UserServiceImpl
 import ua.ukma.edu.danki.utils.DatabaseFactory
 import ua.ukma.edu.danki.utils.JwtConfig
@@ -78,8 +80,12 @@ fun Application.module() {
     install(Resources)
     routing {
         // this counts as DI, right?
-        cardCollectionsControllers(CardCollectionServiceImpl(UserServiceImpl()), UserServiceImpl())
-        authControllers(UserServiceImpl())
+        val userService = UserServiceImpl()
+        val cardCollectionsService = CardCollectionServiceImpl(userService)
+        val cardService = CardServiceImpl(userService, cardCollectionsService)
+        cardCollectionsControllers(cardCollectionsService, userService)
+        authControllers(userService)
         dictionaryController()
+        cardController(cardService, userService)
     }
 }

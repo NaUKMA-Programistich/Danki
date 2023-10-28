@@ -4,11 +4,16 @@ import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
+import org.jetbrains.exposed.sql.ReferenceOption
+import org.jetbrains.exposed.sql.kotlin.datetime.CurrentTimestamp
+import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
 object Cards : LongIdTable() {
-    val term = varchar("term", length = 50)
-    val definition = varchar("definition", length = 50)
-    val collection = reference("card-collection", CardCollections).nullable()
+    val term = varchar("term", length = 255)
+    val definition = text("definition")
+    val collection = reference("card_collection", CardCollections, onDelete = ReferenceOption.CASCADE)
+    val lastModified = timestamp("last_modified").defaultExpression(CurrentTimestamp())
+    val timeAdded = timestamp("time_added").defaultExpression(CurrentTimestamp())
 }
 
 class Card(id: EntityID<Long>) : LongEntity(id) {
@@ -16,6 +21,17 @@ class Card(id: EntityID<Long>) : LongEntity(id) {
 
     var term by Cards.term
     var definition by Cards.definition
-    var collection by CardCollection optionalReferencedOn Cards.collection
+    var collection by Cards.collection
+    val timeAdded by Cards.timeAdded
+    var lastModified by Cards.lastModified
 
+    fun toCardDTO(): CardDTO {
+        return CardDTO(
+            term = this.term,
+            id = this.id.value,
+            definition = this.definition,
+            lastModified = this.lastModified,
+            timeAdded = this.timeAdded
+        )
+    }
 }

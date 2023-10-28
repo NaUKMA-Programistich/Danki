@@ -39,6 +39,13 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
             call.respond(ListOfCollectionsResponse(collections))
         }
 
+        get("/collections/recents") {
+            val user = extractUserFromJWT(userService)
+            val collections = cardCollectionService.getDefaultCollectionOfUser(user.id.value)
+                ?: throw Exception("Internal server error: no recents collection was found fo the user")
+            call.respond(collections.toUserCardCollectionDTO())
+        }
+
         post<CreateCardCollectionRequest>("/collections/") {
             val email = call.extractEmailFromJWT()
             val uuidOfCreatedRelation = cardCollectionService.createCollection(email, it.name)
@@ -80,7 +87,7 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
     }
 }
 
-private suspend fun PipelineContext<Unit, ApplicationCall>.extractUserFromJWT(
+suspend fun PipelineContext<Unit, ApplicationCall>.extractUserFromJWT(
     userService: UserService
 ) = userService.findUser(call.extractEmailFromJWT()) ?: throw ResourceNotFoundException(
     USER_NOT_FOUND_MESSAGE
