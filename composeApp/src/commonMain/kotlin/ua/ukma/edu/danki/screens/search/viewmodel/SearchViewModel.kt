@@ -29,7 +29,7 @@ class SearchViewModel() : ViewModel<SearchState, SearchAction, SearchEvent>(init
 
     private fun processSelectWord(word: String) {
         withViewModelScope {
-            // TODO("open screen with word definition")
+            setViewAction(SearchAction.OpenDefinition(word))
         }
     }
 

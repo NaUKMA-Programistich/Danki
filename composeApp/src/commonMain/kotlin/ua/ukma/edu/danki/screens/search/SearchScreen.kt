@@ -50,6 +50,11 @@ internal fun SearchScreen() {
                 println("Navigate to history screen")
             }
 
+            is SearchAction.OpenDefinition -> {
+                // TODO("navigate to word definition screen")
+                println("Navigate to '${action.word}' definition")
+            }
+
             null -> {}
         }
     }
