@@ -2,7 +2,7 @@ package ua.ukma.edu.danki.screens.search.viewmodel
 
 import ua.ukma.edu.danki.core.viewmodel.ViewModel
 
-class SearchViewModel(): ViewModel<SearchState, SearchAction, SearchEvent>(initialState = SearchState.Loading) {
+class SearchViewModel() : ViewModel<SearchState, SearchAction, SearchEvent>(initialState = SearchState.Loading) {
     override fun obtainEvent(viewEvent: SearchEvent) {
         when (viewEvent) {
             is SearchEvent.ChangeInput -> processChangeInput(viewEvent.newInput)
@@ -21,15 +21,15 @@ class SearchViewModel(): ViewModel<SearchState, SearchAction, SearchEvent>(initi
             val state = viewStates().value
             if (state !is SearchState.SearchResults) return@withViewModelScope
 
-            val results = emptyList<String>() // TODO("get reals results")
+            val results = List(newInput.length) { ('a'..'z').random().toString() }  // TODO("get real results")
             setViewState(SearchState.SearchResults(newInput, results))
         }
     }
 
     private fun processSelectWord(word: String) {
-       withViewModelScope {
+        withViewModelScope {
             // TODO("open screen with word definition")
-       }
+        }
     }
 
 
