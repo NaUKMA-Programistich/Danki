@@ -1,20 +1,11 @@
 package ua.ukma.edu.danki.screens.collections.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +14,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import ua.ukma.edu.danki.models.CollectionSortParam
+import ua.ukma.edu.danki.models.UserCardCollectionDTO
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
 
@@ -33,51 +25,16 @@ internal fun CollectionViewList(
     onEvent: (CollectionEvent) -> Unit
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                FavoriteButton(favoriteOnlyIsOn = state.favoriteOnly, onClick = {
-                    if (!state.favoriteOnly)
-                        onEvent(CollectionEvent.ShowOnlyFavorites)
-                    else
-                        onEvent(CollectionEvent.ShowAll)
-                })
-                SortMenu(state, onEvent)
-            }
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                items(state.collections) { collection ->
-                    Column() {
-                        Text(
-                            collection.lastModified.timeToString(),
-                            color = MaterialTheme.colorScheme.secondary,
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                collection.name,
-                                color = Color.Black,
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                            IconButton(onClick = { onEvent(CollectionEvent.ChangeFavoriteStatus(collection.id)) }) {
-                                //TODO("Icons.Outlined.Star is not actually outlined
-                                // so now we use Favorite/FavoriteBorder")
-                                Icon(
-                                    if (collection.favorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                                    contentDescription = "Favorite button",
-                                )
-                            }
-                        }
-                    }
-                }
-
+        BoxWithConstraints {
+            if (maxWidth < 400.dp) {
+                CollectionViewSmall(state, onEvent)
+            } else {
+                CollectionViewLarge(state, onEvent)
             }
         }
     }
-}
 
+}
 
 @Composable
 fun FavoriteButton(
@@ -111,6 +68,7 @@ fun SortMenu(
         ElevatedButton(
             onClick = { menuExpanded = true },
             shape = MaterialTheme.shapes.medium,
+            elevation = ButtonDefaults.buttonElevation(1.dp) // TODO("proper elevation")
         ) {
             Text(state.sortingParam.paramToString(), color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
@@ -133,6 +91,40 @@ fun SortMenu(
 
         }
     }
+}
+
+@Composable
+fun CollectionAsItem(
+    collection: UserCardCollectionDTO,
+    onEvent: (CollectionEvent) -> Unit
+) {
+    Text(
+        collection.lastModified.timeToString(),
+        color = MaterialTheme.colorScheme.secondary,
+        style = MaterialTheme.typography.labelLarge
+    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            collection.name,
+            color = Color.Black,
+            style = MaterialTheme.typography.titleLarge
+        )
+        IconButton(onClick = { onEvent(CollectionEvent.ChangeFavoriteStatus(collection.id)) }) {
+            //TODO("Icons.Outlined.Star is not actually outlined
+            // so now we use Favorite/FavoriteBorder")
+            Icon(
+                if (collection.favorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                contentDescription = "Favorite button",
+                tint = MaterialTheme.colorScheme.secondary
+            )
+        }
+    }
+
+
 }
 
 fun CollectionSortParam.paramToString(): String {
