@@ -12,7 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
+import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.search_history.ui.SearchHistoryView
 import ua.ukma.edu.danki.screens.search_history.viewmodel.SearchHistoryAction
 import ua.ukma.edu.danki.screens.search_history.viewmodel.SearchHistoryState
@@ -48,8 +50,7 @@ internal fun SearchHistoryScreen() {
 
         when (val action = viewAction) {
             is SearchHistoryAction.OpenDefinition -> {
-                // TODO("navigate to word definition screen")
-                println("Navigate to '${action.word}' definition")
+                navController.push(NavigationRoute.Definition.name, action.word)
             }
 
             is SearchHistoryAction.NavigateBack -> {
