@@ -9,6 +9,7 @@ import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.CardService
 import ua.ukma.edu.danki.services.UserService
+import ua.ukma.edu.danki.utils.auth.extractUserFromJWT
 import java.util.*
 
 fun Routing.cardController(cardService: CardService, userService: UserService) {
