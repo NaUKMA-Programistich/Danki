@@ -138,11 +138,13 @@ class WordTypeDictionary(
         return termAt(min.toULong())
     }
 
-
-    //val wordType: WordType
-    //val indexSize: ULong
-    //val relationSize: ULong
-
+    fun close() {
+        indexData.close()
+        indexWords.close()
+        indexReference.close()
+        relationData.close()
+        relationReference.close()
+    }
 
 }
 
@@ -156,6 +158,8 @@ interface RandomAccessReader {
     fun moveTo(position: Long)
 
     fun position(): Long
+
+    fun close()
 }
 
 
@@ -252,7 +256,7 @@ class FileAccessReader(path: String) : RandomAccessReader {
         return accessFile.length()
     }
 
-    fun close() {
+    override fun close() {
         this.accessFile.close()
     }
 

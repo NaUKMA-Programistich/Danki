@@ -4,7 +4,7 @@ import io.ktor.resources.*
 import kotlinx.serialization.Serializable
 
 
-@Resource("/dictionary/suggest/{input}?count={count}")
+@Resource("/dictionary/suggest/{input}")
 class GetDictionarySuggestions(val input: String, val count: Int)
 
 @Serializable

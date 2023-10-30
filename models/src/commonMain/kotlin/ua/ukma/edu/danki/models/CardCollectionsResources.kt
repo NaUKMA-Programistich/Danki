@@ -36,13 +36,6 @@ data class UserCardCollectionDTO(
 )
 
 
-@Resource("/recent")
-class GetRecentCollection()
-
-@Serializable
-/* data */ class RecentCollectionResponse(
-    // TODO
-)
 
 
 @Serializable

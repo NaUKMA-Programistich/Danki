@@ -5,7 +5,7 @@ import ua.ukma.edu.danki.exceptions.EmailTakenException
 import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.utils.DatabaseFactory
-import ua.ukma.edu.danki.utils.JwtConfig
+import ua.ukma.edu.danki.utils.auth.JwtConfig
 import ua.ukma.edu.danki.utils.PasswordEncoder
 import ua.ukma.edu.danki.utils.impl.PasswordEncoderImpl
 import java.util.*

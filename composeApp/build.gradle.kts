@@ -43,6 +43,7 @@ kotlin {
             dependencies {
                 implementation(compose.runtime)
                 implementation(compose.material3)
+
                 implementation(libs.libres)
                 implementation(libs.composeImageLoader)
                 implementation(libs.napier)
@@ -53,6 +54,17 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.multiplatformSettings)
                 implementation(libs.koin.core)
+
+
+                implementation(libs.viewmodel)
+                implementation(libs.viewmodel.compose)
+                implementation(libs.viewmodel.odyssey)
+
+                implementation(libs.navigation.core)
+                implementation(libs.navigation.compose)
+
+                implementation(libs.settings)
+                implementation(libs.klock.common)
 
                 implementation(project(":models"))
             }
@@ -79,6 +91,8 @@ kotlin {
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)
                 implementation(libs.ktor.client.okhttp)
+
+                implementation(libs.klock.jvm)
             }
         }
 
