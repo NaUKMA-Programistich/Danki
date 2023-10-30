@@ -14,12 +14,14 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ua.ukma.edu.danki.controllers.authControllers
 import ua.ukma.edu.danki.controllers.cardCollectionsControllers
+import ua.ukma.edu.danki.controllers.cardController
 import ua.ukma.edu.danki.controllers.dictionaryController
 import ua.ukma.edu.danki.controllers.recentsController
 import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.UserRegistrationException
 import ua.ukma.edu.danki.models.ErrorMsg
 import ua.ukma.edu.danki.services.impl.CardCollectionServiceImpl
+import ua.ukma.edu.danki.services.impl.CardServiceImpl
 import ua.ukma.edu.danki.services.impl.DictionaryServiceImpl
 import ua.ukma.edu.danki.services.impl.RecentsServiceImpl
 import ua.ukma.edu.danki.services.impl.UserServiceImpl
