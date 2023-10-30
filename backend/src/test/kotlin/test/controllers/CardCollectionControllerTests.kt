@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test
 import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.CardCollectionService
 import ua.ukma.edu.danki.services.UserService
+import ua.ukma.edu.danki.services.impl.CardServiceImpl
+import ua.ukma.edu.danki.services.impl.RecentsServiceImpl
 import ua.ukma.edu.danki.utils.auth.JwtConfig
 import java.util.*
 import kotlin.test.assertEquals
@@ -62,7 +64,12 @@ class CardCollectionsControllerTests {
         } returns collections
 
         application {
-            mockModule(cardCollectionService, userService)
+            mockModule(
+                cardCollectionService,
+                userService,
+                CardServiceImpl(userService, cardCollectionService),
+                recentsService = RecentsServiceImpl()
+            )
             jwt = JwtConfig.makeToken(UserAuthRequest(user.email, user.password))
         }
 
