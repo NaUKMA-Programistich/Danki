@@ -89,3 +89,16 @@ fun Application.mockModule(
         recentsController(recentsService, userService)
     }
 }
+
+fun Application.configureProductionModuleForTests() {
+    val userService = UserServiceImpl()
+    val cardCollectionService = CardCollectionServiceImpl(userService)
+    val cardService = CardServiceImpl(userService, cardCollectionService)
+    val recentsService = RecentsServiceImpl()
+    this.mockModule(
+        userService = userService,
+        cardCollectionService = cardCollectionService,
+        cardService = cardService,
+        recentsService = recentsService
+    )
+}
