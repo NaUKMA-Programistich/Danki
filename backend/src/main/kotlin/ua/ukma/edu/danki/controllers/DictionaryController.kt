@@ -1,27 +1,42 @@
 package ua.ukma.edu.danki.controllers
 
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import ua.ukma.edu.danki.DICTIONARY_PATH
-import ua.ukma.edu.danki.services.impl.DictionaryServiceImpl
+import io.ktor.util.pipeline.*
 import ua.ukma.edu.danki.models.dictionary.DictionarySuggestions
 import ua.ukma.edu.danki.models.dictionary.GetDictionarySuggestions
 import ua.ukma.edu.danki.models.dictionary.GetTermDefinition
 import ua.ukma.edu.danki.models.dictionary.TermDefinition
 import ua.ukma.edu.danki.services.DictionaryService
+import ua.ukma.edu.danki.services.UserService
+import ua.ukma.edu.danki.utils.auth.extractOptionalUserFromJWT
+import ua.ukma.edu.danki.utils.extractEmailFromOptionalJWT
 
-fun Routing.dictionaryController() {
-    val dictionaryServiceFactory: () -> DictionaryService = { DictionaryServiceImpl(DICTIONARY_PATH) }
+fun Routing.dictionaryController(
+    dictionaryServiceFactory: () -> DictionaryService,
+    userService: UserService
+) {
 
-    get<GetDictionarySuggestions> {
-        val result = dictionaryServiceFactory().getSuggestionsFor(it.input, it.count)
-        call.respond(DictionarySuggestions(result))
-    }
+    authenticate("auth-jwt", optional = true) {
 
-    get<GetTermDefinition> {
-        val result = dictionaryServiceFactory().definitionFor(it.term)
-        call.respond(TermDefinition(result))
+        get<GetDictionarySuggestions> {
+            val dictionary = dictionaryServiceFactory()
+            val result = dictionary.getSuggestionsFor(it.input, it.count)
+            call.respond(DictionarySuggestions(result))
+            dictionary.close()
+        }
+
+        get<GetTermDefinition> {
+            val user = extractOptionalUserFromJWT(userService)
+            val dictionary = dictionaryServiceFactory()
+            val result = dictionary.definitionFor(it.term, user)
+            call.respond(TermDefinition(result))
+            dictionary.close()
+        }
     }
 }
+
+

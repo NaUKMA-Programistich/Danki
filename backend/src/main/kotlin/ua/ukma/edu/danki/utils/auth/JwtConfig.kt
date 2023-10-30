@@ -1,4 +1,4 @@
-package ua.ukma.edu.danki.utils
+package ua.ukma.edu.danki.utils.auth
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier

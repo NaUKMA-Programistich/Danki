@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test
 import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.CardCollectionService
 import ua.ukma.edu.danki.services.UserService
-import ua.ukma.edu.danki.utils.JwtConfig
+import ua.ukma.edu.danki.utils.auth.JwtConfig
 import java.util.*
 import kotlin.test.assertEquals
 

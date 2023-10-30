@@ -19,7 +19,7 @@ import ua.ukma.edu.danki.models.ErrorMsg
 import ua.ukma.edu.danki.services.CardCollectionService
 import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.utils.DatabaseFactory
-import ua.ukma.edu.danki.utils.JwtConfig
+import ua.ukma.edu.danki.utils.auth.JwtConfig
 import ua.ukma.edu.danki.validation.validateUserRequests
 
 fun Application.mockModule(cardCollectionServiceMock: CardCollectionService, userServiceMock: UserService) {

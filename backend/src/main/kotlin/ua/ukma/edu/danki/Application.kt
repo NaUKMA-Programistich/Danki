@@ -15,13 +15,16 @@ import io.ktor.server.routing.*
 import ua.ukma.edu.danki.controllers.authControllers
 import ua.ukma.edu.danki.controllers.cardCollectionsControllers
 import ua.ukma.edu.danki.controllers.dictionaryController
+import ua.ukma.edu.danki.controllers.recentsController
 import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.UserRegistrationException
 import ua.ukma.edu.danki.models.ErrorMsg
 import ua.ukma.edu.danki.services.impl.CardCollectionServiceImpl
+import ua.ukma.edu.danki.services.impl.DictionaryServiceImpl
+import ua.ukma.edu.danki.services.impl.RecentsServiceImpl
 import ua.ukma.edu.danki.services.impl.UserServiceImpl
 import ua.ukma.edu.danki.utils.DatabaseFactory
-import ua.ukma.edu.danki.utils.JwtConfig
+import ua.ukma.edu.danki.utils.auth.JwtConfig
 import ua.ukma.edu.danki.validation.validateUserRequests
 
 const val DICTIONARY_PATH = "./src/main/resources/dictionary-data"
@@ -78,8 +81,15 @@ fun Application.module() {
     install(Resources)
     routing {
         // this counts as DI, right?
-        cardCollectionsControllers(CardCollectionServiceImpl(UserServiceImpl()), UserServiceImpl())
-        authControllers(UserServiceImpl())
-        dictionaryController()
+        val userService = UserServiceImpl()
+        val cardCollectionService = CardCollectionServiceImpl(userService)
+        val recentsService = RecentsServiceImpl()
+        cardCollectionsControllers(cardCollectionService, userService)
+        authControllers(userService)
+        dictionaryController(
+            { DictionaryServiceImpl(DICTIONARY_PATH, recentsService) },
+            userService
+        )
+        recentsController(recentsService, userService)
     }
 }
