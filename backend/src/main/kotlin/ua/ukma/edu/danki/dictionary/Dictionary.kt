@@ -169,4 +169,11 @@ class Dictionary(
         }
 
     }
+
+    fun close() {
+        noun.close()
+        adjective.close()
+        adverb.close()
+        verb.close()
+    }
 }

@@ -85,6 +85,7 @@ fun Application.module() {
         // this counts as DI, right?
         val userService = UserServiceImpl()
         val cardCollectionService = CardCollectionServiceImpl(userService)
+        val cardService = CardServiceImpl(userService, cardCollectionService)
         val recentsService = RecentsServiceImpl()
         cardCollectionsControllers(cardCollectionService, userService)
         authControllers(userService)
@@ -92,6 +93,7 @@ fun Application.module() {
             { DictionaryServiceImpl(DICTIONARY_PATH, recentsService) },
             userService
         )
+        cardController(cardService, userService)
         recentsController(recentsService, userService)
     }
 }
