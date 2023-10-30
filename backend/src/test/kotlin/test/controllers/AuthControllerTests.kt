@@ -10,9 +10,8 @@ import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import ua.ukma.edu.danki.models.UserRegisterRequest
-import ua.ukma.edu.danki.models.UserRegisterResponse
-import java.util.UUID
+import ua.ukma.edu.danki.models.*
+import java.util.*
 
 class AuthControllerTests {
     @Test
@@ -47,5 +46,119 @@ class AuthControllerTests {
         val body = result.body<UserRegisterResponse>()
 
         Assertions.assertTrue(body.success)
+    }
+
+    @Test
+    fun testInvalidEmailRegistration() = testApplication {
+        environment {
+            config = ApplicationConfig("application-mock.yaml")
+        }
+
+        this.application {
+            this.configureProductionModuleForTests()
+        }
+
+
+        val client = createClient {
+            install(Resources)
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val request = UserRegisterRequest(
+            username = "name",
+            email = UUID.randomUUID().toString(),
+            password = "pass"
+        )
+
+        val result = client.post("/register") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }
+
+        val body = result.body<ErrorMsg>()
+
+        Assertions.assertTrue(body.message.isNotEmpty())
+    }
+
+    @Test
+    fun testValidLogin() = testApplication {
+        environment {
+            config = ApplicationConfig("application-mock.yaml")
+        }
+
+        this.application {
+            this.configureProductionModuleForTests()
+        }
+
+
+        val client = createClient {
+            install(Resources)
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val requestToRegister = UserRegisterRequest(
+            username = "name",
+            email = UUID.randomUUID().toString() + "@email.com",
+            password = "pass"
+        )
+
+        client.post("/register") {
+            contentType(ContentType.Application.Json)
+            setBody(requestToRegister)
+        }
+
+        val requestToLogin = UserAuthRequest(email = requestToRegister.email, password = requestToRegister.password)
+
+        val result = client.post("/login") {
+            contentType(ContentType.Application.Json)
+            setBody(requestToLogin)
+        }
+
+        val body = result.body<UserAuthResponse>()
+
+        Assertions.assertTrue(body.jwt.isNotEmpty())
+    }
+
+    @Test
+    fun testUnsuccessfulLogin() = testApplication {
+        environment {
+            config = ApplicationConfig("application-mock.yaml")
+        }
+
+        this.application {
+            this.configureProductionModuleForTests()
+        }
+
+
+        val client = createClient {
+            install(Resources)
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val requestToRegister = UserRegisterRequest(
+            username = "name",
+            email = UUID.randomUUID().toString() + "@email.com",
+            password = "pass"
+        )
+
+        client.post("/register") {
+            contentType(ContentType.Application.Json)
+            setBody(requestToRegister)
+        }
+
+        val requestToLogin = UserAuthRequest(email = requestToRegister.email, password = "sfdsdf")
+
+        val result = client.post("/login") {
+            contentType(ContentType.Application.Json)
+            setBody(requestToLogin)
+        }
+
+        Assertions.assertEquals(HttpStatusCode.BadRequest, result.status)
     }
 }

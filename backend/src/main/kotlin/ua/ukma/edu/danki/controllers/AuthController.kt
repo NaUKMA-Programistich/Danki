@@ -13,11 +13,11 @@ import ua.ukma.edu.danki.utils.extractEmailFromJWT
 
 fun Routing.authControllers(service: UserService) {
     post<UserAuthRequest>("login") {
-        val response = UserAuthResponse(service.authenticateUser(it))
-        if (response.jwt == null)
+        val response = service.authenticateUser(it)
+        if (response == null)
             respondWithBadRequestError(call, ErrorMsg(INCORRECT_CREDENTIALS_MESSAGE))
         else
-            call.respond(response)
+            call.respond(UserAuthResponse(response))
     }
 
     post<UserRegisterRequest>("register") {

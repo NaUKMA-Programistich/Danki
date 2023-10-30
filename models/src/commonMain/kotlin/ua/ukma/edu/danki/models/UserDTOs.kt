@@ -24,7 +24,7 @@ data class UserRegisterRequest(
 @Serializable
 data class UserAuthResponse(
     @SerialName("jwt")
-    val jwt: String?
+    val jwt: String
 )
 
 @Serializable
