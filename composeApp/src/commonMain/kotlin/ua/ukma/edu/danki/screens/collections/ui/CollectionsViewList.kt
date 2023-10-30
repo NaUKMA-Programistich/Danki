@@ -2,7 +2,9 @@ package ua.ukma.edu.danki.screens.collections.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -24,16 +26,29 @@ internal fun CollectionViewList(
     state: CollectionState.CollectionList,
     onEvent: (CollectionEvent) -> Unit
 ) {
-    Surface(modifier = Modifier.fillMaxSize()) {
-        BoxWithConstraints {
-            if (maxWidth < 400.dp) {
-                CollectionViewSmall(state, onEvent)
-            } else {
-                CollectionViewLarge(state, onEvent)
-            }
+
+    BoxWithConstraints {
+        if (maxWidth < 400.dp) {
+            CollectionViewSmall(state, onEvent)
+        } else {
+            CollectionViewLarge(state, onEvent)
         }
     }
 
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Header() {
+    TopAppBar(
+        title = { Text(text = "Collections", style = MaterialTheme.typography.titleLarge) },
+        actions = {
+            IconButton(onClick = { }) {
+                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More options")
+            }
+        }
+    )
 }
 
 @Composable

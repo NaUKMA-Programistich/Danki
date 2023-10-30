@@ -29,6 +29,22 @@ class CollectionViewModel :
                 "UniqueID4", "forth", Clock.System.now().minus(1.hours),
                 own = false, true
             ),
+            UserCardCollectionDTO(
+                "UniqueID5", "fifth", Clock.System.now().minus(1.hours),
+                own = false, true
+            ),
+            UserCardCollectionDTO(
+                "UniqueID6", "sixth", Clock.System.now().minus(1.hours),
+                own = false, true
+            ),
+            UserCardCollectionDTO(
+                "UniqueID7", "seventh", Clock.System.now().minus(1.hours),
+                own = false, true
+            ),
+            UserCardCollectionDTO(
+                "UniqueID8", "eights", Clock.System.now().minus(1.hours),
+                own = false, true
+            ),
         )
 
         withViewModelScope {
