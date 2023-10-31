@@ -50,6 +50,7 @@ class WordTypeDictionary(
         val dataPosition = indexReference.readU64().toLong()
 
         indexWords.moveTo(wordPosition)
+        indexData.moveTo(dataPosition)
 
         val word = let {
             val wordLen = indexWords.readVariableU64().toInt()

@@ -42,7 +42,7 @@ class Dictionary(
 
     fun dataAt(wordType: WordType, index: ULong): UnwrappedData {
         val dict = getDictionary(wordType)
-        dict.relationReference.moveTo((index * 8UL).toLong());
+        dict.relationReference.moveTo((index * 8UL).toLong())
         val position = dict.relationReference.readU64()
         dict.relationData.moveTo(position.toLong())
 
@@ -99,6 +99,18 @@ class Dictionary(
         return FullTerm(term.term, list)
     }
 
+    fun getSuggestion(term: String): FullTerm? {
+        val suggestions = findTerms(term, 1).let {
+            if (it.isEmpty())
+                return null
+            if (it[0].term != term)
+                return null
+            it[0]
+        }
+
+        return unwrapTerm(suggestions)
+    }
+
     fun findTerms(lowerBound: String, count: Int): List<PartialTerm> {
         val higherBound = let {
             val lastChar = lowerBound.last().plus(1)
@@ -151,7 +163,7 @@ class Dictionary(
 
                         for (j in values.indices) {
                             if (j == min.get()) {
-                                continue;
+                                continue
                             }
 
                             if (values[j].first.map { it.term == term.term }.orElse(false)) {
