@@ -1,8 +1,8 @@
 package ua.ukma.edu.danki.services
 
 import ua.ukma.edu.danki.models.User
-import ua.ukma.edu.danki.models.UserAuthRequest
-import ua.ukma.edu.danki.models.UserRegisterRequest
+import ua.ukma.edu.danki.models.auth.UserAuthRequest
+import ua.ukma.edu.danki.models.auth.UserRegisterRequest
 import java.util.UUID
 
 interface UserService {

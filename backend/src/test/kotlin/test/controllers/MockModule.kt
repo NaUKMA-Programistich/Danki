@@ -11,18 +11,26 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import ua.ukma.edu.danki.controllers.authControllers
-import ua.ukma.edu.danki.controllers.cardCollectionsControllers
+import ua.ukma.edu.danki.DICTIONARY_PATH
+import ua.ukma.edu.danki.controllers.*
 import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.UserRegistrationException
 import ua.ukma.edu.danki.models.ErrorMsg
 import ua.ukma.edu.danki.services.CardCollectionService
+import ua.ukma.edu.danki.services.CardService
+import ua.ukma.edu.danki.services.RecentsService
 import ua.ukma.edu.danki.services.UserService
+import ua.ukma.edu.danki.services.impl.*
 import ua.ukma.edu.danki.utils.DatabaseFactory
 import ua.ukma.edu.danki.utils.auth.JwtConfig
 import ua.ukma.edu.danki.validation.validateUserRequests
 
-fun Application.mockModule(cardCollectionServiceMock: CardCollectionService, userServiceMock: UserService) {
+fun Application.mockModule(
+    cardCollectionService: CardCollectionService,
+    userService: UserService,
+    cardService: CardService,
+    recentsService: RecentsService
+) {
     DatabaseFactory.init(
         environment.config.property("db.driver").getString(),
         environment.config.property("db.url").getString()
@@ -31,7 +39,7 @@ fun Application.mockModule(cardCollectionServiceMock: CardCollectionService, use
         environment.config.property("jwt.secret").getString(),
         environment.config.property("jwt.issuer").getString(),
         environment.config.property("jwt.validity").getString().toLong(),
-        userServiceMock
+        userService
     )
     install(Authentication) {
         jwt("auth-jwt") {
@@ -49,14 +57,21 @@ fun Application.mockModule(cardCollectionServiceMock: CardCollectionService, use
         exception<RequestValidationException> { call, cause ->
             call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.reasons.joinToString()))
         }
+        exception<IllegalAccessException> { call, cause ->
+            call.respond(HttpStatusCode.Forbidden, ErrorMsg(cause.message ?: "Unable to register user"))
+        }
         exception<UserRegistrationException> { call, cause ->
             call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.message ?: "Unable to register user"))
         }
         exception<BadRequestException> { call, cause ->
             call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.message ?: "Bad request"))
         }
+        exception<io.ktor.server.plugins.BadRequestException> { call, cause ->
+            call.respond(HttpStatusCode.BadRequest, ErrorMsg(cause.message ?: "Bad request"))
+        }
         exception<Throwable> { call, cause ->
             call.respond(HttpStatusCode.InternalServerError, ErrorMsg("500: $cause"))
+            cause.printStackTrace()
         }
     }
     install(RequestValidation) {
@@ -64,7 +79,26 @@ fun Application.mockModule(cardCollectionServiceMock: CardCollectionService, use
     }
     install(Resources)
     routing {
-        cardCollectionsControllers(cardCollectionServiceMock, userServiceMock)
-        authControllers(userServiceMock)
+        cardCollectionsControllers(cardCollectionService, userService)
+        authControllers(userService)
+        dictionaryController(
+            { DictionaryServiceImpl(DICTIONARY_PATH, recentsService) },
+            userService
+        )
+        cardController(cardService, userService)
+        recentsController(recentsService, userService)
     }
+}
+
+fun Application.configureProductionModuleForTests() {
+    val userService = UserServiceImpl()
+    val cardCollectionService = CardCollectionServiceImpl(userService)
+    val cardService = CardServiceImpl(userService, cardCollectionService)
+    val recentsService = RecentsServiceImpl()
+    this.mockModule(
+        userService = userService,
+        cardCollectionService = cardCollectionService,
+        cardService = cardService,
+        recentsService = recentsService
+    )
 }
