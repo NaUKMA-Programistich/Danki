@@ -28,6 +28,7 @@ dependencies {
 
     implementation(libs.h2)
     implementation(libs.jbcrypt)
+    implementation(libs.postgresql)
     testImplementation(libs.ktor.client.resources)
     testImplementation(libs.ktor.client.serialization)
     testImplementation(libs.ktor.client.contentnegotiation)
