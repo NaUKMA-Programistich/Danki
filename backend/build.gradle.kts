@@ -28,6 +28,7 @@ dependencies {
 
     implementation(libs.h2)
     implementation(libs.jbcrypt)
+    implementation(libs.postgresql)
     testImplementation(libs.ktor.client.resources)
     testImplementation(libs.ktor.client.serialization)
     testImplementation(libs.ktor.client.contentnegotiation)
@@ -43,4 +44,14 @@ tasks.test {
 
 application {
     mainClass = "ApplicationKt"
+}
+
+tasks.register<Jar>("fatJar") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes["Main-Class"] = "ua.ukma.edu.danki.ApplicationKt"
+    }
+    from(configurations.runtimeClasspath.get().filter { it.isDirectory() }.map { it })
+    from(configurations.runtimeClasspath.get().filter { !it.isDirectory() }.map { zipTree(it) })
+    with(tasks["jar"] as CopySpec)
 }
