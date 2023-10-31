@@ -10,8 +10,8 @@ class GetDictionarySuggestions(val input: String, val count: Int)
 @Serializable
 data class DictionarySuggestions(val suggestions: List<PartialTerm>)
 
-@Resource("/dictionary/term/{term}")
-data class GetTermDefinition(val term: PartialTerm)
+@Resource("/dictionary/term/")
+data class GetTermDefinition(val term: String, val references: Reference)
 
 @Serializable
 data class TermDefinition(val term: FullTerm)

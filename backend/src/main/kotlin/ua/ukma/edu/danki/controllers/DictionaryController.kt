@@ -5,15 +5,10 @@ import io.ktor.server.auth.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.pipeline.*
-import ua.ukma.edu.danki.models.dictionary.DictionarySuggestions
-import ua.ukma.edu.danki.models.dictionary.GetDictionarySuggestions
-import ua.ukma.edu.danki.models.dictionary.GetTermDefinition
-import ua.ukma.edu.danki.models.dictionary.TermDefinition
+import ua.ukma.edu.danki.models.dictionary.*
 import ua.ukma.edu.danki.services.DictionaryService
 import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.utils.auth.extractOptionalUserFromJWT
-import ua.ukma.edu.danki.utils.extractEmailFromOptionalJWT
 
 fun Routing.dictionaryController(
     dictionaryServiceFactory: () -> DictionaryService,
@@ -32,7 +27,7 @@ fun Routing.dictionaryController(
         get<GetTermDefinition> {
             val user = extractOptionalUserFromJWT(userService)
             val dictionary = dictionaryServiceFactory()
-            val result = dictionary.definitionFor(it.term, user)
+            val result = dictionary.definitionFor(PartialTerm(it.term, listOf(it.references)), user)
             call.respond(TermDefinition(result))
             dictionary.close()
         }
