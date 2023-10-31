@@ -20,6 +20,9 @@ import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ua.ukma.edu.danki.models.*
+import ua.ukma.edu.danki.models.auth.UserAuthRequest
+import ua.ukma.edu.danki.models.auth.UserAuthResponse
+import ua.ukma.edu.danki.models.auth.UserRegisterRequest
 import ua.ukma.edu.danki.services.CardCollectionService
 import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.services.impl.CardServiceImpl

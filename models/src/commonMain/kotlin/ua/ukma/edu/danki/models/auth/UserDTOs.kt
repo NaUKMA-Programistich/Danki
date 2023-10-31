@@ -1,4 +1,4 @@
-package ua.ukma.edu.danki.models
+package ua.ukma.edu.danki.models.auth
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

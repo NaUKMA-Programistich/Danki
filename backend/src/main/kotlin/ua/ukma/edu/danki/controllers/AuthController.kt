@@ -5,14 +5,16 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.resources.*
 import ua.ukma.edu.danki.models.*
+import ua.ukma.edu.danki.models.auth.*
 import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.utils.consts.INCORRECT_CREDENTIALS_MESSAGE
 import ua.ukma.edu.danki.utils.extractEmailFromJWT
 
 
 fun Routing.authControllers(service: UserService) {
-    post<UserAuthRequest>("login") {
+    post<Login, UserAuthRequest> { _, it ->
         val response = service.authenticateUser(it)
         if (response == null)
             respondWithBadRequestError(call, ErrorMsg(INCORRECT_CREDENTIALS_MESSAGE))
@@ -20,7 +22,7 @@ fun Routing.authControllers(service: UserService) {
             call.respond(UserAuthResponse(response))
     }
 
-    post<UserRegisterRequest>("register") {
+    post<Register, UserRegisterRequest> { _, it ->
         service.registerUser(it)
         call.respond(UserRegisterResponse(true))
     }
