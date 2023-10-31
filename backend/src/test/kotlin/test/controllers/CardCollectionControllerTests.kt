@@ -20,9 +20,7 @@ import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ua.ukma.edu.danki.models.*
-import ua.ukma.edu.danki.models.auth.UserAuthRequest
-import ua.ukma.edu.danki.models.auth.UserAuthResponse
-import ua.ukma.edu.danki.models.auth.UserRegisterRequest
+import ua.ukma.edu.danki.models.auth.*
 import ua.ukma.edu.danki.services.CardCollectionService
 import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.services.impl.CardServiceImpl
@@ -81,7 +79,14 @@ class CardCollectionsControllerTests {
             jwt = JwtConfig.makeToken(UserAuthRequest(user.email, user.password))
         }
 
-        val loginToken = Json.decodeFromString<UserAuthResponse>(client.post("/login") {
+        val client = createClient {
+            install(Resources)
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val loginToken = Json.decodeFromString<UserAuthResponse>(client.post(Login()) {
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(UserAuthRequest(user.email, user.password)))
         }.body<String>()).jwt
@@ -121,14 +126,14 @@ class CardCollectionsControllerTests {
             password = "pass"
         )
 
-        client.post("/register") {
+        client.post(Register()) {
             contentType(ContentType.Application.Json)
             setBody(requestToRegister)
         }
 
         val requestToLogin = UserAuthRequest(email = requestToRegister.email, password = requestToRegister.password)
 
-        val loginResult = client.post("/login") {
+        val loginResult = client.post(Login()) {
             contentType(ContentType.Application.Json)
             setBody(requestToLogin)
         }
@@ -168,14 +173,14 @@ class CardCollectionsControllerTests {
             password = "pass"
         )
 
-        client.post("/register") {
+        client.post(Register()) {
             contentType(ContentType.Application.Json)
             setBody(requestToRegister)
         }
 
         val requestToLogin = UserAuthRequest(email = requestToRegister.email, password = requestToRegister.password)
 
-        client.post("/login") {
+        client.post(Login()) {
             contentType(ContentType.Application.Json)
             setBody(requestToLogin)
         }
@@ -211,14 +216,14 @@ class CardCollectionsControllerTests {
             password = "pass"
         )
 
-        client.post("/register") {
+        client.post(Register()) {
             contentType(ContentType.Application.Json)
             setBody(requestToRegister)
         }
 
         val requestToLogin = UserAuthRequest(email = requestToRegister.email, password = requestToRegister.password)
 
-        val loginResult = client.post("/login") {
+        val loginResult = client.post(Login()) {
             contentType(ContentType.Application.Json)
             setBody(requestToLogin)
         }
@@ -265,14 +270,14 @@ class CardCollectionsControllerTests {
             password = "pass"
         )
 
-        client.post("/register") {
+        client.post(Register()) {
             contentType(ContentType.Application.Json)
             setBody(requestToRegister)
         }
 
         val requestToLogin = UserAuthRequest(email = requestToRegister.email, password = requestToRegister.password)
 
-        val loginResult = client.post("/login") {
+        val loginResult = client.post(Login()) {
             contentType(ContentType.Application.Json)
             setBody(requestToLogin)
         }
@@ -330,14 +335,14 @@ class CardCollectionsControllerTests {
             password = "pass"
         )
 
-        client.post("/register") {
+        client.post(Register()) {
             contentType(ContentType.Application.Json)
             setBody(requestToRegister)
         }
 
         val requestToLogin = UserAuthRequest(email = requestToRegister.email, password = requestToRegister.password)
 
-        val loginResult = client.post("/login") {
+        val loginResult = client.post(Login()) {
             contentType(ContentType.Application.Json)
             setBody(requestToLogin)
         }
@@ -398,12 +403,12 @@ class CardCollectionsControllerTests {
             password = "pass"
         )
 
-        client.post("/register") {
+        client.post(Register()) {
             contentType(ContentType.Application.Json)
             setBody(requestToRegister1)
         }
 
-        client.post("/register") {
+        client.post(Register()) {
             contentType(ContentType.Application.Json)
             setBody(requestToRegister2)
         }
@@ -411,12 +416,12 @@ class CardCollectionsControllerTests {
         val requestToLogin1 = UserAuthRequest(email = requestToRegister1.email, password = requestToRegister1.password)
         val requestToLogin2 = UserAuthRequest(email = requestToRegister2.email, password = requestToRegister2.password)
 
-        val loginResult1 = client.post("/login") {
+        val loginResult1 = client.post(Login()) {
             contentType(ContentType.Application.Json)
             setBody(requestToLogin1)
         }
 
-        val loginResult2 = client.post("/login") {
+        val loginResult2 = client.post(Login()) {
             contentType(ContentType.Application.Json)
             setBody(requestToLogin2)
         }

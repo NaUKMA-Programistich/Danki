@@ -11,10 +11,7 @@ import io.ktor.server.testing.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import ua.ukma.edu.danki.models.*
-import ua.ukma.edu.danki.models.auth.UserAuthRequest
-import ua.ukma.edu.danki.models.auth.UserAuthResponse
-import ua.ukma.edu.danki.models.auth.UserRegisterRequest
-import ua.ukma.edu.danki.models.auth.UserRegisterResponse
+import ua.ukma.edu.danki.models.auth.*
 import java.util.*
 
 class AuthControllerTests {
@@ -42,7 +39,7 @@ class AuthControllerTests {
             password = "pass"
         )
 
-        val result = client.post("/register") {
+        val result = client.post(Register()) {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
@@ -76,7 +73,7 @@ class AuthControllerTests {
             password = "pass"
         )
 
-        val result = client.post("/register") {
+        val result = client.post(Register()) {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
@@ -110,14 +107,14 @@ class AuthControllerTests {
             password = "pass"
         )
 
-        client.post("/register") {
+        client.post(Register()) {
             contentType(ContentType.Application.Json)
             setBody(requestToRegister)
         }
 
         val requestToLogin = UserAuthRequest(email = requestToRegister.email, password = requestToRegister.password)
 
-        val result = client.post("/login") {
+        val result = client.post(Login()) {
             contentType(ContentType.Application.Json)
             setBody(requestToLogin)
         }
@@ -151,14 +148,14 @@ class AuthControllerTests {
             password = "pass"
         )
 
-        client.post("/register") {
+        client.post(Register()) {
             contentType(ContentType.Application.Json)
             setBody(requestToRegister)
         }
 
         val requestToLogin = UserAuthRequest(email = requestToRegister.email, password = "sfdsdf")
 
-        val result = client.post("/login") {
+        val result = client.post(Login()) {
             contentType(ContentType.Application.Json)
             setBody(requestToLogin)
         }
