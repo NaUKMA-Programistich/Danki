@@ -52,6 +52,7 @@ class DictionaryTest {
         Assertions.assertEquals(definitionResponse.status, HttpStatusCode.OK)
         val definition = definitionResponse.body<TermDefinition>()
         Assertions.assertEquals(definition.term.term, "apple")
+        println(definition)
 
 
     }
