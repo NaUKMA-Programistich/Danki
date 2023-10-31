@@ -7,9 +7,9 @@ import ua.ukma.edu.danki.models.dictionary.PartialTerm
 
 interface DictionaryService {
 
-    suspend fun getSuggestionsFor(input: String, count: Int): List<PartialTerm>;
+    suspend fun getSuggestionsFor(input: String, count: Int): List<PartialTerm>
 
-    suspend fun definitionFor(term: PartialTerm, user: User?): FullTerm;
+    suspend fun definitionFor(term: String, user: User?): FullTerm?
 
 
     suspend fun close()

@@ -15,8 +15,9 @@ class DictionaryServiceImpl(
         return dictionary.findTerms(input, count)
     }
 
-    override suspend fun definitionFor(term: PartialTerm, user: User?): FullTerm {
-        val fullTerm = dictionary.unwrapTerm(term)
+    override suspend fun definitionFor(term: String, user: User?): FullTerm? {
+        //dictionary.
+        val fullTerm = dictionary.getSuggestion(term) ?: return null
         user?.let {
             recentsService.addTermForUser(it, fullTerm)
         }
