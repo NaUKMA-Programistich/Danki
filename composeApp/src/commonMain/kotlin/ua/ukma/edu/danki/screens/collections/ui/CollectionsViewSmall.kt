@@ -64,5 +64,8 @@ fun SmallCollectionList(
             }
 
         }
+        item {
+            Spacer(modifier = Modifier.size(56.dp))
+        }
     }
 }

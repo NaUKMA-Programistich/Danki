@@ -2,6 +2,7 @@ package ua.ukma.edu.danki.screens.collections.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
@@ -51,27 +52,22 @@ fun Header() {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteButton(
     favoriteOnlyIsOn: Boolean,
     onClick: () -> Unit
 ) {
-    if (favoriteOnlyIsOn)
-        Button(
-            onClick = onClick,
-            shape = MaterialTheme.shapes.medium,
-        ) {
-            Text("Favorite")
-        }
-    else
-        OutlinedButton(
-            onClick = onClick,
-            shape = MaterialTheme.shapes.medium,
-        ) {
-            Text("Favorite", color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
+    FilterChip(
+        onClick = onClick,
+        shape = MaterialTheme.shapes.medium,
+        label = { Text("Favorite") },
+        elevation = null,
+        selected = favoriteOnlyIsOn,
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SortMenu(
     state: CollectionState.CollectionList,
@@ -80,13 +76,14 @@ fun SortMenu(
     var menuExpanded by remember { mutableStateOf(false) }
 
     Box {
-        ElevatedButton(
+
+        ElevatedFilterChip(
             onClick = { menuExpanded = true },
             shape = MaterialTheme.shapes.medium,
-            elevation = ButtonDefaults.buttonElevation(1.dp) // TODO("proper elevation")
-        ) {
-            Text(state.sortingParam.paramToString(), color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
+            label = { Text(state.sortingParam.paramToString(), color = MaterialTheme.colorScheme.onSurfaceVariant) },
+            selected = false,
+            trailingIcon = {Icon(Icons.Default.ArrowDropDown, "arrow down icon")},
+        )
 
         DropdownMenu(
             expanded = menuExpanded,
@@ -125,7 +122,6 @@ fun CollectionAsItem(
     ) {
         Text(
             collection.name,
-            color = Color.Black,
             style = MaterialTheme.typography.titleLarge
         )
         IconButton(onClick = { onEvent(CollectionEvent.ChangeFavoriteStatus(collection.id)) }) {
