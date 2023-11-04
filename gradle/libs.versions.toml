@@ -22,6 +22,7 @@ slf4j = "2.0.9"
 exposed = "0.44.0"
 jbcrypt = "0.4"
 mockk = "1.13.8"
+postgresql = "42.5.1"
 
 viewmodel = "0.14"
 #navigation = "1.4.0-alpha05"
@@ -53,24 +54,28 @@ multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", versi
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 
 
-viewmodel = { module = "com.adeo:kviewmodel", version.ref = "viewmodel"}
-viewmodel-compose = { module = "com.adeo:kviewmodel-compose", version.ref = "viewmodel"}
-viewmodel-odyssey = { module = "com.adeo:kviewmodel-odyssey", version.ref = "viewmodel"}
+viewmodel = { module = "com.adeo:kviewmodel", version.ref = "viewmodel" }
+viewmodel-compose = { module = "com.adeo:kviewmodel-compose", version.ref = "viewmodel" }
+viewmodel-odyssey = { module = "com.adeo:kviewmodel-odyssey", version.ref = "viewmodel" }
 
 navigation-core = { module = "io.github.alexgladkov:odyssey-core", version.ref = "navigation" }
 navigation-compose = { module = "io.github.alexgladkov:odyssey-compose", version.ref = "navigation" }
 
 settings = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "settings" }
 
-klock-common = { module = "com.soywiz.korlibs.klock:klock", version.ref = "klock"}
-klock-jvm = { module = "com.soywiz.korlibs.klock:klock-jvm", version.ref = "klock"}
+klock-common = { module = "com.soywiz.korlibs.klock:klock", version.ref = "klock" }
+klock-jvm = { module = "com.soywiz.korlibs.klock:klock-jvm", version.ref = "klock" }
+
+ktor-client-resources = { module = "io.ktor:ktor-client-resources", version.ref = "ktor" }
+ktor-client-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-contentnegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 
 
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
 ktor-server-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
-ktor-server-validation = {module = "io.ktor:ktor-server-request-validation", version.ref = "ktor"}
-ktor-server-status-pages = {module = "io.ktor:ktor-server-status-pages", version.ref = "ktor"}
+ktor-server-validation = { module = "io.ktor:ktor-server-request-validation", version.ref = "ktor" }
+ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 ktor-server-yaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor" }
 ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-server-resources = { module = "io.ktor:ktor-server-resources", version.ref = "ktor" }
@@ -86,7 +91,9 @@ exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datet
 
 slf4j = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
-mockk = {module = "io.mockk:mockk", version.ref="mockk"}
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+postgresql = {module = "org.postgresql:postgresql", version.ref = "postgresql"}
 
 
 

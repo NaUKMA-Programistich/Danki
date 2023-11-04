@@ -9,9 +9,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalView
+import io.ktor.client.*
+import io.ktor.client.engine.android.*
 import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
 import ru.alexgladkov.odyssey.core.configuration.DisplayType
 import ua.ukma.edu.danki.theme.mColors
+import java.net.InetSocketAddress
+import java.net.Proxy
 
 class AndroidApp : Application() {
     companion object {
@@ -42,6 +46,7 @@ class AppActivity : ComponentActivity() {
         }
     }
 }
+
 
 internal actual fun openUrl(url: String?) {
     val uri = url?.let { Uri.parse(it) } ?: return

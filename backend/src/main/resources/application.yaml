@@ -6,13 +6,13 @@ ktor:
       - ua.ukma.edu.danki.ApplicationKt.module
 jwt:
   secret:
-    "secret"
+    "$JWT_SECRET:secret"
   issuer:
-    "https://Danki"
+    "$JWT_ISSUER:https://Danki"
   validity:
-    3600000000
+    "$JWT_VALIDITY:3600000000"
 db:
   driver:
-    "org.h2.Driver"
+    "$DB_DRIVER:org.h2.Driver"
   url:
-    "jdbc:h2:file:./build/db"
+    "$DB_URL:jdbc:h2:file:./build/db"

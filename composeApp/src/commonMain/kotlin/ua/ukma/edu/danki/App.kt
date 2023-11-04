@@ -11,6 +11,7 @@ import ua.ukma.edu.danki.navigation.NavigationGraph
 import ua.ukma.edu.danki.theme.AppTheme
 
 
+
 @Composable
 internal fun App(
     systemAppearance: (isLight: Boolean) -> Unit = {},
