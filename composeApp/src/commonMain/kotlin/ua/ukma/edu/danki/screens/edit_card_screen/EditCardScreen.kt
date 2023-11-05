@@ -26,10 +26,12 @@ fun EditCardScreen (editCard : EditCard = EditCard(
         val viewAction by viewModel.viewActions().observeAsState()
 
         when (val state = viewState) {
-            is EditCardState.CardToEdit -> CardToEditView(
-                state = state,
-                onEvent = { viewModel.obtainEvent(it) }
-            )
+            is EditCardState.CardToEdit -> {
+                CardToEditView(
+                    state = state,
+                    onEvent = { viewModel.obtainEvent(it) }
+                )
+            }
 
             is EditCardState.Loading -> {
 

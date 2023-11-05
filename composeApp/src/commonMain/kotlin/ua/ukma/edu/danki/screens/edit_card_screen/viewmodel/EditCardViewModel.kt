@@ -8,37 +8,6 @@ import kotlin.time.Duration.Companion.hours
 
 
 class EditCardViewModel(editCard: EditCard) : ViewModel<EditCardState, EditCardAction, EditCardEvent>(initialState = EditCardState.Loading) {
-    override fun obtainEvent(viewEvent: EditCardEvent) {
-        when (viewEvent) {
-            EditCardEvent.Cancel -> processCancel()
-            is EditCardEvent.SaveCard -> processSavingCard(viewEvent.editCard)
-            is EditCardEvent.DeleteCard -> processDeletingCard(viewEvent.editCard)
-        }
-    }
-
-    private fun processDeletingCard(editCard: EditCard) {
-        withViewModelScope {
-            // TODO("delete card")
-        }
-    }
-
-    private fun processSavingCard(editCard: EditCard) {
-        withViewModelScope {
-            // TODO("save card in db")
-        }
-    }
-
-    init {
-        withViewModelScope {
-            setViewState(EditCardState.CardToEdit(editCard = editCard, collectionList = mockData))
-        }
-    }
-
-    private fun processCancel() {
-        withViewModelScope {
-            setViewAction(EditCardAction.NavigateBack)
-        }
-    }
 
     private val mockData = listOf(
         UserCardCollectionDTO(
@@ -62,6 +31,40 @@ class EditCardViewModel(editCard: EditCard) : ViewModel<EditCardState, EditCardA
             own = false, true
         ),
     )
+
+    override fun obtainEvent(viewEvent: EditCardEvent) {
+        when (viewEvent) {
+            EditCardEvent.Cancel -> processCancel()
+            is EditCardEvent.SaveCard -> processSavingCard(viewEvent.editCard)
+            is EditCardEvent.DeleteCard -> processDeletingCard(viewEvent.editCard)
+        }
+    }
+
+    private fun processDeletingCard(editCard: EditCard) {
+        withViewModelScope {
+            // TODO("delete card")
+        }
+    }
+
+    private fun processSavingCard(editCard: EditCard) {
+        withViewModelScope {
+            // TODO("save card in db")
+        }
+    }
+
+    init {
+        withViewModelScope {
+           setViewState(EditCardState.Loading)
+           setViewState(EditCardState.CardToEdit(editCard = editCard, collectionList = mockData))
+        }
+    }
+
+    private fun processCancel() {
+        withViewModelScope {
+            setViewAction(EditCardAction.NavigateBack)
+        }
+    }
+
 
 
 }

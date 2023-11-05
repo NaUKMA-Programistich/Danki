@@ -8,9 +8,9 @@ import ua.ukma.edu.danki.screens.login.LoginScreen
 
 internal fun RootComposeBuilder.NavigationGraph() {
 
-    screen(NavigationRoute.Login.name) {
+    /*screen(NavigationRoute.Login.name) {
         LoginScreen()
-    }
+    }*/
     screen(NavigationRoute.EditCard.name) {
         EditCardScreen()
     }
