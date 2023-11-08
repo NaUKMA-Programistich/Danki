@@ -8,6 +8,7 @@ import ua.ukma.edu.danki.screens.card_collection_viewer.model.CardViewerModel
 import ua.ukma.edu.danki.screens.edit_card_screen.EditCardScreen
 import ua.ukma.edu.danki.screens.edit_card_screen.model.EditCard
 import ua.ukma.edu.danki.screens.login.LoginScreen
+import ua.ukma.edu.danki.screens.new_cards_viewer.NewCardViewerScreen
 
 
 internal fun RootComposeBuilder.NavigationGraph() {
@@ -15,6 +16,10 @@ internal fun RootComposeBuilder.NavigationGraph() {
     /*screen(NavigationRoute.Login.name) {
         LoginScreen()
     }*/
+
+    screen(NavigationRoute.NewCardViewer.name) {
+        NewCardViewerScreen()
+    }
 
     screen(NavigationRoute.CardCollectionViewer.name) {
         CardCollectionViewerScreen()
@@ -33,5 +38,5 @@ internal fun RootComposeBuilder.NavigationGraph() {
 }
 
 internal enum class NavigationRoute {
-    Login,EditCard,CardCollectionViewer
+    Login,EditCard,CardCollectionViewer,NewCardViewer
 }

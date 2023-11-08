@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -16,11 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import ua.ukma.edu.danki.models.UserCardCollectionDTO
 import ua.ukma.edu.danki.screens.card_collection_viewer.model.CardViewerModel
 import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollectionViewerEvent
 import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollectionViewerState
-import ua.ukma.edu.danki.screens.edit_card_screen.model.EditCard
 
 @Composable
 fun CardCollectionViewerView (
