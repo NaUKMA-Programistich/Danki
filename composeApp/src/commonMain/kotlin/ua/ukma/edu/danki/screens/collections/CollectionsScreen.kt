@@ -4,10 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
-import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ua.ukma.edu.danki.core.composable.ComposableLoading
-import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.collections.ui.CollectionViewList
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionAction
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
