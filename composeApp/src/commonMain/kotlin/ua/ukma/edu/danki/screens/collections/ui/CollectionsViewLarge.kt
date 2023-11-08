@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionViewLarge(
     state: CollectionState.CollectionList,
@@ -31,14 +30,7 @@ fun CollectionViewLarge(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(32.dp)
                 ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        FavoriteButton(favoriteOnlyIsOn = state.favoriteOnly, onClick = {
-                            if (!state.favoriteOnly) onEvent(CollectionEvent.ShowOnlyFavorites)
-                            else onEvent(CollectionEvent.ShowAll)
-                        })
-                        SortMenu(state, onEvent)
-                    }
-
+                    FavoriteAndSortButtonsRow(state, onEvent)
                     ExtendedCollectionList(state, onEvent)
                 }
             }
@@ -57,13 +49,13 @@ fun SideNavigation() {
         }
         Spacer(modifier = Modifier.size(20.dp))
         NavigationRailItem(
-            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Dictionary") },
+            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Dictionary") }, // TODO proper icon
             label = { Text("Dictionary") },
             selected = false,
             onClick = { }
         )
         NavigationRailItem(
-            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Collections") },
+            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Collections") }, // TODO proper icon
             label = { Text("Collections") },
             selected = true,
             onClick = { }

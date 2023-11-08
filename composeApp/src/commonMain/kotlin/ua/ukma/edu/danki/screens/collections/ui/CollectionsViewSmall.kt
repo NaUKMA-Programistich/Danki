@@ -36,14 +36,7 @@ fun CollectionViewSmall(
                 modifier = Modifier.padding(innerPadding).padding(horizontal = 32.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    FavoriteButton(favoriteOnlyIsOn = state.favoriteOnly, onClick = {
-                        if (!state.favoriteOnly) onEvent(CollectionEvent.ShowOnlyFavorites)
-                        else onEvent(CollectionEvent.ShowAll)
-                    })
-                    SortMenu(state, onEvent)
-                }
-
+                FavoriteAndSortButtonsRow(state, onEvent)
                 SmallCollectionList(state, onEvent)
             }
         }

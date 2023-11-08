@@ -7,7 +7,8 @@ sealed class CollectionState {
     data class CollectionList(
         val collections: List<UserCardCollectionDTO>,
         val sortingParam: CollectionSortParam,
-        val favoriteOnly: Boolean
+        val orderIsAscending: Boolean,
+        val favoriteOnly: Boolean,
     ) : CollectionState()
 
     data object Loading : CollectionState()
