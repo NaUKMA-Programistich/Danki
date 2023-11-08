@@ -1,8 +1,10 @@
 package ua.ukma.edu.danki.screens.collections.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.onClick
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Refresh
@@ -50,12 +52,18 @@ fun SmallCollectionList(
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         items(state.collections) { collection ->
-            Column(
-                modifier = Modifier.padding(horizontal = 8.dp)
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                shape = MaterialTheme.shapes.large,
+                onClick = { onEvent(CollectionEvent.OpenCollection(collection)) }
             ) {
-                CollectionAsItem(collection, onEvent)
-            }
+                Column(
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
+                    CollectionAsItem(collection, onEvent)
+                }
 
+            }
         }
         item {
             Spacer(modifier = Modifier.size(56.dp))

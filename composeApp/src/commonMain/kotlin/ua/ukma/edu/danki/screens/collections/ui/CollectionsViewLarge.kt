@@ -80,6 +80,7 @@ fun ExtendedCollectionList(
             Surface(
                 color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                 shape = MaterialTheme.shapes.large,
+                onClick = { onEvent(CollectionEvent.OpenCollection(collection)) }
             ) {
                 Column(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),

@@ -56,6 +56,7 @@ class CollectionViewModel :
             is CollectionEvent.ChangeSortingOrder -> changeOrder()
             is CollectionEvent.ShowOnlyFavorites -> showOnlyFavorites()
             is CollectionEvent.ChangeFavoriteStatus -> changeCollectionFavoriteStatus(viewEvent.id)
+            is CollectionEvent.OpenCollection -> processOpenCollection(viewEvent.collection)
         }
     }
 
@@ -156,6 +157,12 @@ class CollectionViewModel :
                     state.sortingParam, state.orderIsAscending, state.favoriteOnly
                 )
             )
+        }
+    }
+
+    private fun processOpenCollection(collection: UserCardCollectionDTO) {
+        withViewModelScope {
+            setViewAction(CollectionAction.OpenCollection(collection))
         }
     }
 }
