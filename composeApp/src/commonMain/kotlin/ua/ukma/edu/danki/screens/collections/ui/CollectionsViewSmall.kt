@@ -13,7 +13,7 @@ import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
 
 @Composable
-fun CollectionViewSmall(
+internal fun CollectionViewSmall(
     state: CollectionState.CollectionList,
     onEvent: (CollectionEvent) -> Unit
 ) {
@@ -43,7 +43,7 @@ fun CollectionViewSmall(
 }
 
 @Composable
-fun SmallCollectionList(
+private fun SmallCollectionList(
     state: CollectionState.CollectionList,
     onEvent: (CollectionEvent) -> Unit
 ) {

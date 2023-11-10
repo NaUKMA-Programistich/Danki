@@ -37,7 +37,7 @@ internal fun CollectionViewList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Header() {
+internal fun Header() {
     TopAppBar(
         title = { Text(text = "Collections", style = MaterialTheme.typography.titleLarge) },
         actions = {
@@ -49,7 +49,7 @@ fun Header() {
 }
 
 @Composable
-fun FavoriteAndSortButtonsRow(
+internal fun FavoriteAndSortButtonsRow(
     state: CollectionState.CollectionList,
     onEvent: (CollectionEvent) -> Unit,
 ) {
@@ -65,7 +65,7 @@ fun FavoriteAndSortButtonsRow(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoriteButton(
+internal fun FavoriteButton(
     favoriteOnlyIsOn: Boolean,
     onClick: () -> Unit
 ) {
@@ -80,7 +80,7 @@ fun FavoriteButton(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SortMenu(
+internal fun SortMenu(
     state: CollectionState.CollectionList,
     onEvent: (CollectionEvent) -> Unit,
 ) {
@@ -115,7 +115,7 @@ fun SortMenu(
 }
 
 @Composable
-fun OrderButton(
+internal fun OrderButton(
     isAscending: Boolean,
     onClick: () -> Unit
 ) {
@@ -129,7 +129,7 @@ fun OrderButton(
 }
 
 @Composable
-fun CollectionAsItem(
+internal fun CollectionAsItem(
     collection: UserCardCollectionDTO,
     onEvent: (CollectionEvent) -> Unit
 ) {

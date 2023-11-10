@@ -15,7 +15,7 @@ import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
 
 @Composable
-fun CollectionViewLarge(
+internal fun CollectionViewLarge(
     state: CollectionState.CollectionList,
     onEvent: (CollectionEvent) -> Unit
 ) {
@@ -39,7 +39,7 @@ fun CollectionViewLarge(
 
 //TODO move side navigation to core/composable?
 @Composable
-fun SideNavigation() {
+private fun SideNavigation() {
     NavigationRail(modifier = Modifier.padding(top = 44.dp, bottom = 56.dp)) {
         FloatingActionButton(
             onClick = {}
