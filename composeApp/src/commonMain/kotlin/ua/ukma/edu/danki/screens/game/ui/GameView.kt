@@ -6,7 +6,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -67,12 +67,27 @@ internal fun GameComponent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun Header() {
+internal fun Header(onFinishGame: () -> Unit) {
+    var menuExpanded by remember { mutableStateOf(false) }
     TopAppBar(
         title = { Text(text = "Play", style = MaterialTheme.typography.titleLarge) },
         actions = {
-            IconButton(onClick = { }) {
-                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More options")
+            Box {
+                IconButton(onClick = { menuExpanded = true }) {
+                    Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More options")
+                }
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false }
+                ) {
+                    DropdownMenuItem(
+                        onClick = {
+                            onFinishGame()
+                            menuExpanded = false
+                        },
+                        text = { Text("Finish game") }
+                    )
+                }
             }
         }
     )

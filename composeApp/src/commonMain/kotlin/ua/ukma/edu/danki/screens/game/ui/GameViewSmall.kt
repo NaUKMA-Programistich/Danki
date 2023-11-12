@@ -17,7 +17,7 @@ internal fun GameViewSmall(
     onEvent: (GameEvent) -> Unit
 ) {
     Scaffold(
-        topBar = { Header() },
+        topBar = { Header(onFinishGame = { onEvent(GameEvent.FinishGame) }) },
     ) { innerPadding ->
         Surface(modifier = Modifier.fillMaxSize()) {
             GameComponent(

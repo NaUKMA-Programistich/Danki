@@ -51,6 +51,7 @@ class GameViewModel(collectionId: String, cardsAmountToPlay: Int = -1) :
     override fun obtainEvent(viewEvent: GameEvent) {
         when (viewEvent) {
             is GameEvent.NextCard -> onNextCard(viewEvent.previousWasCorrect)
+            GameEvent.FinishGame -> finishGame()
             GameEvent.ShowDefinition -> onShowDefinition()
         }
     }
@@ -62,7 +63,7 @@ class GameViewModel(collectionId: String, cardsAmountToPlay: Int = -1) :
 
             val nextIndex = state.currentCardIndex + 1
             if (nextIndex >= state.gameCards.size)
-                setViewAction(GameAction.ShowGameResult(state.gameCards, state.gameResults))
+                finishGame()
             else {
                 state.gameResults[state.currentCardIndex] = previousWasCorrect
                 setViewState(
@@ -72,6 +73,15 @@ class GameViewModel(collectionId: String, cardsAmountToPlay: Int = -1) :
                     )
                 )
             }
+        }
+    }
+
+    private fun finishGame() {
+        withViewModelScope {
+            val state = viewStates().value
+            if (state !is GameState.GameInProgress) return@withViewModelScope
+
+            setViewAction(GameAction.ShowGameResult(state.gameCards, state.gameResults))
         }
     }
 

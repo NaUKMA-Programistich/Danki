@@ -20,7 +20,7 @@ internal fun GameViewLarge(
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column {
-            Header()
+            Header(onFinishGame = { onEvent(GameEvent.FinishGame) })
             Row {
                 SideNavigation()
 
