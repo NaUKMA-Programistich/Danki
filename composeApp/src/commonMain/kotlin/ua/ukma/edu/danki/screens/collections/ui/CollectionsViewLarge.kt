@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
+import ua.ukma.edu.danki.theme.surfaceContainer
 
 @Composable
 internal fun CollectionViewLarge(
@@ -24,7 +25,6 @@ internal fun CollectionViewLarge(
             Header()
             Row {
                 SideNavigation()
-
                 Column(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(32.dp)
@@ -64,7 +64,7 @@ private fun SideNavigation() {
 }
 
 @Composable
-fun ExtendedCollectionList(
+private fun ExtendedCollectionList(
     state: CollectionState.CollectionList,
     onEvent: (CollectionEvent) -> Unit
 ) {
@@ -73,11 +73,10 @@ fun ExtendedCollectionList(
         columns = GridCells.FixedSize(size = 304.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
-
     ) {
         items(state.collections) { collection ->
             Surface(
-                color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+                color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = MaterialTheme.shapes.large,
                 onClick = { onEvent(CollectionEvent.OpenCollection(collection)) }
             ) {

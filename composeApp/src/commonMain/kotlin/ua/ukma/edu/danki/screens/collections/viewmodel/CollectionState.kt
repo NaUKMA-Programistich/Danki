@@ -10,6 +10,5 @@ sealed class CollectionState {
         val orderIsAscending: Boolean,
         val favoriteOnly: Boolean,
     ) : CollectionState()
-
     data object Loading : CollectionState()
 }

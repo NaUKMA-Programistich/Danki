@@ -17,7 +17,6 @@ internal fun CollectionViewSmall(
     state: CollectionState.CollectionList,
     onEvent: (CollectionEvent) -> Unit
 ) {
-
     Scaffold(
         topBar = { Header() },
         floatingActionButtonPosition = FabPosition.Center,
@@ -59,7 +58,6 @@ private fun SmallCollectionList(
                 ) {
                     CollectionAsItem(collection, onEvent)
                 }
-
             }
         }
         item {

@@ -23,7 +23,6 @@ internal fun CollectionViewList(
     state: CollectionState.CollectionList,
     onEvent: (CollectionEvent) -> Unit
 ) {
-
     BoxWithConstraints {
         if (maxWidth < 400.dp) {
             CollectionViewSmall(state, onEvent)
@@ -31,8 +30,6 @@ internal fun CollectionViewList(
             CollectionViewLarge(state, onEvent)
         }
     }
-
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,7 +84,6 @@ internal fun SortMenu(
     var menuExpanded by remember { mutableStateOf(false) }
 
     Box {
-
         ElevatedFilterChip(
             onClick = { menuExpanded = true },
             shape = MaterialTheme.shapes.medium,
@@ -95,7 +91,6 @@ internal fun SortMenu(
             selected = false,
             trailingIcon = { Icon(Icons.Default.ArrowDropDown, "arrow down icon") },
         )
-
         DropdownMenu(
             expanded = menuExpanded,
             onDismissRequest = { menuExpanded = false }
@@ -157,8 +152,6 @@ internal fun CollectionAsItem(
             )
         }
     }
-
-
 }
 
 fun CollectionSortParam.paramToString(): String {
