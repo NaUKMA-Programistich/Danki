@@ -28,10 +28,6 @@ internal fun GameScreen(collectionId: String) {
         }
 
         when (val action = viewAction) {
-            is GameAction.ShowDefinition -> {
-                //TODO navigate to definition or card screen
-            }
-
             is GameAction.ShowGameResult -> {
                 //TODO navigate to game result screen
             }

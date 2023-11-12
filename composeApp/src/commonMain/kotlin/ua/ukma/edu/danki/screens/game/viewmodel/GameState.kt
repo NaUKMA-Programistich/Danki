@@ -8,7 +8,8 @@ sealed class GameState {
         val gameResults: MutableList<Boolean>,
         val currentCardIndex: Int,
         val currentCard: String,
-        val score: Int
+        val score: Int,
+        val showDefinition: Boolean
     ) : GameState()
 
     data object Loading : GameState()

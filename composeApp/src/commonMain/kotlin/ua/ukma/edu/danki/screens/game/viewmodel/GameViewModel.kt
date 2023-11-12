@@ -42,7 +42,7 @@ class GameViewModel(collectionId: String, cardsAmountToPlay: Int = -1) :
             setViewState(
                 GameState.GameInProgress(
                     cardsToPlay, MutableList(cardsToPlay.size) { false },
-                    currentCardIndex = 0, cardsToPlay[0].term, score = 0
+                    currentCardIndex = 0, cardsToPlay[0].term, score = 0, showDefinition = false
                 )
             )
         }
@@ -61,18 +61,19 @@ class GameViewModel(collectionId: String, cardsAmountToPlay: Int = -1) :
             val state = viewStates().value
             if (state !is GameState.GameInProgress) return@withViewModelScope
 
+            state.gameResults[state.currentCardIndex] = previousWasCorrect
+
             val nextIndex = state.currentCardIndex + 1
             if (nextIndex >= state.gameCards.size)
                 finishGame()
-            else {
-                state.gameResults[state.currentCardIndex] = previousWasCorrect
+            else
                 setViewState(
                     GameState.GameInProgress(
                         state.gameCards, state.gameResults,
-                        nextIndex, state.gameCards[nextIndex].term, state.gameResults.filter { it }.size
+                        nextIndex, state.gameCards[nextIndex].term, state.gameResults.filter { it }.size,
+                        showDefinition = false
                     )
                 )
-            }
         }
     }
 
@@ -90,9 +91,17 @@ class GameViewModel(collectionId: String, cardsAmountToPlay: Int = -1) :
             val state = viewStates().value
             if (state !is GameState.GameInProgress) return@withViewModelScope
 
-            setViewAction(GameAction.ShowDefinition(state.gameCards[state.currentCardIndex]))
+            setViewState(
+                GameState.GameInProgress(
+                    state.gameCards,
+                    state.gameResults,
+                    state.currentCardIndex,
+                    if (!state.showDefinition) state.gameCards[state.currentCardIndex].definition
+                    else state.gameCards[state.currentCardIndex].term,
+                    state.gameResults.filter { it }.size,
+                    !state.showDefinition
+                )
+            )
         }
     }
-
-
 }
