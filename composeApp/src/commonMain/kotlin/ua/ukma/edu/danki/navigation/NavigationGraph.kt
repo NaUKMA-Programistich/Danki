@@ -10,7 +10,7 @@ internal fun RootComposeBuilder.NavigationGraph() {
     screen(NavigationRoute.Login.name) {
         LoginScreen()
     }
-    screen(NavigationRoute.Login.name) {
+    screen(NavigationRoute.Game.name) {
         GameScreen(collectionId = it as String)
     }
 }
