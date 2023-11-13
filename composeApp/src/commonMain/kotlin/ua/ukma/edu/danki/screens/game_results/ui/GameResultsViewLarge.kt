@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ua.ukma.edu.danki.screens.game_results.viewmodel.GameResultsEvent
@@ -62,15 +62,17 @@ fun LargeResultsList(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(state.gameCardsAndResults) { cardAndResult ->
+            var expanded by remember { mutableStateOf(false) }
+
             Surface(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = MaterialTheme.shapes.large,
-                onClick = { onEvent(GameResultsEvent.ShowDefinition(cardAndResult.first)) }
+                onClick = { expanded = !expanded }
             ) {
                 Column(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                 ) {
-                    ResultAsItem(cardAndResult)
+                    ResultAsItem(cardAndResult, expanded)
                 }
             }
         }

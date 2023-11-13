@@ -40,20 +40,13 @@ class GameResultsViewModel(cards: List<CardDTO>, gameResults: List<Boolean>) :
 
     override fun obtainEvent(viewEvent: GameResultsEvent) {
         when (viewEvent) {
-            is GameResultsEvent.ShowDefinition -> onShowDefinition(viewEvent.card)
-            GameResultsEvent.CloseResults -> onCloseResults()
+            is GameResultsEvent.CloseResults -> onCloseResults()
         }
     }
 
     private fun onCloseResults() {
         withViewModelScope {
             setViewAction(GameResultsAction.CloseResults)
-        }
-    }
-
-    private fun onShowDefinition(card: CardDTO) {
-        withViewModelScope {
-            setViewAction(GameResultsAction.ShowDefinition(card))
         }
     }
 }

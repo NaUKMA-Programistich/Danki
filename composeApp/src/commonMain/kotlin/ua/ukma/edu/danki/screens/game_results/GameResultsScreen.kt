@@ -28,10 +28,6 @@ internal fun GameResultsScreen(cards: List<CardDTO>, gameResults: List<Boolean>)
         }
 
         when (val action = viewAction) {
-            is GameResultsAction.ShowDefinition -> {
-                //TODO navigate to definition or card screen
-            }
-
             is GameResultsAction.CloseResults -> {
                 //TODO navigate back twice
             }

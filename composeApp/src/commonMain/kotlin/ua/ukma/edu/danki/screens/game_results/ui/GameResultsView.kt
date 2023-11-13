@@ -1,5 +1,6 @@
 package ua.ukma.edu.danki.screens.game_results.ui
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -58,13 +59,19 @@ internal fun Header(onCloseResults: () -> Unit) {
 
 @Composable
 internal fun ResultAsItem(
-    cardAndSuccess: Pair<CardDTO, Boolean>
+    cardAndSuccess: Pair<CardDTO, Boolean>,
+    expanded: Boolean
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(cardAndSuccess.first.term)
+        Text(
+            maxLines = if (expanded) Int.MAX_VALUE else 1,
+            modifier = Modifier.animateContentSize(),
+            text = "${cardAndSuccess.first.term}\n${cardAndSuccess.first.definition}",
+            style = MaterialTheme.typography.labelLarge
+        )
         if (cardAndSuccess.second)
             Icon(Icons.Default.Check, "succeess icon")
         else
