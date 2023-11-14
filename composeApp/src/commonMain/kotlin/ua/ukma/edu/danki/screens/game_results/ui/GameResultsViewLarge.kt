@@ -70,5 +70,8 @@ fun LargeResultsList(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
             )
         }
+        item {
+            Spacer(modifier = Modifier.size(40.dp))
+        }
     }
 }
