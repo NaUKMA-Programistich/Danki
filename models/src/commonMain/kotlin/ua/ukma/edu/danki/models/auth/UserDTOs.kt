@@ -1,4 +1,4 @@
-package ua.ukma.edu.danki.models
+package ua.ukma.edu.danki.models.auth
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -24,7 +24,7 @@ data class UserRegisterRequest(
 @Serializable
 data class UserAuthResponse(
     @SerialName("jwt")
-    val jwt: String?
+    val jwt: String
 )
 
 @Serializable

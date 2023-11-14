@@ -5,9 +5,6 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Resource("/collections")
-class GetCollectionsCards(val sort: String? = "new")
-
 enum class CollectionSortParam {
     ByName, ByDate
 }
@@ -19,7 +16,7 @@ data class GetUserCollections(
     val sort: CollectionSortParam = CollectionSortParam.ByDate,
     val favorite: Boolean = false,
     val offset: Int = 0,
-    val limit: Int = 0,
+    val limit: Int = 10,
     val ascending: Boolean = true
 )
 
@@ -36,13 +33,6 @@ data class UserCardCollectionDTO(
 )
 
 
-@Resource("/recent")
-class GetRecentCollection()
-
-@Serializable
-/* data */ class RecentCollectionResponse(
-    // TODO
-)
 
 
 @Serializable

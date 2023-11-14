@@ -2,6 +2,8 @@ package ua.ukma.edu.danki.validation
 
 import io.ktor.server.plugins.requestvalidation.*
 import ua.ukma.edu.danki.models.*
+import ua.ukma.edu.danki.models.auth.UserAuthRequest
+import ua.ukma.edu.danki.models.auth.UserRegisterRequest
 import ua.ukma.edu.danki.utils.consts.INCORRECT_CREDENTIALS_MESSAGE
 import ua.ukma.edu.danki.utils.isEmailValid
 import java.util.*
@@ -55,6 +57,24 @@ fun RequestValidationConfig.validateUserRequests() {
             ValidationResult.Valid
         } catch (e: IllegalArgumentException) {
             ValidationResult.Invalid("One or more invalid UUIDs")
+        }
+    }
+
+    validate<CreateCardInCollectionRequest> { body ->
+        try {
+            UUID.fromString(body.collection)
+            ValidationResult.Valid
+        } catch (e: IllegalArgumentException) {
+            ValidationResult.Invalid("Card collection UUID provided is invalid")
+        }
+    }
+
+    validate<MoveCardToCollectionRequest> { body ->
+        try {
+            UUID.fromString(body.collection)
+            ValidationResult.Valid
+        } catch (e: IllegalArgumentException) {
+            ValidationResult.Invalid("Card collection UUID provided is invalid")
         }
     }
 }

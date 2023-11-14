@@ -64,7 +64,7 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
     override suspend fun shareCollection(user: User, collection: UUID): Long {
         val existingCollection = readCollection(user, collection)
             ?: throw ResourceNotFoundException("Could not find collection by specified id")
-        if(existingCollection.hidden)
+        if (existingCollection.hidden)
             throw IllegalAccessException("Couldn't share hidden collection")
         existingCollection.shared = true
         updateCollection(existingCollection)
@@ -120,7 +120,7 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
                 val collection = readCollection(user, it)
                     ?: throw BadRequestException("One or more of the collections requested for deletion could not be found")
                 if (collection.removable && collection.own) CardCollections.deleteWhere { CardCollections.id eq collection.collection }
-                else if(collection.removable) UserCardCollections.deleteWhere { UserCardCollections.id eq collection.uuid }
+                else if (collection.removable) UserCardCollections.deleteWhere { UserCardCollections.id eq collection.uuid }
             }
         }
     }
@@ -168,6 +168,16 @@ class CardCollectionServiceImpl(private val userService: UserService) : CardColl
         return DatabaseFactory.dbQuery {
             UserCardCollections.innerJoin(CardCollections).select(
                 where = (UserCardCollections.id eq collection).and(UserCardCollections.user eq user.id)
+            ).map {
+                mapResultRowToCardCollectionDTO(it)
+            }.singleOrNull()
+        }
+    }
+
+    override suspend fun getDefaultCollectionOfUser(user: UUID): InternalCardCollectionDTO? {
+        return DatabaseFactory.dbQuery {
+            UserCardCollections.innerJoin(CardCollections).select(
+                where = (UserCardCollections.user eq user).and(UserCardCollections.type eq CollectionType.Recents)
             ).map {
                 mapResultRowToCardCollectionDTO(it)
             }.singleOrNull()
