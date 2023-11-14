@@ -5,16 +5,14 @@ import io.ktor.server.auth.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.pipeline.*
 import ua.ukma.edu.danki.exceptions.BadRequestException
 import ua.ukma.edu.danki.exceptions.ResourceNotFoundException
 import ua.ukma.edu.danki.models.*
 import ua.ukma.edu.danki.services.CardCollectionService
 import ua.ukma.edu.danki.services.UserService
-import ua.ukma.edu.danki.utils.consts.USER_NOT_FOUND_MESSAGE
+import ua.ukma.edu.danki.utils.auth.extractUserFromJWT
 import ua.ukma.edu.danki.utils.extractEmailFromJWT
 import ua.ukma.edu.danki.utils.toUUID
-import java.lang.IllegalArgumentException
 import java.util.*
 
 fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionService, userService: UserService) {
@@ -37,6 +35,13 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
 
             val collections = cardCollectionService.getCollections(user, offset, limit, sort, ascending, favorite)
             call.respond(ListOfCollectionsResponse(collections))
+        }
+
+        get("/collections/recents") {
+            val user = extractUserFromJWT(userService)
+            val collections = cardCollectionService.getDefaultCollectionOfUser(user.id.value)
+                ?: throw Exception("Internal server error: no recents collection was found fo the user")
+            call.respond(collections.toUserCardCollectionDTO())
         }
 
         post<CreateCardCollectionRequest>("/collections/") {
@@ -79,9 +84,3 @@ fun Routing.cardCollectionsControllers(cardCollectionService: CardCollectionServ
         }
     }
 }
-
-private suspend fun PipelineContext<Unit, ApplicationCall>.extractUserFromJWT(
-    userService: UserService
-) = userService.findUser(call.extractEmailFromJWT()) ?: throw ResourceNotFoundException(
-    USER_NOT_FOUND_MESSAGE
-)

@@ -1,10 +1,10 @@
-package ua.ukma.edu.danki.utils
+package ua.ukma.edu.danki.utils.auth
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.auth.jwt.*
-import ua.ukma.edu.danki.models.UserAuthRequest
+import ua.ukma.edu.danki.models.auth.UserAuthRequest
 import ua.ukma.edu.danki.services.UserService
 import ua.ukma.edu.danki.services.impl.UserServiceImpl
 import java.util.*

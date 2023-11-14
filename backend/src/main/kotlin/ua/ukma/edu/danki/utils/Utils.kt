@@ -26,6 +26,11 @@ fun ApplicationCall.extractEmailFromJWT(): String {
     return principal!!.extractEmail()
 }
 
+fun ApplicationCall.extractEmailFromOptionalJWT(): String? {
+    val principal = principal<JWTPrincipal>()
+    return principal?.extractEmail()
+}
+
 fun String.toUUID(): UUID {
     return UUID.fromString(this)
 }
