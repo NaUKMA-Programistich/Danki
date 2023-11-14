@@ -1,9 +1,9 @@
 package ua.ukma.edu.danki.screens.game_results.ui
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.*
@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ua.ukma.edu.danki.screens.game_results.viewmodel.GameResultsEvent
 import ua.ukma.edu.danki.screens.game_results.viewmodel.GameResultsState
-import ua.ukma.edu.danki.theme.surfaceContainer
 
 @Composable
 internal fun GameResultsViewLarge(
@@ -55,26 +54,21 @@ fun LargeResultsList(
     state: GameResultsState.ShowGameResults,
     onEvent: (GameResultsEvent) -> Unit
 ) {
-    LazyVerticalGrid(
+    LazyVerticalStaggeredGrid(
         modifier = Modifier.padding(horizontal = 16.dp),
-        columns = GridCells.FixedSize(size = 304.dp),
+        columns = StaggeredGridCells.FixedSize(size = 304.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalItemSpacing = 16.dp
     ) {
         items(state.gameCardsAndResults) { cardAndResult ->
             var expanded by remember { mutableStateOf(false) }
 
-            Surface(
-                color = MaterialTheme.colorScheme.surfaceContainer,
-                shape = MaterialTheme.shapes.large,
-                onClick = { expanded = !expanded }
-            ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-                ) {
-                    ResultAsItem(cardAndResult, expanded)
-                }
-            }
+            ResultAsItem(
+                cardAndResult,
+                expanded,
+                onClick = { expanded = !expanded },
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+            )
         }
     }
 }

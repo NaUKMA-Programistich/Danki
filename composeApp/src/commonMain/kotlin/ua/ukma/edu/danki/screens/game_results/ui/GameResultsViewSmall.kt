@@ -3,7 +3,6 @@ package ua.ukma.edu.danki.screens.game_results.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
@@ -23,22 +22,17 @@ internal fun GameResultsViewSmall(
         Surface(modifier = Modifier.fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier.padding(innerPadding).padding(horizontal = 19.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(state.gameCardsAndResults) { cardAndResult ->
                     var expanded by remember { mutableStateOf(false) }
 
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        shape = MaterialTheme.shapes.large,
-                        onClick = { expanded = !expanded }
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(8.dp),
-                        ) {
-                            ResultAsItem(cardAndResult, expanded)
-                        }
-                    }
+                    ResultAsItem(
+                        cardAndResult,
+                        expanded,
+                        onClick = { expanded = !expanded },
+                        modifier = Modifier.padding(12.dp)
+                    )
                 }
                 item {
                     Spacer(modifier = Modifier.size(40.dp))
