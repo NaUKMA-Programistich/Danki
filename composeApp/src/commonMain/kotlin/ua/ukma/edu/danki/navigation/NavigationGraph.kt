@@ -5,15 +5,23 @@ import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.screens.game.GameScreen
 import ua.ukma.edu.danki.screens.game_results.GameResultsScreen
+import ua.ukma.edu.danki.screens.game.GameScreen
+import ua.ukma.edu.danki.screens.collections.CollectionsScreen
 import ua.ukma.edu.danki.screens.login.LoginScreen
 
 internal fun RootComposeBuilder.NavigationGraph() {
     screen(NavigationRoute.Login.name) {
         LoginScreen()
     }
+
+    screen(NavigationRoute.Collections.name) {
+        CollectionsScreen()
+    }
+
     screen(NavigationRoute.Game.name) {
         GameScreen(collectionId = it as String)
     }
+
     screen(NavigationRoute.GameResults.name) { cardsAndResults ->
         if (cardsAndResults !is Pair<*, *>) return@screen
         GameResultsScreen(
@@ -24,5 +32,5 @@ internal fun RootComposeBuilder.NavigationGraph() {
 }
 
 internal enum class NavigationRoute {
-    Login, Game, GameResults
+    Login, Collections, Game, GameResults
 }
