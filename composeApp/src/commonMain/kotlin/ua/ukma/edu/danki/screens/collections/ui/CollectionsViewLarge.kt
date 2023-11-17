@@ -22,7 +22,7 @@ internal fun CollectionViewLarge(
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column {
-            Header()
+            Header(onEvent)
             Row {
                 SideNavigation()
                 Column(

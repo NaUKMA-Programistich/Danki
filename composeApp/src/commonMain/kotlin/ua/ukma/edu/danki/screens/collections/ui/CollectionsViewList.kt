@@ -34,12 +34,30 @@ internal fun CollectionViewList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun Header() {
+internal fun Header(
+    onEvent: (CollectionEvent) -> Unit
+) {
+    var menuExpanded by remember { mutableStateOf(false) }
+
     TopAppBar(
         title = { Text(text = "Collections", style = MaterialTheme.typography.titleLarge) },
         actions = {
-            IconButton(onClick = { }) {
-                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More options")
+            Box {
+                IconButton(onClick = { menuExpanded = true }) {
+                    Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More options")
+                }
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false }
+                ) {
+                    DropdownMenuItem(
+                        onClick = {
+                            onEvent(CollectionEvent.ShowCreateCollectionDialog)
+                            menuExpanded = false
+                        },
+                        text = { Text("Create collection") }
+                    )
+                }
             }
         }
     )

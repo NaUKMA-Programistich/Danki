@@ -1,12 +1,17 @@
 package ua.ukma.edu.danki.screens.collections
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
+import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
 import ua.ukma.edu.danki.core.composable.ComposableLoading
 import ua.ukma.edu.danki.screens.collections.ui.CollectionViewList
+import ua.ukma.edu.danki.screens.collections.ui.CreateCollectionDialog
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionAction
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionViewModel
@@ -14,7 +19,8 @@ import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionViewModel
 @Composable
 internal fun CollectionsScreen() {
     StoredViewModel(factory = { CollectionViewModel() }) { viewModel ->
-        val navController = LocalRootController.current
+        val modalController = LocalRootController.current.findModalController()
+        val alertConfiguration = AlertConfiguration(maxHeight = 0.5f, maxWidth = 0.7f, cornerRadius = 8)
         val viewState by viewModel.viewStates().observeAsState()
         val viewAction by viewModel.viewActions().observeAsState()
 
@@ -30,6 +36,13 @@ internal fun CollectionsScreen() {
         when (val action = viewAction) {
             is CollectionAction.OpenCollection -> {
                 //TODO navigate to card_collection_viewer
+            }
+
+            is CollectionAction.ShowCreateCollectionDialog -> modalController.present(alertConfiguration) { key ->
+                CreateCollectionDialog(
+                    onCloseClick = { modalController.popBackStack(key) },
+                    onEvent = { viewModel.obtainEvent(it) }
+                )
             }
 
             else -> {

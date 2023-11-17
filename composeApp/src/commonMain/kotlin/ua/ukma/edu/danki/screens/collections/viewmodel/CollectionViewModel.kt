@@ -8,7 +8,7 @@ import kotlin.time.Duration.Companion.hours
 
 class CollectionViewModel :
     ViewModel<CollectionState, CollectionAction, CollectionEvent>(initialState = CollectionState.Loading) {
-    private val mockData: List<UserCardCollectionDTO> = listOf(
+    private val mockData: MutableList<UserCardCollectionDTO> = mutableListOf(
         UserCardCollectionDTO(
             "UniqueID1", "First", Clock.System.now().minus(10.hours),
             own = true, true
@@ -57,6 +57,10 @@ class CollectionViewModel :
             is CollectionEvent.ShowOnlyFavorites -> showOnlyFavorites()
             is CollectionEvent.ChangeFavoriteStatus -> changeCollectionFavoriteStatus(viewEvent.id)
             is CollectionEvent.OpenCollection -> processOpenCollection(viewEvent.collection)
+            is CollectionEvent.SaveCollection -> processSaveCollection(viewEvent.collectionName)
+            is CollectionEvent.UpdateCollection -> TODO()
+            is CollectionEvent.DeleteCollection -> TODO()
+            is CollectionEvent.ShowCreateCollectionDialog -> processShowCreateCollectionDialog()
         }
     }
 
@@ -160,9 +164,31 @@ class CollectionViewModel :
         }
     }
 
+    private fun processSaveCollection(collectionName: String) {
+        withViewModelScope {
+            // TODO create real collection
+
+            mockData.add(UserCardCollectionDTO("", collectionName, Clock.System.now(), own = true, favorite = false))
+            setViewState(
+                CollectionState.CollectionList(
+                    mockData.sortedBy { it.name.lowercase() },
+                    CollectionSortParam.ByName,
+                    orderIsAscending = true,
+                    favoriteOnly = false
+                )
+            )
+        }
+    }
+
     private fun processOpenCollection(collection: UserCardCollectionDTO) {
         withViewModelScope {
             setViewAction(CollectionAction.OpenCollection(collection))
+        }
+    }
+
+    private fun processShowCreateCollectionDialog() {
+        withViewModelScope {
+            setViewAction(CollectionAction.ShowCreateCollectionDialog)
         }
     }
 }

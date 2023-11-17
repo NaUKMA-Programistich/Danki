@@ -18,7 +18,7 @@ internal fun CollectionViewSmall(
     onEvent: (CollectionEvent) -> Unit
 ) {
     Scaffold(
-        topBar = { Header() },
+        topBar = { Header(onEvent) },
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             ExtendedFloatingActionButton(onClick = {}) {
