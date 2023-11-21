@@ -24,7 +24,6 @@ internal fun CollectionViewLarge(
         Column {
             Header()
             Row {
-                SideNavigation()
                 Column(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(32.dp)
@@ -38,30 +37,7 @@ internal fun CollectionViewLarge(
 }
 
 //TODO move side navigation to core/composable?
-@Composable
-private fun SideNavigation() {
-    NavigationRail(modifier = Modifier.padding(top = 44.dp, bottom = 56.dp)) {
-        FloatingActionButton(
-            onClick = {}
-        ) {
-            Icon(Icons.Filled.Refresh, "Recents button") // TODO proper recent icon
-        }
-        Spacer(modifier = Modifier.size(20.dp))
-        NavigationRailItem(
-            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Dictionary") }, // TODO proper icon
-            label = { Text("Dictionary") },
-            selected = false,
-            onClick = { }
-        )
-        NavigationRailItem(
-            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Collections") }, // TODO proper icon
-            label = { Text("Collections") },
-            selected = true,
-            onClick = { }
-        )
 
-    }
-}
 
 @Composable
 private fun ExtendedCollectionList(
