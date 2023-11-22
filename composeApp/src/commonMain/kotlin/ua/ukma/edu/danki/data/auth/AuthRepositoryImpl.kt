@@ -5,6 +5,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import ua.ukma.edu.danki.data.API
+import ua.ukma.edu.danki.data.Cache
 import ua.ukma.edu.danki.models.auth.UserAuthRequest
 import ua.ukma.edu.danki.models.auth.UserAuthResponse
 import ua.ukma.edu.danki.models.auth.UserRegisterRequest
@@ -18,7 +19,11 @@ class AuthRepositoryImpl(private val client: HttpClient) : AuthRepository {
                 contentType(ContentType.Application.Json)
                 setBody(request)
             }
-            result.body<UserAuthResponse>()
+            val response = result.body<UserAuthResponse>()
+            if (response.jwt.isNotBlank()) {
+                Cache.jwt = response.jwt
+            }
+            response
         } catch (e: Exception) {
             null
         }
@@ -34,5 +39,9 @@ class AuthRepositoryImpl(private val client: HttpClient) : AuthRepository {
         } catch (e: Exception) {
             null
         }
+    }
+
+    override suspend fun logout() {
+        Cache.jwt = ""
     }
 }

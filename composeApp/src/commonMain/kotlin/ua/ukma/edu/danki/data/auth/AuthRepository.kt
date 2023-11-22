@@ -8,4 +8,6 @@ import ua.ukma.edu.danki.models.auth.UserRegisterResponse
 interface AuthRepository {
     suspend fun login(request: UserAuthRequest): UserAuthResponse?
     suspend fun register(request: UserRegisterRequest): UserRegisterResponse?
+
+    suspend fun logout()
 }
