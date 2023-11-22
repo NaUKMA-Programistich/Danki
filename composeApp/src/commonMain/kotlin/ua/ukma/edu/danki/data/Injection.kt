@@ -6,6 +6,7 @@ import io.ktor.client.plugins.resources.*
 import io.ktor.serialization.kotlinx.json.*
 import ua.ukma.edu.danki.data.auth.AuthRepositoryImpl
 import ua.ukma.edu.danki.data.dictionary.DictionaryRepositoryImpl
+import ua.ukma.edu.danki.data.recents.RecentsRepositoryImpl
 
 object Injection {
     private val client = HttpClient {
@@ -16,4 +17,5 @@ object Injection {
     }
     val authRepository = AuthRepositoryImpl(client)
     val dictionaryRepository = DictionaryRepositoryImpl(client)
+    val recentsRepository = RecentsRepositoryImpl(client)
 }
