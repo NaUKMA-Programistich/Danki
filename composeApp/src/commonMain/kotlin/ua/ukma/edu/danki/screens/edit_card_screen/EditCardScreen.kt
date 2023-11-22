@@ -5,8 +5,8 @@ import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import kotlinx.datetime.Clock
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ua.ukma.edu.danki.models.UserCardCollectionDTO
-import ua.ukma.edu.danki.screens.edit_card_screen.model.EditCard
+import ua.ukma.edu.danki.core.composable.ComposableLoading
+import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.screens.edit_card_screen.ui.CardToEditView
 import ua.ukma.edu.danki.screens.edit_card_screen.viewmodel.EditCardAction
 import ua.ukma.edu.danki.screens.edit_card_screen.viewmodel.EditCardState
@@ -14,12 +14,8 @@ import ua.ukma.edu.danki.screens.edit_card_screen.viewmodel.EditCardViewModel
 import kotlin.time.Duration.Companion.hours
 
 @Composable
-fun EditCardScreen (editCard : EditCard = EditCard(
-    term = "",
-    definition = "",
-    collection = UserCardCollectionDTO(id = "", name = "" , lastModified = Clock.System.now().minus(1.hours) , own = false , favorite = false)
-)) {
-    StoredViewModel(factory = { EditCardViewModel(editCard = editCard) }) { viewModel ->
+fun EditCardScreen (card : CardDTO) {
+    StoredViewModel(factory = { EditCardViewModel(card = card) }) { viewModel ->
         val navController = LocalRootController.current
         val viewState by viewModel.viewStates().observeAsState()
         val viewAction by viewModel.viewActions().observeAsState()
@@ -33,7 +29,7 @@ fun EditCardScreen (editCard : EditCard = EditCard(
             }
 
             is EditCardState.Loading -> {
-
+                ComposableLoading()
             }
         }
 

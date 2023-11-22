@@ -6,11 +6,8 @@ import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ua.ukma.edu.danki.core.composable.ComposableLoading
 import ua.ukma.edu.danki.navigation.NavigationRoute
-import ua.ukma.edu.danki.screens.card_collection_viewer.model.CardCollectionViewerModel
-import ua.ukma.edu.danki.screens.card_collection_viewer.ui.CardCollectionViewerView
-import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollectionViewerAction
-import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollectionViewerState
 import ua.ukma.edu.danki.screens.new_cards_viewer.ui.NewCardViewerView
 import ua.ukma.edu.danki.screens.new_cards_viewer.viewmodel.NewCardViewerAction
 import ua.ukma.edu.danki.screens.new_cards_viewer.viewmodel.NewCardViewerState
@@ -33,7 +30,7 @@ fun NewCardViewerScreen () {
             }
 
             is NewCardViewerState.Loading -> {
-
+                ComposableLoading()
             }
         }
 
@@ -42,7 +39,7 @@ fun NewCardViewerScreen () {
                 navController.popBackStack()
             }
             is NewCardViewerAction.OpenCardToEdit -> {
-                navController.push(NavigationRoute.EditCard.name, action.newCardViewerModel)
+                navController.push(NavigationRoute.EditCard.name, action.newCard)
             }
             else -> {
 

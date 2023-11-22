@@ -5,7 +5,9 @@ import androidx.compose.runtime.getValue
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ua.ukma.edu.danki.core.composable.ComposableLoading
+import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.collections.ui.CollectionViewList
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionAction
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
@@ -29,7 +31,11 @@ internal fun CollectionsScreen() {
 
         when (val action = viewAction) {
             is CollectionAction.OpenCollection -> {
-                //TODO navigate to card_collection_viewer
+                navController.launch(
+                    screen = NavigationRoute.CardCollectionViewer.name,
+                    params = action.collection,
+                    animationType = AnimationType.Present(animationTime = 500)
+                );
             }
 
             else -> {

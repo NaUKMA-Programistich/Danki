@@ -2,115 +2,96 @@ package ua.ukma.edu.danki.screens.new_cards_viewer.viewmodel
 
 import kotlinx.datetime.Clock
 import ua.ukma.edu.danki.core.viewmodel.ViewModel
+import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
-import ua.ukma.edu.danki.screens.new_cards_viewer.model.NewCardViewerModel
-
 
 class NewCardViewerViewModel() : ViewModel<NewCardViewerState, NewCardViewerAction, NewCardViewerEvent>(initialState = NewCardViewerState.Loading) {
 
-    private val mockCollections = listOf(
-        UserCardCollectionDTO(
-            "1", "Fruits", Clock.System.now(),
-            own = false,
-            favorite = false
-        ),
-        UserCardCollectionDTO(
-            "2", "Family", Clock.System.now(),
-            own = false,
-            favorite = false
-        ),
-        UserCardCollectionDTO(
-            "3", "Work", Clock.System.now(),
-            own = false,
-            favorite = false
-        )
-    )
-
     private val mockData = listOf(
-        NewCardViewerModel(
+        CardDTO(
+            id = null,
             "Banan",
             "Definition for Banan: Banan is a tropical fruit known for its curved shape and yellow skin. It is a good source of potassium and is often used in various culinary dishes.",
-            mockCollections[0]
+            null
         ),
-        NewCardViewerModel(
+        CardDTO(
+            id = null,
             "Apple",
             "Definition for Apple: Apple is a widely consumed fruit with a variety of flavors and colors. It is often used in making pies, applesauce, and various desserts.",
-            mockCollections[0]
+            null
         ),
-        NewCardViewerModel(
+        CardDTO(
+            id = null,
             "Orange",
             "Definition for Orange: Orange is a citrus fruit that is rich in vitamin C. It is commonly consumed as fresh fruit or as a refreshing juice.",
-            mockCollections[1]
+            null
         ),
-        NewCardViewerModel(
+        CardDTO(
+            id = null,
             "Grapes",
             "Definition for Grapes: Grapes are small, sweet, and juicy fruits that are used to make wine, raisins, and consumed as a healthy snack.",
-            mockCollections[2]
+            null
         ),
-        NewCardViewerModel(
+        CardDTO(
+            id = null,
             "Strawberry",
             "Definition for Strawberry: Strawberry is a red, heart-shaped fruit known for its sweet taste. It is used in a variety of desserts, jams, and as a topping for many dishes.",
-            mockCollections[0]
+            null
         ),
-        NewCardViewerModel(
+        CardDTO(
+            id = null,
             "Pineapple",
             "Definition for Pineapple: Pineapple is a tropical fruit with a spiky skin and sweet, juicy flesh. It is often used in fruit salads, smoothies, and as a pizza topping.",
-            mockCollections[1]
+            null
         ),
-        NewCardViewerModel(
+        CardDTO(
+            id = null,
             "Watermelon",
             "Definition for Watermelon: Watermelon is a refreshing and hydrating fruit with a green rind and pink or red flesh. It's a popular fruit during the summer months.",
-            mockCollections[2]
+            null
         ),
-        NewCardViewerModel(
+        CardDTO(
+            id = null,
             "Mango",
             "Definition for Mango: Mango is a tropical fruit with a sweet and juicy flesh. It is often eaten fresh, added to salads, or used in mango lassi and chutney.",
-            mockCollections[0]
+            null
         ),
-        NewCardViewerModel(
+        CardDTO(
+            id = null,
             "Cherry",
             "Definition for Cherry: Cherry is a small, round fruit with a tart or sweet flavor. It is used in various desserts, pies, and is a popular ice cream topping.",
-            mockCollections[1]
+            null
         ),
-        NewCardViewerModel(
+        CardDTO(
+            id = null,
             "Kiwi",
             "Definition for Kiwi: Kiwi is a small, green fruit with fuzzy skin and vibrant green flesh. It is rich in vitamin C and can be eaten with or without the skin.",
-            mockCollections[2]
+            null
         )
     )
 
     override fun obtainEvent(viewEvent: NewCardViewerEvent) {
         when (viewEvent) {
             NewCardViewerEvent.GoBack -> processGoBack()
-            is NewCardViewerEvent.OnCardClick -> processOnCardClick(viewEvent.newCardViewerModel)
+            is NewCardViewerEvent.OnCardClick -> processOnCardClick(viewEvent.newCard)
         }
     }
 
     init {
         withViewModelScope {
             setViewState(NewCardViewerState.Loading)
-            setViewState(NewCardViewerState.NewCardCards(newCardViewerModelMap = getNewCardMap()))
+            setViewState(NewCardViewerState.NewCardCards(newCards = getNewCards()))
         }
     }
 
-    private suspend fun getNewCardMap () : Map<UserCardCollectionDTO?,MutableList<NewCardViewerModel>> {
+    private suspend fun getNewCards () : List<CardDTO> {
         // TODO("get all new cards")
-        return mockData.run {
-            val map = mutableMapOf<UserCardCollectionDTO?,MutableList<NewCardViewerModel>>()
-            this.forEach {
-                if(map.containsKey(it.collection)){
-                    map[it.collection]?.add(it)
-                }else {
-                    map[it.collection] = mutableListOf(it)
-                }
-            }
-            map
-        }
+        return mockData
     }
 
-    private fun processOnCardClick(newCardViewerModel: NewCardViewerModel) {
+    private fun processOnCardClick(newCard: CardDTO) {
         withViewModelScope {
-            setViewAction(NewCardViewerAction.OpenCardToEdit(newCardViewerModel = newCardViewerModel))
+            setViewAction(NewCardViewerAction.OpenCardToEdit(newCard = newCard))
         }
     }
 
