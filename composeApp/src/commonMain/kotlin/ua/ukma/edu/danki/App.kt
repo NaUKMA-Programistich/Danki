@@ -33,54 +33,11 @@ internal fun App(
     //var email by remember { mutableStateOf("") }
     //var password by remember { mutableStateOf("") }
 
-    Row (modifier = Modifier.fillMaxSize(),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.Start) {
-        SideNavigation()
-        setNavigationContent(odysseyConfiguration) {
-            NavigationGraph()
-        }
+    setNavigationContent(odysseyConfiguration) {
+        NavigationGraph()
     }
-
 
 }
 
-@Composable
-private fun SideNavigation() {
-    val navController = LocalRootController.current
-
-    NavigationRail(modifier = Modifier.padding(top = 44.dp, bottom = 56.dp)) {
-        FloatingActionButton(
-            onClick = {}
-        ) {
-            Icon(Icons.Filled.Refresh, "Recents button")
-        }
-        Spacer(modifier = Modifier.size(20.dp))
-        NavigationRailItem(
-            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Search Screen") },
-            label = { Text("Search") },
-            selected = false,
-            onClick = { navController.push(NavigationRoute.Search.name) }
-        )
-        NavigationRailItem(
-            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "New Cards Viewer") },
-            label = { Text("New Cards Viewer") },
-            selected = false,
-            onClick = { navController.push(NavigationRoute.NewCardViewer.name) }
-        )
-        NavigationRailItem(
-            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Collections") },
-            label = { Text("Collections") },
-            selected = false,
-            onClick = { navController.push(NavigationRoute.Collections.name) }
-        )
-        NavigationRailItem(
-            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "GameScreen") },
-            label = { Text("Game") },
-            selected = false,
-            onClick = { navController.push(NavigationRoute.Game.name) }
-        )
-    }
-}
 
 internal expect fun openUrl(url: String?)

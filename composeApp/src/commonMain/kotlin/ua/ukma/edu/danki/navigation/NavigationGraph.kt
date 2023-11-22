@@ -1,19 +1,23 @@
 package ua.ukma.edu.danki.navigation
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.extensions.screen
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
-import ua.ukma.edu.danki.models.UserCardCollectionDTO
+import ru.alexgladkov.odyssey.core.LaunchFlag
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ua.ukma.edu.danki.screens.card_collection_viewer.CardCollectionViewerScreen
 import ua.ukma.edu.danki.screens.card_collection_viewer.model.CardViewerModel
 import ua.ukma.edu.danki.screens.edit_card_screen.EditCardScreen
@@ -24,61 +28,118 @@ import ua.ukma.edu.danki.screens.definition.DefinitionScreen
 import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.screens.game.GameScreen
 import ua.ukma.edu.danki.screens.game_results.GameResultsScreen
-import ua.ukma.edu.danki.screens.game.GameScreen
 import ua.ukma.edu.danki.screens.collections.CollectionsScreen
-import ua.ukma.edu.danki.screens.login.LoginScreen
 import ua.ukma.edu.danki.screens.search.SearchScreen
 import ua.ukma.edu.danki.screens.search_history.SearchHistoryScreen
 
 
+@Composable
+private fun SideNavigation(selectedElem: MutableState<Int>, content: @Composable () -> Unit) {
+
+    Row (modifier = Modifier.fillMaxSize(),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.Start) {
+        val navController = LocalRootController.current
+        NavigationRail(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(top = 44.dp, bottom = 56.dp).fillMaxHeight()) {
+            FloatingActionButton(
+                onClick = {  navController.launch(
+                    screen = NavigationRoute.NewCardViewer.name,
+                    animationType = AnimationType.Present(animationTime = 500)
+                ); selectedElem.value = 0}
+            ) {
+                Icon(Icons.Filled.Refresh, "New Cards")
+            }
+            Spacer(modifier = Modifier.size(20.dp))
+            NavigationRailItem(
+                icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Search Screen") },
+                label = { Text("Search") },
+                selected = selectedElem.value == 1,
+                onClick = { navController.launch(
+                    screen = NavigationRoute.Search.name,
+                    animationType = AnimationType.Present(animationTime = 500)
+                ); selectedElem.value = 1 }
+            )
+            NavigationRailItem(
+                icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Collections") },
+                label = { Text("Collections") },
+                selected = selectedElem.value == 2,
+                onClick = { navController.launch(
+                    screen = NavigationRoute.Collections.name,
+                    animationType = AnimationType.Present(animationTime = 500)
+                ); selectedElem.value = 2 }
+            )
+        }
+        content()
+    }
+
+}
 
 internal fun RootComposeBuilder.NavigationGraph() {
+        val selectedElem = mutableStateOf(1)
 
         screen(NavigationRoute.Login.name) {
             LoginScreen()
         }
 
          screen(NavigationRoute.NewCardViewer.name) {
-             NewCardViewerScreen()
+             SideNavigation (selectedElem = selectedElem) {
+                 NewCardViewerScreen()
+             }
          }
 
          screen(NavigationRoute.CardCollectionViewer.name) {
-             CardCollectionViewerScreen()
+             SideNavigation (selectedElem = selectedElem) {
+                 CardCollectionViewerScreen()
+             }
          }
 
          screen(NavigationRoute.EditCard.name) {
-             EditCardScreen((it as CardViewerModel).run {
-                 EditCard(
-                     term = this.term,
-                     definition = this.definition,
-                     collection = this.collection,
+             SideNavigation (selectedElem = selectedElem) {
+                 EditCardScreen((it as CardViewerModel).run {
+                     EditCard(
+                         term = this.term,
+                         definition = this.definition,
+                         collection = this.collection,
                      )
-             })
+                 })
+             }
          }
          screen(NavigationRoute.Search.name) {
-             SearchScreen()
+             SideNavigation (selectedElem = selectedElem) {
+                 SearchScreen()
+             }
          }
          screen(NavigationRoute.SearchHistory.name) {
-             SearchHistoryScreen()
+             SideNavigation (selectedElem = selectedElem) {
+                 SearchHistoryScreen()
+             }
          }
          screen(NavigationRoute.Definition.name) {
-             DefinitionScreen(term = it as String)
+             SideNavigation (selectedElem = selectedElem) {
+                 DefinitionScreen(term = it as String)
+             }
          }
 
          screen(NavigationRoute.Collections.name) {
-             CollectionsScreen()
+             SideNavigation (selectedElem = selectedElem) {
+                 CollectionsScreen()
+             }
          }
 
          screen(NavigationRoute.Game.name) {
-             GameScreen(collectionId = it as String)
+             SideNavigation (selectedElem = selectedElem) {
+                 GameScreen(collectionId = it as String)
+             }
          }
 
          screen(NavigationRoute.GameResults.name) { cardsAndResults ->
              if (cardsAndResults !is Pair<*, *>) return@screen
-             GameResultsScreen(
-                 cards = (cardsAndResults.first as List<CardDTO>),
-                 gameResults = cardsAndResults.second as List<Boolean>
-             )
+             SideNavigation (selectedElem = selectedElem) {
+                 GameResultsScreen(
+                     cards = (cardsAndResults.first as List<CardDTO>),
+                     gameResults = cardsAndResults.second as List<Boolean>
+                 )
+             }
          }
 }
 

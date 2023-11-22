@@ -14,8 +14,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
+import ru.alexgladkov.odyssey.compose.extensions.push
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ua.ukma.edu.danki.core.viewmodel.ViewModel
 import ua.ukma.edu.danki.models.SimpleDto
+import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.rememberDarkMode
 import ua.ukma.edu.danki.rememberLightMode
 import ua.ukma.edu.danki.theme.LocalThemeIsDark
@@ -52,10 +56,9 @@ class AppViewModel : ViewModel<AppState, Unit, AppEvent>(
 @Composable
 internal fun LoginScreen() {
     StoredViewModel(factory = { AppViewModel() }) { viewModel ->
-
         val viewState = viewModel.viewStates().observeAsState()
         var passwordVisibility by remember { mutableStateOf(false) }
-
+        val navController = LocalRootController.current
 
         val dto by remember { mutableStateOf(SimpleDto(test = "test")) }
 
@@ -114,7 +117,10 @@ internal fun LoginScreen() {
             )
 
             Button(
-                onClick = { /* Handle login logic here */ },
+                onClick = { navController.launch(
+                    screen = NavigationRoute.Search.name,
+                    animationType = AnimationType.Present(animationTime = 500)
+                ) },
                 modifier = Modifier.fillMaxWidth().padding(16.dp)
             ) {
                 Text("Login")
