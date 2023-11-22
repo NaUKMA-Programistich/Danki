@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ua.ukma.edu.danki.core.composable.ComposableLoading
 import ua.ukma.edu.danki.screens.definition.ui.TermDefinitionView
 import ua.ukma.edu.danki.screens.definition.viewmodel.DefinitionAction
 import ua.ukma.edu.danki.screens.definition.viewmodel.DefinitionState
@@ -32,17 +33,7 @@ internal fun DefinitionScreen(term: String) {
             )
 
             is DefinitionState.Loading -> {
-                // TODO("replace with ComposableLoading from another branch")
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(120.dp)
-                            .padding(16.dp)
-                    )
-                }
+                ComposableLoading()
             }
         }
 

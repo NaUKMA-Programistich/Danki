@@ -16,8 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableSharedFlow
+import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
-import ua.ukma.edu.danki.screens.edit_card_screen.model.EditCard
 import ua.ukma.edu.danki.screens.edit_card_screen.viewmodel.EditCardEvent
 import ua.ukma.edu.danki.screens.edit_card_screen.viewmodel.EditCardState
 
@@ -33,9 +33,9 @@ fun CardToEditView (
             verticalArrangement = Arrangement.Top) {
             HeaderComponent(
                 onCancel = { onEvent(EditCardEvent.Cancel) },
-                onDelete = { onEvent(EditCardEvent.DeleteCard(state.editCard)) },
+                onDelete = { onEvent(EditCardEvent.DeleteCard(state.card)) },
                 onSave = {onSaveFlow.tryEmit(Unit)})
-            EditForm(onSaveFlow = onSaveFlow,editCard = state.editCard, collectionList = state.collectionList, onSave = { onEvent(EditCardEvent.SaveCard(it)) })
+            EditForm(onSaveFlow = onSaveFlow,editCard = state.card, collectionList = state.collectionList, onSave = { card, collectionId -> onEvent(EditCardEvent.SaveCard(card,collectionId)) })
         }
     }
 }
@@ -106,10 +106,10 @@ private fun HeaderComponent (onCancel: () -> Unit, onDelete : () -> Unit = {}, o
 
 @Composable
 private fun EditForm(
-    editCard: EditCard,
+    editCard: CardDTO,
     onSaveFlow: MutableSharedFlow<Unit>,
     collectionList: List<UserCardCollectionDTO>,
-    onSave: (EditCard) -> Unit,
+    onSave: (CardDTO,String?) -> Unit,
 ) {
     var term by remember { mutableStateOf(editCard.term) }
     var definition by remember { mutableStateOf(editCard.definition) }
@@ -123,7 +123,7 @@ private fun EditForm(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CollectionsList (collection = collection, collectionList = collectionList)
+        CollectionsList(collection = collection, collectionList = collectionList)
 
         OutlinedTextField(
             modifier = Modifier.padding(8.dp).fillMaxWidth(),
@@ -138,7 +138,7 @@ private fun EditForm(
         )
 
         OutlinedTextField(
-            modifier = Modifier.padding(8.dp).fillMaxWidth().fillMaxHeight(0.3f),
+            modifier = Modifier.padding(8.dp).fillMaxWidth().fillMaxHeight(0.6f),
             value = definition,
             onValueChange = { definition = it },
             shape = MaterialTheme.shapes.extraLarge,
@@ -153,11 +153,12 @@ private fun EditForm(
 
     LaunchedEffect(true) {
         onSaveFlow.collect {
-            onSave(editCard.copy(
-                term = term,
-                definition = definition,
-                collection = collection.value
-            ))
+            onSave(
+                editCard.copy(
+                    term = term,
+                    definition = definition
+                ), collection.value?.id
+            )
         }
     }
 }

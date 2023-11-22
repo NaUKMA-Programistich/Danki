@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import ua.ukma.edu.danki.screens.card_collection_viewer.model.CardViewerModel
+import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollectionViewerEvent
 import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollectionViewerState
 
@@ -30,10 +30,10 @@ fun CardCollectionViewerView (
             verticalArrangement = Arrangement.Top
         ) {
             HeaderComponent(
-                collectionName = state.cardCollectionViewerModel.name,
+                collectionName = state.collection.name,
                 onBack = { onEvent(CardCollectionViewerEvent.GoBack) },
-                onDelete = { onEvent(CardCollectionViewerEvent.DeleteCollection(cardCollectionViewerModel = state.cardCollectionViewerModel)) })
-            CardList(cardList = state.cardViewerModelList , onCard = { onEvent(CardCollectionViewerEvent.OnCardClick(cardViewerModel = it)) })
+                onDelete = { onEvent(CardCollectionViewerEvent.DeleteCollection(collection = state.collection)) })
+            CardList(cardList = state.cardList , onCard = { onEvent(CardCollectionViewerEvent.OnCardClick(card = it)) })
         }
     }
 }
@@ -89,8 +89,8 @@ private fun HeaderComponent (onBack: () -> Unit, onDelete: () -> Unit = {}, coll
 
 @Composable
 private fun CardList (
-    cardList: List<CardViewerModel>,
-    onCard: (CardViewerModel) -> Unit
+    cardList: List<CardDTO>,
+    onCard: (CardDTO) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(0.8f).fillMaxHeight().padding(16.dp).clip(MaterialTheme.shapes.large)
@@ -109,8 +109,8 @@ private fun CardList (
 
 @Composable
 private fun CardComponent(
-    card: CardViewerModel,
-    onCard: (CardViewerModel) -> Unit
+    card: CardDTO,
+    onCard: (CardDTO) -> Unit
 ) {
     Column (modifier = Modifier.padding(8.dp).fillMaxWidth().clip(MaterialTheme.shapes.large).clickable { onCard(card) }.padding(12.dp),
         verticalArrangement = Arrangement.SpaceAround,
