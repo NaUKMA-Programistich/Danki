@@ -15,7 +15,8 @@ class AuthRepositoryImpl(private val client: HttpClient) : AuthRepository {
 
     override suspend fun login(request: UserAuthRequest): UserAuthResponse? {
         return try {
-            val result = client.post("${API.BASE_URL}/login") {
+            val url = "${API.BASE_URL}/login"
+            val result = client.post(url) {
                 contentType(ContentType.Application.Json)
                 setBody(request)
             }
@@ -31,7 +32,8 @@ class AuthRepositoryImpl(private val client: HttpClient) : AuthRepository {
 
     override suspend fun register(request: UserRegisterRequest): UserRegisterResponse? {
         return try {
-            val result = client.post("${API.BASE_URL}/register") {
+            val url = "${API.BASE_URL}/register"
+            val result = client.post(url) {
                 contentType(ContentType.Application.Json)
                 setBody(request)
             }
