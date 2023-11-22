@@ -5,6 +5,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.resources.*
 import io.ktor.serialization.kotlinx.json.*
 import ua.ukma.edu.danki.data.auth.AuthRepositoryImpl
+import ua.ukma.edu.danki.data.card.CardRepositoryImpl
 import ua.ukma.edu.danki.data.dictionary.DictionaryRepositoryImpl
 import ua.ukma.edu.danki.data.recents.RecentsRepositoryImpl
 
@@ -18,4 +19,5 @@ object Injection {
     val authRepository = AuthRepositoryImpl(client)
     val dictionaryRepository = DictionaryRepositoryImpl(client)
     val recentsRepository = RecentsRepositoryImpl(client)
+    val cardRepository = CardRepositoryImpl(client)
 }
