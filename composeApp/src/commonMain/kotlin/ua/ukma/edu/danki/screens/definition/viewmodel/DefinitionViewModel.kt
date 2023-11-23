@@ -1,8 +1,11 @@
 package ua.ukma.edu.danki.screens.definition.viewmodel
 
 import ua.ukma.edu.danki.core.viewmodel.ViewModel
+import ua.ukma.edu.danki.data.Injection
+import ua.ukma.edu.danki.data.dictionary.DictionaryRepository
+import ua.ukma.edu.danki.models.dictionary.GetTermDefinition
 
-class DefinitionViewModel(term: String) :
+class DefinitionViewModel(term: String, dictionaryRepository: DictionaryRepository = Injection.dictionaryRepository) :
     ViewModel<DefinitionState, DefinitionAction, DefinitionEvent>(initialState = DefinitionState.Loading) {
     override fun obtainEvent(viewEvent: DefinitionEvent) {
         when (viewEvent) {
@@ -12,7 +15,13 @@ class DefinitionViewModel(term: String) :
 
     init {
         withViewModelScope {
-            val definition = List(30) { _ -> "text" }.joinToString(separator = "") // TODO("replace with real data")
+            val termDefinition = dictionaryRepository.getTermDefinition(
+                GetTermDefinition(
+                    term = term
+                )
+            )
+            // TODO: make this display multiple defintions
+            val definition = termDefinition?.term?.data?.first()?.definition ?: ""
             setViewState(DefinitionState.TermDefinition(term, definition))
         }
     }
