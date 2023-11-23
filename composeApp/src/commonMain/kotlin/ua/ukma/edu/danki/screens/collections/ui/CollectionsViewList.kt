@@ -57,6 +57,13 @@ internal fun Header(
                         },
                         text = { Text("Create collection") }
                     )
+                    DropdownMenuItem(
+                        onClick = {
+                            onEvent(CollectionEvent.DeleteSelected)
+                            menuExpanded = false
+                        },
+                        text = { Text("Delete selected") }
+                    )
                 }
             }
         }
@@ -169,6 +176,40 @@ internal fun CollectionAsItem(
                 tint = MaterialTheme.colorScheme.secondary
             )
         }
+    }
+}
+
+@Composable
+internal fun CollectionMenu(
+    collectionId: String,
+    menuExpanded: Boolean,
+    onCloseMenu: () -> Unit,
+    onEvent: (CollectionEvent) -> Unit
+) {
+    DropdownMenu(
+        expanded = menuExpanded,
+        onDismissRequest = onCloseMenu
+    ) {
+        DropdownMenuItem(
+            onClick = {
+                onEvent(CollectionEvent.ToggleSelectCollection(collectionId))
+                onCloseMenu()
+            },
+            text = { Text("Select") }
+        )
+        DropdownMenuItem(
+            onClick = {
+                onCloseMenu()
+            },
+            text = { Text("Change name") }
+        )
+        DropdownMenuItem(
+            onClick = {
+                onEvent(CollectionEvent.DeleteCollection(collectionId))
+                onCloseMenu()
+            },
+            text = { Text("Delete") }
+        )
     }
 }
 

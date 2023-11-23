@@ -12,6 +12,8 @@ sealed class CollectionEvent {
     data class OpenCollection(val collection: UserCardCollectionDTO) : CollectionEvent()
     data class SaveCollection(val collectionName: String) : CollectionEvent()
     data class UpdateCollection(val collection: UserCardCollectionDTO) : CollectionEvent()
-    data class DeleteCollection(val collection: UserCardCollectionDTO) : CollectionEvent()
+    data class DeleteCollection(val collectionId: String) : CollectionEvent()
+    data object DeleteSelected : CollectionEvent()
     data object ShowCreateCollectionDialog : CollectionEvent()
+    data class ToggleSelectCollection(val collectionId: String) : CollectionEvent()
 }

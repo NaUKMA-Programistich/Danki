@@ -60,7 +60,9 @@ class CollectionViewModel :
             is CollectionEvent.SaveCollection -> processSaveCollection(viewEvent.collectionName)
             is CollectionEvent.UpdateCollection -> TODO()
             is CollectionEvent.DeleteCollection -> TODO()
+            is CollectionEvent.DeleteSelected -> processDeleteSelected()
             is CollectionEvent.ShowCreateCollectionDialog -> processShowCreateCollectionDialog()
+            is CollectionEvent.ToggleSelectCollection -> processToggleSelectCollection(viewEvent.collectionId)
         }
     }
 
@@ -71,6 +73,8 @@ class CollectionViewModel :
             setViewState(
                 CollectionState.CollectionList(
                     mockData.sortedBy { it.name.lowercase() },
+                    HashSet(),
+                    selectionMode = false,
                     CollectionSortParam.ByName,
                     orderIsAscending = true,
                     favoriteOnly = false
@@ -87,6 +91,8 @@ class CollectionViewModel :
             setViewState(
                 CollectionState.CollectionList(
                     state.collections.filter { it.favorite },
+                    state.selected,
+                    state.selectionMode,
                     state.sortingParam,
                     state.orderIsAscending,
                     true
@@ -94,6 +100,7 @@ class CollectionViewModel :
             )
         }
     }
+
 
     private fun sort(sortParam: CollectionSortParam) {
         withViewModelScope {
@@ -104,6 +111,8 @@ class CollectionViewModel :
                 setViewState(
                     CollectionState.CollectionList(
                         state.collections.sortedBy { it.name.lowercase() },
+                        state.selected,
+                        state.selectionMode,
                         sortParam,
                         orderIsAscending = true,
                         state.favoriteOnly
@@ -113,6 +122,8 @@ class CollectionViewModel :
                 setViewState(
                     CollectionState.CollectionList(
                         state.collections.sortedBy { it.lastModified },
+                        state.selected,
+                        state.selectionMode,
                         sortParam,
                         orderIsAscending = true,
                         state.favoriteOnly
@@ -129,6 +140,8 @@ class CollectionViewModel :
             setViewState(
                 CollectionState.CollectionList(
                     state.collections.reversed(),
+                    state.selected,
+                    state.selectionMode,
                     state.sortingParam,
                     !state.orderIsAscending,
                     state.favoriteOnly
@@ -158,6 +171,7 @@ class CollectionViewModel :
                         else
                             it
                     },
+                    state.selected, state.selectionMode,
                     state.sortingParam, state.orderIsAscending, state.favoriteOnly
                 )
             )
@@ -168,15 +182,9 @@ class CollectionViewModel :
         withViewModelScope {
             // TODO create real collection
 
+
             mockData.add(UserCardCollectionDTO("", collectionName, Clock.System.now(), own = true, favorite = false))
-            setViewState(
-                CollectionState.CollectionList(
-                    mockData.sortedBy { it.name.lowercase() },
-                    CollectionSortParam.ByName,
-                    orderIsAscending = true,
-                    favoriteOnly = false
-                )
-            )
+            getCollections()
         }
     }
 
@@ -186,9 +194,54 @@ class CollectionViewModel :
         }
     }
 
+    private fun processDeleteSelected() {
+        withViewModelScope {
+            //TODO real delete collections
+            val state = viewStates().value
+            if (state !is CollectionState.CollectionList) return@withViewModelScope
+
+            mockData.removeAll { state.selected.contains(it.id) }
+            getCollections()
+        }
+    }
+
     private fun processShowCreateCollectionDialog() {
         withViewModelScope {
             setViewAction(CollectionAction.ShowCreateCollectionDialog)
+        }
+    }
+
+    private fun processToggleSelectCollection(collectionId: String) {
+        withViewModelScope {
+            val state = viewStates().value
+            if (state !is CollectionState.CollectionList) return@withViewModelScope
+
+            if (state.selected.contains(collectionId)) {
+                state.selected.remove(collectionId)
+                setViewState(
+                    CollectionState.CollectionList(
+                        state.collections,
+                        if (!state.selected.isEmpty()) state.selected else HashSet(),
+                        !state.selected.isEmpty(),
+                        state.sortingParam,
+                        state.orderIsAscending,
+                        state.favoriteOnly
+                    )
+                )
+                return@withViewModelScope
+            }
+
+            state.selected.add(collectionId)
+            setViewState(
+                CollectionState.CollectionList(
+                    state.collections,
+                    state.selected,
+                    selectionMode = true,
+                    state.sortingParam,
+                    state.orderIsAscending,
+                    state.favoriteOnly
+                )
+            )
         }
     }
 }

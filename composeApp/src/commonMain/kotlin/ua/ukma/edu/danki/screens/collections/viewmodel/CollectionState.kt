@@ -6,9 +6,12 @@ import ua.ukma.edu.danki.models.UserCardCollectionDTO
 sealed class CollectionState {
     data class CollectionList(
         val collections: List<UserCardCollectionDTO>,
+        val selected: HashSet<String>,
+        val selectionMode: Boolean,
         val sortingParam: CollectionSortParam,
         val orderIsAscending: Boolean,
         val favoriteOnly: Boolean,
     ) : CollectionState()
+
     data object Loading : CollectionState()
 }
