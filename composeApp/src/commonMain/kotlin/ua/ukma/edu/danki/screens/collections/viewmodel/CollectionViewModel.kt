@@ -2,46 +2,50 @@ package ua.ukma.edu.danki.screens.collections.viewmodel
 
 import kotlinx.datetime.Clock
 import ua.ukma.edu.danki.core.viewmodel.ViewModel
+import ua.ukma.edu.danki.data.Injection
+import ua.ukma.edu.danki.data.card_collections.CardCollectionsRepository
 import ua.ukma.edu.danki.models.CollectionSortParam
+import ua.ukma.edu.danki.models.GetUserCollections
+import ua.ukma.edu.danki.models.UpdateCollectionRequest
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
-import kotlin.time.Duration.Companion.hours
 
-class CollectionViewModel :
-    ViewModel<CollectionState, CollectionAction, CollectionEvent>(initialState = CollectionState.Loading) {
-    private val mockData: List<UserCardCollectionDTO> = listOf(
-        UserCardCollectionDTO(
-            "UniqueID1", "First", Clock.System.now().minus(10.hours),
-            own = true, true
-        ),
-        UserCardCollectionDTO(
-            "UniqueID2", "Second", Clock.System.now().minus(40.hours),
-            own = true, false
-        ),
-        UserCardCollectionDTO(
-            "UniqueID3", "third", Clock.System.now().minus(100.hours),
-            own = true, false
-        ),
-        UserCardCollectionDTO(
-            "UniqueID4", "forth", Clock.System.now().minus(1.hours),
-            own = false, true
-        ),
-        UserCardCollectionDTO(
-            "UniqueID5", "fifth", Clock.System.now().minus(1.hours),
-            own = false, true
-        ),
-        UserCardCollectionDTO(
-            "UniqueID6", "sixth", Clock.System.now().minus(1.hours),
-            own = false, true
-        ),
-        UserCardCollectionDTO(
-            "UniqueID7", "any", Clock.System.now().minus(1.hours),
-            own = false, true
-        ),
-        UserCardCollectionDTO(
-            "UniqueID8", "eights", Clock.System.now().minus(1.hours),
-            own = false, true
-        ),
-    )
+class CollectionViewModel(
+    private val cardCollectionsRepository: CardCollectionsRepository = Injection.cardCollectionsRepository
+) : ViewModel<CollectionState, CollectionAction, CollectionEvent>(initialState = CollectionState.Loading) {
+//    private val mockData: List<UserCardCollectionDTO> = listOf(
+//        UserCardCollectionDTO(
+//            "UniqueID1", "First", Clock.System.now().minus(10.hours),
+//            own = true, true
+//        ),
+//        UserCardCollectionDTO(
+//            "UniqueID2", "Second", Clock.System.now().minus(40.hours),
+//            own = true, false
+//        ),
+//        UserCardCollectionDTO(
+//            "UniqueID3", "third", Clock.System.now().minus(100.hours),
+//            own = true, false
+//        ),
+//        UserCardCollectionDTO(
+//            "UniqueID4", "forth", Clock.System.now().minus(1.hours),
+//            own = false, true
+//        ),
+//        UserCardCollectionDTO(
+//            "UniqueID5", "fifth", Clock.System.now().minus(1.hours),
+//            own = false, true
+//        ),
+//        UserCardCollectionDTO(
+//            "UniqueID6", "sixth", Clock.System.now().minus(1.hours),
+//            own = false, true
+//        ),
+//        UserCardCollectionDTO(
+//            "UniqueID7", "any", Clock.System.now().minus(1.hours),
+//            own = false, true
+//        ),
+//        UserCardCollectionDTO(
+//            "UniqueID8", "eights", Clock.System.now().minus(1.hours),
+//            own = false, true
+//        ),
+//    )
 
     init {
         withViewModelScope {
@@ -62,11 +66,12 @@ class CollectionViewModel :
 
     private fun getCollections() {
         withViewModelScope {
-            //TODO("collecting real data from db/server")
+            val listOfUserCollections = cardCollectionsRepository.getUserCollections(GetUserCollections())
+            val collections = listOfUserCollections?.cardCollections ?: emptyList()
 
             setViewState(
                 CollectionState.CollectionList(
-                    mockData.sortedBy { it.name.lowercase() },
+                    collections.sortedBy { it.name.lowercase() },
                     CollectionSortParam.ByName,
                     orderIsAscending = true,
                     favoriteOnly = false
@@ -135,10 +140,10 @@ class CollectionViewModel :
 
     private fun changeCollectionFavoriteStatus(id: String) {
         withViewModelScope {
-            //TODO("change collection favorite status in server/local db")
             val state = viewStates().value
             if (state !is CollectionState.CollectionList) return@withViewModelScope
 
+            val initialFavoriteStatus = state.collections.find { it.id == id }?.favorite ?: false
             // should be retrieved from db and not changed with .map() here
             setViewState(
                 CollectionState.CollectionList(
@@ -155,6 +160,13 @@ class CollectionViewModel :
                             it
                     },
                     state.sortingParam, state.orderIsAscending, state.favoriteOnly
+                )
+            )
+
+            cardCollectionsRepository.updateCollection(
+                UpdateCollectionRequest(
+                    uuid = id,
+                    favorite = !initialFavoriteStatus
                 )
             )
         }

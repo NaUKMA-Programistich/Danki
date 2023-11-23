@@ -58,7 +58,7 @@ class CardCollectionsRepositoryImpl(private val client: HttpClient) : CardCollec
 
     override suspend fun updateCollection(request: UpdateCollectionRequest): GenericBooleanResponse? {
         return try {
-            val url = "${API.BASE_URL}/collections"
+            val url = "${API.BASE_URL}/collections/"
             val result = client.put(url) {
                 contentType(ContentType.Application.Json)
                 setBody(request)
