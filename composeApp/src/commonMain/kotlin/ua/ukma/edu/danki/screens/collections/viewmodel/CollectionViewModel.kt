@@ -59,12 +59,13 @@ class CollectionViewModel :
             is CollectionEvent.OpenCollection -> processOpenCollection(viewEvent.collection)
             is CollectionEvent.SaveCollection -> processSaveCollection(viewEvent.collectionName)
             is CollectionEvent.UpdateCollection -> TODO()
-            is CollectionEvent.DeleteCollection -> TODO()
+            is CollectionEvent.DeleteCollection -> processDeleteCollection(viewEvent.collectionId)
             is CollectionEvent.DeleteSelected -> processDeleteSelected()
             is CollectionEvent.ShowCreateCollectionDialog -> processShowCreateCollectionDialog()
             is CollectionEvent.ToggleSelectCollection -> processToggleSelectCollection(viewEvent.collectionId)
         }
     }
+
 
     private fun getCollections() {
         withViewModelScope {
@@ -191,6 +192,17 @@ class CollectionViewModel :
     private fun processOpenCollection(collection: UserCardCollectionDTO) {
         withViewModelScope {
             setViewAction(CollectionAction.OpenCollection(collection))
+        }
+    }
+
+    private fun processDeleteCollection(collectionId: String) {
+        withViewModelScope {
+            //TODO real delete collections
+            val state = viewStates().value
+            if (state !is CollectionState.CollectionList) return@withViewModelScope
+
+            mockData.removeAll { it.id == collectionId }
+            getCollections()
         }
     }
 
