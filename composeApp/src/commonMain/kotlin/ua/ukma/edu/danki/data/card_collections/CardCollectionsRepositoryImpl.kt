@@ -74,7 +74,7 @@ class CardCollectionsRepositoryImpl(private val client: HttpClient) : CardCollec
 
     override suspend fun deleteCollection(request: DeleteCollectionsRequest): GenericBooleanResponse? {
         return try {
-            val url = "${API.BASE_URL}/delete"
+            val url = "${API.BASE_URL}/collections/delete"
             val result = client.post(url) {
                 contentType(ContentType.Application.Json)
                 setBody(request)
@@ -90,7 +90,7 @@ class CardCollectionsRepositoryImpl(private val client: HttpClient) : CardCollec
 
     override suspend fun shareCollection(request: ShareCollectionRequest): ShareCollectionResponse? {
         return try {
-            val url = "${API.BASE_URL}/share"
+            val url = "${API.BASE_URL}/collections/share"
             val result = client.post(url) {
                 contentType(ContentType.Application.Json)
                 setBody(request)
@@ -106,7 +106,7 @@ class CardCollectionsRepositoryImpl(private val client: HttpClient) : CardCollec
 
     override suspend fun getSharedCollection(request: ReadSharedCollectionRequest): UserCardCollectionDTO? {
         return try {
-            val url = "${API.BASE_URL}/get-shared"
+            val url = "${API.BASE_URL}/collections/get-shared"
             val result = client.post(url) {
                 contentType(ContentType.Application.Json)
                 setBody(request)
