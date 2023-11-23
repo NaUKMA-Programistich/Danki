@@ -14,11 +14,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
-import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ua.ukma.edu.danki.core.viewmodel.ViewModel
+import ua.ukma.edu.danki.data.Injection
+import ua.ukma.edu.danki.data.auth.AuthRepository
 import ua.ukma.edu.danki.models.SimpleDto
+import ua.ukma.edu.danki.models.auth.UserAuthRequest
 import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.rememberDarkMode
 import ua.ukma.edu.danki.rememberLightMode
@@ -33,9 +35,18 @@ data class AppState(
 sealed interface AppEvent {
     data class SetEmail(val email: String) : AppEvent
     data class SetPassword(val password: String) : AppEvent
+
+    data object Login : AppEvent
 }
 
-class AppViewModel : ViewModel<AppState, Unit, AppEvent>(
+sealed interface AppAction {
+
+    data object GoToStartScreen : AppAction
+}
+
+class AppViewModel(
+    private val authRepository: AuthRepository = Injection.authRepository
+) : ViewModel<AppState, AppAction, AppEvent>(
     AppState("", "")
 ) {
 
@@ -48,6 +59,14 @@ class AppViewModel : ViewModel<AppState, Unit, AppEvent>(
             is AppEvent.SetPassword -> withViewModelScope {
                 setViewState(viewStates().value.copy(password = viewEvent.password))
             }
+
+            is AppEvent.Login -> withViewModelScope {
+                val value = viewStates().value
+                val response = authRepository.login(UserAuthRequest(email = value.email, password = value.password))
+                if (response != null) {
+                    setViewAction(AppAction.GoToStartScreen)
+                }
+            }
         }
     }
 }
@@ -57,6 +76,7 @@ class AppViewModel : ViewModel<AppState, Unit, AppEvent>(
 internal fun LoginScreen() {
     StoredViewModel(factory = { AppViewModel() }) { viewModel ->
         val viewState = viewModel.viewStates().observeAsState()
+        val viewAction by viewModel.viewActions().observeAsState()
         var passwordVisibility by remember { mutableStateOf(false) }
         val navController = LocalRootController.current
 
@@ -117,10 +137,9 @@ internal fun LoginScreen() {
             )
 
             Button(
-                onClick = { navController.launch(
-                    screen = NavigationRoute.Search.name,
-                    animationType = AnimationType.Present(animationTime = 500)
-                ) },
+                onClick = {
+                    viewModel.obtainEvent(AppEvent.Login)
+                },
                 modifier = Modifier.fillMaxWidth().padding(16.dp)
             ) {
                 Text("Login")
@@ -132,6 +151,18 @@ internal fun LoginScreen() {
             ) {
                 Text("Open github")
             }
+
+        }
+
+        when (viewAction) {
+            is AppAction.GoToStartScreen -> {
+                navController.launch(
+                    screen = NavigationRoute.Search.name,
+                    animationType = AnimationType.Present(animationTime = 500)
+                )
+            }
+
+            null -> {}
 
         }
     }
