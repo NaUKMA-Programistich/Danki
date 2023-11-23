@@ -25,14 +25,13 @@ import ua.ukma.edu.danki.models.UserCardCollectionDTO
 import ua.ukma.edu.danki.screens.game.GameScreen
 import ua.ukma.edu.danki.screens.game_results.GameResultsScreen
 import ua.ukma.edu.danki.screens.collections.CollectionsScreen
-import ua.ukma.edu.danki.screens.edit_card_screen.EditCardScreen
+import ua.ukma.edu.danki.screens.edit_add_card_screen.EditAddCardScreen
 import ua.ukma.edu.danki.screens.search.SearchScreen
 import ua.ukma.edu.danki.screens.search_history.SearchHistoryScreen
 
 
 @Composable
 private fun SideNavigation(selectedElem: MutableState<Int>, content: @Composable () -> Unit) {
-
     Row (modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Start) {
@@ -68,72 +67,78 @@ private fun SideNavigation(selectedElem: MutableState<Int>, content: @Composable
         }
         content()
     }
-
 }
 
 internal fun RootComposeBuilder.NavigationGraph() {
-        val selectedElem = mutableStateOf(1)
+    val selectedElem = mutableStateOf(1)
 
-        screen(NavigationRoute.Login.name) {
-            LoginScreen()
+    screen(NavigationRoute.Login.name) {
+        LoginScreen()
+    }
+
+    screen(NavigationRoute.NewCardViewer.name) {
+        SideNavigation(selectedElem = selectedElem) {
+            NewCardViewerScreen()
         }
+    }
 
-         screen(NavigationRoute.NewCardViewer.name) {
-             SideNavigation (selectedElem = selectedElem) {
-                 NewCardViewerScreen()
-             }
-         }
+    screen(NavigationRoute.CardCollectionViewer.name) {
+        SideNavigation(selectedElem = selectedElem) {
+            CardCollectionViewerScreen(it as UserCardCollectionDTO)
+        }
+    }
 
-         screen(NavigationRoute.CardCollectionViewer.name) {
-             SideNavigation (selectedElem = selectedElem) {
-                 CardCollectionViewerScreen(it as UserCardCollectionDTO)
-             }
-         }
+    screen(NavigationRoute.EditCard.name) {
+        SideNavigation(selectedElem = selectedElem) {
+            EditAddCardScreen(card = (it as CardDTO), isNew = false)
+        }
+    }
 
-         screen(NavigationRoute.EditCard.name) {
-             SideNavigation (selectedElem = selectedElem) {
-                 EditCardScreen((it as CardDTO))
-             }
-         }
-         screen(NavigationRoute.Search.name) {
-             SideNavigation (selectedElem = selectedElem) {
-                 SearchScreen()
-             }
-         }
-         screen(NavigationRoute.SearchHistory.name) {
-             SideNavigation (selectedElem = selectedElem) {
-                 SearchHistoryScreen()
-             }
-         }
-         screen(NavigationRoute.Definition.name) {
-             SideNavigation (selectedElem = selectedElem) {
-                 DefinitionScreen(term = it as String)
-             }
-         }
+    screen(NavigationRoute.AddCard.name) {
+        SideNavigation(selectedElem = selectedElem) {
+            EditAddCardScreen(card = (it as CardDTO), isNew = true)
+        }
+    }
 
-         screen(NavigationRoute.Collections.name) {
-             SideNavigation (selectedElem = selectedElem) {
-                 CollectionsScreen()
-             }
-         }
+    screen(NavigationRoute.Search.name) {
+        SideNavigation(selectedElem = selectedElem) {
+            SearchScreen()
+        }
+    }
+    screen(NavigationRoute.SearchHistory.name) {
+        SideNavigation(selectedElem = selectedElem) {
+            SearchHistoryScreen()
+        }
+    }
+    screen(NavigationRoute.Definition.name) {
+        SideNavigation(selectedElem = selectedElem) {
+            DefinitionScreen(term = it as String)
+        }
+    }
 
-         screen(NavigationRoute.Game.name) {
-             SideNavigation (selectedElem = selectedElem) {
-                 GameScreen(collectionId = it as String)
-             }
-         }
+    screen(NavigationRoute.Collections.name) {
+        SideNavigation(selectedElem = selectedElem) {
+            CollectionsScreen()
+        }
+    }
 
-         screen(NavigationRoute.GameResults.name) { cardsAndResults ->
-             if (cardsAndResults !is Pair<*, *>) return@screen
-             SideNavigation (selectedElem = selectedElem) {
-                 GameResultsScreen(
-                     cards = (cardsAndResults.first as List<CardDTO>),
-                     gameResults = cardsAndResults.second as List<Boolean>
-                 )
-             }
-         }
+    screen(NavigationRoute.Game.name) {
+        SideNavigation(selectedElem = selectedElem) {
+            GameScreen(collectionId = it as String)
+        }
+    }
+
+    screen(NavigationRoute.GameResults.name) { cardsAndResults ->
+        if (cardsAndResults !is Pair<*, *>) return@screen
+        SideNavigation(selectedElem = selectedElem) {
+            GameResultsScreen(
+                cards = (cardsAndResults.first as List<CardDTO>),
+                gameResults = cardsAndResults.second as List<Boolean>
+            )
+        }
+    }
 }
 
 internal enum class NavigationRoute {
-  Login, Collections, Game, GameResults, Search, SearchHistory, Definition,EditCard,CardCollectionViewer,NewCardViewer
+    Login, Collections, Game, GameResults, Search, SearchHistory, Definition, EditCard, CardCollectionViewer, NewCardViewer, AddCard
 }
