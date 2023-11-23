@@ -104,16 +104,14 @@ class DictionaryTest {
 
         Assertions.assertTrue(body.jwt.isNotEmpty())
 
-        val authClient = createClient {
-            install(Resources)
-            install(ContentNegotiation) {
-                json()
-            }
-            //install(Auth)
-        }
         val appleResponse = client
 
-            .get(GetDictionarySuggestions("apple", 10))
+            .get(GetDictionarySuggestions("apple", 10)) {
+                contentType(ContentType.Application.Json)
+                headers {
+                    append("Authorization", "Bearer ${body.jwt}")
+                }
+            }
 
         val suggestions = appleResponse.body<DictionarySuggestions>().suggestions
 
@@ -124,7 +122,12 @@ class DictionaryTest {
         apple!!
 
 
-        val definitionResponse = client.get(GetTermDefinition(apple.term))
+        val definitionResponse = client.get(GetTermDefinition(apple.term)) {
+            contentType(ContentType.Application.Json)
+            headers {
+                append("Authorization", "Bearer ${body.jwt}")
+            }
+        }
 
         Assertions.assertEquals(definitionResponse.status, HttpStatusCode.OK)
         val definition = definitionResponse.body<TermDefinition>()
