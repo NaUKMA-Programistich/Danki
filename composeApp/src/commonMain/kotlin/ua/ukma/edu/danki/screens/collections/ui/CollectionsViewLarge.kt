@@ -82,7 +82,7 @@ private fun ExtendedCollectionList(
 
             Box {
                 CollectionAsSurface(collection, state, { menuExpanded = true }, onEvent)
-                CollectionMenu(collection.id, menuExpanded, { menuExpanded = false }, onEvent)
+                CollectionMenu(collection, menuExpanded, { menuExpanded = false }, onEvent)
             }
         }
     }

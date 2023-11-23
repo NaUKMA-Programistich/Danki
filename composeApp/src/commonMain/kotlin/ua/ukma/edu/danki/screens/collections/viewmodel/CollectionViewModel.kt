@@ -57,8 +57,9 @@ class CollectionViewModel :
             is CollectionEvent.ShowOnlyFavorites -> showOnlyFavorites()
             is CollectionEvent.ChangeFavoriteStatus -> changeCollectionFavoriteStatus(viewEvent.id)
             is CollectionEvent.OpenCollection -> processOpenCollection(viewEvent.collection)
-            is CollectionEvent.SaveCollection -> processSaveCollection(viewEvent.collectionName)
-            is CollectionEvent.UpdateCollection -> TODO()
+            is CollectionEvent.CreateCollection -> processCreateCollection(viewEvent.collection)
+            is CollectionEvent.UpdateCollection -> processUpdateCollection(viewEvent.collection)
+            is CollectionEvent.ChangeCollectionName -> processChangeCollectionName(viewEvent.collection)
             is CollectionEvent.DeleteCollection -> processDeleteCollection(viewEvent.collectionId)
             is CollectionEvent.DeleteSelected -> processDeleteSelected()
             is CollectionEvent.ShowCreateCollectionDialog -> processShowCreateCollectionDialog()
@@ -179,19 +180,36 @@ class CollectionViewModel :
         }
     }
 
-    private fun processSaveCollection(collectionName: String) {
+    private fun processOpenCollection(collection: UserCardCollectionDTO) {
+        withViewModelScope {
+            setViewAction(CollectionAction.OpenCollection(collection))
+        }
+    }
+
+    private fun processCreateCollection(collection: UserCardCollectionDTO) {
         withViewModelScope {
             // TODO create real collection
 
-
-            mockData.add(UserCardCollectionDTO("", collectionName, Clock.System.now(), own = true, favorite = false))
+            mockData.add(
+                UserCardCollectionDTO("", collection.name, Clock.System.now(), own = true, favorite = false)
+            )
             getCollections()
         }
     }
 
-    private fun processOpenCollection(collection: UserCardCollectionDTO) {
+    private fun processUpdateCollection(collection: UserCardCollectionDTO) {
         withViewModelScope {
-            setViewAction(CollectionAction.OpenCollection(collection))
+            //TODO update collection
+
+            mockData.removeAll { it.id == collection.id }
+            mockData.add(collection)
+            getCollections()
+        }
+    }
+
+    private fun processChangeCollectionName(collection: UserCardCollectionDTO) {
+        withViewModelScope {
+            setViewAction(CollectionAction.ShowChangeCollectionNameDialog(collection))
         }
     }
 

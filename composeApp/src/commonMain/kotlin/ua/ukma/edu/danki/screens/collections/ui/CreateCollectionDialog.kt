@@ -5,25 +5,30 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.Clock
+import ua.ukma.edu.danki.models.UserCardCollectionDTO
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
 
 @Composable
 fun CreateCollectionDialog(
-    collectionName: String = "",
+    collection: UserCardCollectionDTO? = null,
     onCloseClick: () -> Unit,
     onEvent: (CollectionEvent) -> Unit
 ) {
-    var name by remember { mutableStateOf(collectionName) }
+    var name by remember { mutableStateOf(collection?.name ?: "") }
     Surface {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxSize().padding(24.dp)
         ) {
-            Text("New collection", style = MaterialTheme.typography.headlineSmall)
+            Text(
+                if (collection == null) "New collection" else "Change collection name",
+                style = MaterialTheme.typography.headlineSmall
+            )
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("name") },
+                label = { Text("Name") },
                 modifier = Modifier.fillMaxWidth()
             )
             Row(
@@ -34,7 +39,22 @@ fun CreateCollectionDialog(
                     Text("Cancel")
                 }
                 TextButton(onClick = {
-                    onEvent(CollectionEvent.SaveCollection(name))
+                    if (collection == null)
+                        onEvent(
+                            CollectionEvent.CreateCollection(
+                                UserCardCollectionDTO(
+                                    "", name, Clock.System.now(), own = true, favorite = false
+                                )
+                            )
+                        )
+                    else
+                        onEvent(
+                            CollectionEvent.UpdateCollection(
+                                UserCardCollectionDTO(
+                                    collection.id, name, collection.lastModified, collection.own, collection.favorite
+                                )
+                            )
+                        )
                     onCloseClick()
                 }) {
                     Text("Save")

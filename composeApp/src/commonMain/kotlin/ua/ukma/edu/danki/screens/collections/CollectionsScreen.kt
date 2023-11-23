@@ -46,6 +46,14 @@ internal fun CollectionsScreen() {
                 )
             }
 
+            is CollectionAction.ShowChangeCollectionNameDialog -> modalController.present(alertConfiguration) { key ->
+                CreateCollectionDialog(
+                    action.collection,
+                    onCloseClick = { modalController.popBackStack(key) },
+                    onEvent = { viewModel.obtainEvent(it) }
+                )
+            }
+
             else -> {
 
             }

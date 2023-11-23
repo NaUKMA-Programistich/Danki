@@ -181,7 +181,7 @@ internal fun CollectionAsItem(
 
 @Composable
 internal fun CollectionMenu(
-    collectionId: String,
+    collection: UserCardCollectionDTO,
     menuExpanded: Boolean,
     onCloseMenu: () -> Unit,
     onEvent: (CollectionEvent) -> Unit
@@ -192,20 +192,21 @@ internal fun CollectionMenu(
     ) {
         DropdownMenuItem(
             onClick = {
-                onEvent(CollectionEvent.ToggleSelectCollection(collectionId))
+                onEvent(CollectionEvent.ToggleSelectCollection(collection.id))
                 onCloseMenu()
             },
             text = { Text("Select") }
         )
         DropdownMenuItem(
             onClick = {
+                onEvent(CollectionEvent.ChangeCollectionName(collection))
                 onCloseMenu()
             },
             text = { Text("Change name") }
         )
         DropdownMenuItem(
             onClick = {
-                onEvent(CollectionEvent.DeleteCollection(collectionId))
+                onEvent(CollectionEvent.DeleteCollection(collection.id))
                 onCloseMenu()
             },
             text = { Text("Delete") }
