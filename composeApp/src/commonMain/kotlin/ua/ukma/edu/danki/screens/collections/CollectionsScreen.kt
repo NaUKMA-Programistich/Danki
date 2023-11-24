@@ -4,11 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
+import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
 import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ua.ukma.edu.danki.core.composable.ComposableLoading
 import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.collections.ui.CollectionViewList
+import ua.ukma.edu.danki.screens.collections.ui.CreateCollectionDialog
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionAction
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionViewModel
@@ -17,6 +20,8 @@ import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionViewModel
 internal fun CollectionsScreen() {
     StoredViewModel(factory = { CollectionViewModel() }) { viewModel ->
         val navController = LocalRootController.current
+        val modalController = navController.findModalController()
+        val alertConfiguration = AlertConfiguration(maxHeight = 0.5f, maxWidth = 0.7f, cornerRadius = 8)
         val viewState by viewModel.viewStates().observeAsState()
         val viewAction by viewModel.viewActions().observeAsState()
 
@@ -35,7 +40,22 @@ internal fun CollectionsScreen() {
                     screen = NavigationRoute.CardCollectionViewer.name,
                     params = action.collection,
                     animationType = AnimationType.Present(animationTime = 500)
-                );
+                )
+            }
+
+            is CollectionAction.ShowCreateCollectionDialog -> modalController.present(alertConfiguration) { key ->
+                CreateCollectionDialog(
+                    onCloseClick = { modalController.popBackStack(key) },
+                    onEvent = { viewModel.obtainEvent(it) }
+                )
+            }
+
+            is CollectionAction.ShowChangeCollectionNameDialog -> modalController.present(alertConfiguration) { key ->
+                CreateCollectionDialog(
+                    action.collection,
+                    onCloseClick = { modalController.popBackStack(key) },
+                    onEvent = { viewModel.obtainEvent(it) }
+                )
             }
 
             else -> {
