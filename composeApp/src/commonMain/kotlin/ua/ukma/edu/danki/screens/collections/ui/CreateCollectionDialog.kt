@@ -40,13 +40,7 @@ fun CreateCollectionDialog(
                 }
                 TextButton(onClick = {
                     if (collection == null)
-                        onEvent(
-                            CollectionEvent.CreateCollection(
-                                UserCardCollectionDTO(
-                                    "", name, Clock.System.now(), own = true, favorite = false
-                                )
-                            )
-                        )
+                        onEvent(CollectionEvent.CreateCollection(name))
                     else
                         onEvent(
                             CollectionEvent.UpdateCollection(

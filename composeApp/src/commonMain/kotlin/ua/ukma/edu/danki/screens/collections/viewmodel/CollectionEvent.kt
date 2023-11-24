@@ -10,7 +10,7 @@ sealed class CollectionEvent {
     data object ShowOnlyFavorites : CollectionEvent()
     data class ChangeFavoriteStatus(val id: String) : CollectionEvent()
     data class OpenCollection(val collection: UserCardCollectionDTO) : CollectionEvent()
-    data class CreateCollection(val collection: UserCardCollectionDTO) : CollectionEvent()
+    data class CreateCollection(val collectionName: String) : CollectionEvent()
     data class UpdateCollection(val collection: UserCardCollectionDTO) : CollectionEvent()
     data class ChangeCollectionName(val collection: UserCardCollectionDTO) : CollectionEvent()
     data class DeleteCollection(val collectionId: String) : CollectionEvent()

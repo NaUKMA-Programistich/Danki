@@ -42,7 +42,7 @@ class CardCollectionsRepositoryImpl(private val client: HttpClient) : CardCollec
 
     override suspend fun createCardCollection(request: CreateCardCollectionRequest): CreateCardCollectionResponse? {
         return try {
-            val url = "${API.BASE_URL}/collections"
+            val url = "${API.BASE_URL}/collections/"
             val result = client.post(url) {
                 contentType(ContentType.Application.Json)
                 setBody(request)

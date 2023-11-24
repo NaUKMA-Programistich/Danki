@@ -4,10 +4,7 @@ import kotlinx.datetime.Clock
 import ua.ukma.edu.danki.core.viewmodel.ViewModel
 import ua.ukma.edu.danki.data.Injection
 import ua.ukma.edu.danki.data.card_collections.CardCollectionsRepository
-import ua.ukma.edu.danki.models.CollectionSortParam
-import ua.ukma.edu.danki.models.GetUserCollections
-import ua.ukma.edu.danki.models.UpdateCollectionRequest
-import ua.ukma.edu.danki.models.UserCardCollectionDTO
+import ua.ukma.edu.danki.models.*
 
 class CollectionViewModel(
     private val cardCollectionsRepository: CardCollectionsRepository = Injection.cardCollectionsRepository
@@ -61,7 +58,7 @@ class CollectionViewModel(
             is CollectionEvent.ShowOnlyFavorites -> showOnlyFavorites()
             is CollectionEvent.ChangeFavoriteStatus -> changeCollectionFavoriteStatus(viewEvent.id)
             is CollectionEvent.OpenCollection -> processOpenCollection(viewEvent.collection)
-            is CollectionEvent.CreateCollection -> processCreateCollection(viewEvent.collection)
+            is CollectionEvent.CreateCollection -> processCreateCollection(viewEvent.collectionName)
             is CollectionEvent.UpdateCollection -> processUpdateCollection(viewEvent.collection)
             is CollectionEvent.ChangeCollectionName -> processChangeCollectionName(viewEvent.collection)
             is CollectionEvent.DeleteCollection -> processDeleteCollection(viewEvent.collectionId)
@@ -196,12 +193,12 @@ class CollectionViewModel(
         }
     }
 
-    private fun processCreateCollection(collection: UserCardCollectionDTO) {
+    private fun processCreateCollection(collectionName: String) {
         withViewModelScope {
-            // TODO create real collection
-
-            mockData.add(
-                UserCardCollectionDTO("", collection.name, Clock.System.now(), own = true, favorite = false)
+            cardCollectionsRepository.createCardCollection(
+                CreateCardCollectionRequest(
+                    collectionName
+                )
             )
             getCollections()
         }
@@ -209,10 +206,13 @@ class CollectionViewModel(
 
     private fun processUpdateCollection(collection: UserCardCollectionDTO) {
         withViewModelScope {
-            //TODO update collection
-
-            mockData.removeAll { it.id == collection.id }
-            mockData.add(collection)
+            cardCollectionsRepository.updateCollection(
+                UpdateCollectionRequest(
+                    collection.id,
+                    collection.favorite,
+                    collection.name
+                )
+            )
             getCollections()
         }
     }
@@ -225,22 +225,28 @@ class CollectionViewModel(
 
     private fun processDeleteCollection(collectionId: String) {
         withViewModelScope {
-            //TODO real delete collections
             val state = viewStates().value
             if (state !is CollectionState.CollectionList) return@withViewModelScope
 
-            mockData.removeAll { it.id == collectionId }
+            cardCollectionsRepository.deleteCollection(
+                DeleteCollectionsRequest(
+                    listOf(collectionId)
+                )
+            )
             getCollections()
         }
     }
 
     private fun processDeleteSelected() {
         withViewModelScope {
-            //TODO real delete collections
             val state = viewStates().value
             if (state !is CollectionState.CollectionList) return@withViewModelScope
 
-            mockData.removeAll { state.selected.contains(it.id) }
+            cardCollectionsRepository.deleteCollection(
+                DeleteCollectionsRequest(
+                    state.selected.toList()
+                )
+            )
             getCollections()
         }
     }
