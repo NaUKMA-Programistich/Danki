@@ -6,6 +6,7 @@ import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.game.ui.GameView
 import ua.ukma.edu.danki.screens.game.viewmodel.GameAction
@@ -30,10 +31,10 @@ internal fun GameScreen(collectionId: String) {
 
         when (val action = viewAction) {
             is GameAction.ShowGameResult -> {
-                navController.push(
-                    NavigationRoute.GameResults.name,
-                    (viewState as GameState.GameInProgress).gameCards
-                            to (viewState as GameState.GameInProgress).gameResults
+                navController.launch(
+                    screen = NavigationRoute.GameResults.name,
+                    params = action.gameCards to action.gameResults,
+                    animationType = AnimationType.Present(animationTime = 500)
                 )
             }
 

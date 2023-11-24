@@ -24,14 +24,14 @@ internal fun CollectionViewSmall(
     Scaffold(
         topBar = { Header(onEvent) },
         floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            ExtendedFloatingActionButton(onClick = {}) {
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Icon(Icons.Default.Refresh, "Recents")
-                    Text("Recents")
-                }
-            }
-        }
+//        floatingActionButton = {
+//            ExtendedFloatingActionButton(onClick = {}) {
+//                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+//                    Icon(Icons.Default.Refresh, "Recents")
+//                    Text("Recents")
+//                }
+//            }
+//        }
     ) { innerPadding ->
         Surface(modifier = Modifier.fillMaxSize()) {
             Column(
