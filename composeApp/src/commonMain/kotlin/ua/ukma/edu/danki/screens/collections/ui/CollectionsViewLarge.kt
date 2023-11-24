@@ -1,16 +1,17 @@
 package ua.ukma.edu.danki.screens.collections.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ua.ukma.edu.danki.models.UserCardCollectionDTO
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
 import ua.ukma.edu.danki.theme.surfaceContainer
@@ -22,7 +23,7 @@ internal fun CollectionViewLarge(
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column {
-            Header()
+            Header(onEvent)
             Row {
                 Column(
                     modifier = Modifier.padding(16.dp),
@@ -36,9 +37,6 @@ internal fun CollectionViewLarge(
     }
 }
 
-//TODO move side navigation to core/composable?
-
-
 @Composable
 private fun ExtendedCollectionList(
     state: CollectionState.CollectionList,
@@ -51,17 +49,44 @@ private fun ExtendedCollectionList(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(state.collections) { collection ->
-            Surface(
-                color = MaterialTheme.colorScheme.surfaceContainer,
-                shape = MaterialTheme.shapes.large,
-                onClick = { onEvent(CollectionEvent.OpenCollection(collection)) }
-            ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-                ) {
-                    CollectionAsItem(collection, onEvent)
-                }
+            var menuExpanded by remember { mutableStateOf(false) }
+
+            Box {
+                CollectionAsSurface(collection, state, { menuExpanded = true }, onEvent)
+                CollectionMenu(collection, menuExpanded, { menuExpanded = false }, onEvent)
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun CollectionAsSurface(
+    collection: UserCardCollectionDTO,
+    state: CollectionState.CollectionList,
+    onOpenMenu: () -> Unit,
+    onEvent: (CollectionEvent) -> Unit
+) {
+    var collectionSelected by mutableStateOf(state.selected.contains(collection.id))
+
+    Surface(
+        modifier = Modifier.fillMaxSize().combinedClickable(
+            onClick = {
+                if (state.selectionMode) {
+                    onEvent(CollectionEvent.ToggleSelectCollection(collection.id))
+                    collectionSelected = state.selected.contains(collection.id)
+                } else onEvent(CollectionEvent.OpenCollection(collection))
+            },
+            onLongClick = onOpenMenu
+        ),
+        shape = MaterialTheme.shapes.large,
+        color = if (collectionSelected) MaterialTheme.colorScheme.outlineVariant
+        else MaterialTheme.colorScheme.surfaceContainer
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+        ) {
+            CollectionAsItem(collection, onEvent)
         }
     }
 }

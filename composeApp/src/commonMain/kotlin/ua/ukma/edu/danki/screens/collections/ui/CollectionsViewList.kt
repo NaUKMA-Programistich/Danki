@@ -34,12 +34,37 @@ internal fun CollectionViewList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun Header() {
+internal fun Header(
+    onEvent: (CollectionEvent) -> Unit
+) {
+    var menuExpanded by remember { mutableStateOf(false) }
+
     TopAppBar(
         title = { Text(text = "Collections", style = MaterialTheme.typography.titleLarge) },
         actions = {
-            IconButton(onClick = { }) {
-                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More options")
+            Box {
+                IconButton(onClick = { menuExpanded = true }) {
+                    Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More options")
+                }
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false }
+                ) {
+                    DropdownMenuItem(
+                        onClick = {
+                            onEvent(CollectionEvent.ShowCreateCollectionDialog)
+                            menuExpanded = false
+                        },
+                        text = { Text("Create collection") }
+                    )
+                    DropdownMenuItem(
+                        onClick = {
+                            onEvent(CollectionEvent.DeleteSelected)
+                            menuExpanded = false
+                        },
+                        text = { Text("Delete selected") }
+                    )
+                }
             }
         }
     )
@@ -151,6 +176,41 @@ internal fun CollectionAsItem(
                 tint = MaterialTheme.colorScheme.secondary
             )
         }
+    }
+}
+
+@Composable
+internal fun CollectionMenu(
+    collection: UserCardCollectionDTO,
+    menuExpanded: Boolean,
+    onCloseMenu: () -> Unit,
+    onEvent: (CollectionEvent) -> Unit
+) {
+    DropdownMenu(
+        expanded = menuExpanded,
+        onDismissRequest = onCloseMenu
+    ) {
+        DropdownMenuItem(
+            onClick = {
+                onEvent(CollectionEvent.ToggleSelectCollection(collection.id))
+                onCloseMenu()
+            },
+            text = { Text("Select") }
+        )
+        DropdownMenuItem(
+            onClick = {
+                onEvent(CollectionEvent.ChangeCollectionName(collection))
+                onCloseMenu()
+            },
+            text = { Text("Change name") }
+        )
+        DropdownMenuItem(
+            onClick = {
+                onEvent(CollectionEvent.DeleteCollection(collection.id))
+                onCloseMenu()
+            },
+            text = { Text("Delete") }
+        )
     }
 }
 

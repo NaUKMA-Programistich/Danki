@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material3.*
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,30 +20,9 @@ internal fun GameResultsViewLarge(
         Column {
             Header(onCloseResults = { onEvent(GameResultsEvent.CloseResults) })
             Row {
-                SideNavigation()
-
                 LargeResultsList(state, onEvent)
             }
         }
-    }
-}
-
-//TODO move side navigation to core/composable?
-@Composable
-private fun SideNavigation() {
-    NavigationRail(modifier = Modifier.padding(top = 44.dp, bottom = 56.dp)) {
-        NavigationRailItem(
-            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Dictionary") }, // TODO proper icon
-            label = { Text("Dictionary") },
-            selected = false,
-            onClick = { }
-        )
-        NavigationRailItem(
-            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Collections") }, // TODO proper icon
-            label = { Text("Collections") },
-            selected = true,
-            onClick = { }
-        )
     }
 }
 
