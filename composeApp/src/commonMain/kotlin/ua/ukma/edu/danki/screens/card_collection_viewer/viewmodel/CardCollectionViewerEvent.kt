@@ -1,10 +1,10 @@
 package ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel
 
-import ua.ukma.edu.danki.screens.card_collection_viewer.model.CardCollectionViewerModel
-import ua.ukma.edu.danki.screens.card_collection_viewer.model.CardViewerModel
+import ua.ukma.edu.danki.models.CardDTO
+import ua.ukma.edu.danki.models.UserCardCollectionDTO
 
 sealed class CardCollectionViewerEvent {
-    data class OnCardClick (val cardViewerModel: CardViewerModel) : CardCollectionViewerEvent()
+    data class OnCardClick (val card: CardDTO) : CardCollectionViewerEvent()
     data object GoBack : CardCollectionViewerEvent()
-    data class DeleteCollection (val cardCollectionViewerModel: CardCollectionViewerModel) : CardCollectionViewerEvent()
+    data class DeleteCollection (val collection: UserCardCollectionDTO) : CardCollectionViewerEvent()
 }

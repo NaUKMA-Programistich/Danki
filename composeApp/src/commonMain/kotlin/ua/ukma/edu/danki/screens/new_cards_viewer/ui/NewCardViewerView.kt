@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,11 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
-import ua.ukma.edu.danki.screens.card_collection_viewer.model.CardViewerModel
-import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollectionViewerEvent
-import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollectionViewerState
-import ua.ukma.edu.danki.screens.new_cards_viewer.model.NewCardViewerModel
 import ua.ukma.edu.danki.screens.new_cards_viewer.viewmodel.NewCardViewerEvent
 import ua.ukma.edu.danki.screens.new_cards_viewer.viewmodel.NewCardViewerState
 
@@ -34,7 +30,7 @@ fun NewCardViewerView (
             verticalArrangement = Arrangement.Top
         ) {
             HeaderComponent(onBack = { onEvent(NewCardViewerEvent.GoBack) })
-            CardList(newCardViewerModelMap = state.newCardViewerModelMap , onCard = { onEvent(NewCardViewerEvent.OnCardClick(newCardViewerModel = it)) })
+            CardList(newCards = state.newCards , onCard = { onEvent(NewCardViewerEvent.OnCardClick(newCard = it)) })
         }
     }
 }
@@ -71,8 +67,8 @@ private fun HeaderComponent (onBack: () -> Unit) {
 
 @Composable
 private fun CardList (
-    newCardViewerModelMap: Map<UserCardCollectionDTO?,MutableList<NewCardViewerModel>>,
-    onCard: (NewCardViewerModel) -> Unit
+    newCards: List<CardDTO>,
+    onCard: (CardDTO) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(0.8f).fillMaxHeight().padding(16.dp).clip(MaterialTheme.shapes.large)
@@ -81,18 +77,15 @@ private fun CardList (
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        newCardViewerModelMap.forEach { pair ->
-
+        newCards.forEach { card ->
             item {
                 Text(
                     modifier = Modifier,
-                    text = pair.key?.name?.toString() ?: "...",
+                    text = "...",
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleMedium
                 )
-                pair.value.forEach {
-                    CardComponent(card = it , onCard = onCard)
-                }
+                CardComponent(card = card , onCard = onCard)
             }
         }
     }
@@ -100,8 +93,8 @@ private fun CardList (
 
 @Composable
 private fun CardComponent(
-    card: NewCardViewerModel,
-    onCard: (NewCardViewerModel) -> Unit
+    card: CardDTO,
+    onCard: (CardDTO) -> Unit
 ) {
     Column (modifier = Modifier.padding(8.dp).fillMaxWidth().clip(MaterialTheme.shapes.large).clickable { onCard(card) }.padding(12.dp),
         verticalArrangement = Arrangement.SpaceAround,

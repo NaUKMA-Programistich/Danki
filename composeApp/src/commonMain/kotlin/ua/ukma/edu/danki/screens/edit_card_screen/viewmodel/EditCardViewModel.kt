@@ -2,12 +2,12 @@ package ua.ukma.edu.danki.screens.edit_card_screen.viewmodel
 
 import kotlinx.datetime.Clock
 import ua.ukma.edu.danki.core.viewmodel.ViewModel
+import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
-import ua.ukma.edu.danki.screens.edit_card_screen.model.EditCard
 import kotlin.time.Duration.Companion.hours
 
 
-class EditCardViewModel(editCard: EditCard) : ViewModel<EditCardState, EditCardAction, EditCardEvent>(initialState = EditCardState.Loading) {
+class EditCardViewModel(card : CardDTO) : ViewModel<EditCardState, EditCardAction, EditCardEvent>(initialState = EditCardState.Loading) {
 
     private val mockData = listOf(
         UserCardCollectionDTO(
@@ -35,18 +35,18 @@ class EditCardViewModel(editCard: EditCard) : ViewModel<EditCardState, EditCardA
     override fun obtainEvent(viewEvent: EditCardEvent) {
         when (viewEvent) {
             EditCardEvent.Cancel -> processCancel()
-            is EditCardEvent.SaveCard -> processSavingCard(viewEvent.editCard)
-            is EditCardEvent.DeleteCard -> processDeletingCard(viewEvent.editCard)
+            is EditCardEvent.SaveCard -> processSavingCard(card = viewEvent.card,collectionId = viewEvent.collectionId)
+            is EditCardEvent.DeleteCard -> processDeletingCard(card = viewEvent.card)
         }
     }
 
-    private fun processDeletingCard(editCard: EditCard) {
+    private fun processDeletingCard(card: CardDTO) {
         withViewModelScope {
             // TODO("delete card")
         }
     }
 
-    private fun processSavingCard(editCard: EditCard) {
+    private fun processSavingCard(card: CardDTO, collectionId: String?) {
         withViewModelScope {
             // TODO("save card in db")
         }
@@ -55,7 +55,7 @@ class EditCardViewModel(editCard: EditCard) : ViewModel<EditCardState, EditCardA
     init {
         withViewModelScope {
            setViewState(EditCardState.Loading)
-           setViewState(EditCardState.CardToEdit(editCard = editCard, collectionList = mockData))
+           setViewState(EditCardState.CardToEdit(card = card, collectionList = mockData))
         }
     }
 

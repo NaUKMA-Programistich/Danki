@@ -8,6 +8,7 @@ import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ua.ukma.edu.danki.core.composable.ComposableLoading
 import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.collections.ui.CollectionViewList
@@ -36,7 +37,11 @@ internal fun CollectionsScreen() {
 
         when (val action = viewAction) {
             is CollectionAction.OpenCollection -> {
-                navController.push(NavigationRoute.CardCollectionViewer.name)
+                navController.launch(
+                    screen = NavigationRoute.CardCollectionViewer.name,
+                    params = action.collection,
+                    animationType = AnimationType.Present(animationTime = 500)
+                )
             }
 
             is CollectionAction.ShowCreateCollectionDialog -> modalController.present(alertConfiguration) { key ->
