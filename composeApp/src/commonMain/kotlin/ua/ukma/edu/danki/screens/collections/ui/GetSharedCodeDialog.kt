@@ -26,7 +26,7 @@ fun GetSharedCodeDialog(
             modifier = Modifier.fillMaxSize().padding(24.dp),
         ) {
             Text(
-                text = "Share this code with your friends",
+                text = "Enter code",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineSmall
             )
