@@ -1,11 +1,13 @@
 package ua.ukma.edu.danki.screens.definition.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.MutableSharedFlow
 import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.screens.definition.viewmodel.DefinitionEvent
 import ua.ukma.edu.danki.screens.definition.viewmodel.DefinitionState
@@ -31,21 +32,29 @@ internal fun TermDefinitionView(
                     DefinitionEvent.OnNewCardClick(
                         CardDTO(
                             term = state.term,
-                            definition = state.definition,
+                            definition = state.definitions[state.selectedDefinitionIndex].definition
                         )
                     )
                 )
             })
             LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(5.dp)) {
                 item { Term(modifier = Modifier.fillMaxWidth(), term = state.term) }
-                item { Definition(modifier = Modifier.fillMaxWidth(), definition = state.definition) }
+                itemsIndexed(state.definitions) { index, definition ->
+                    Definition(
+                        modifier = Modifier.fillMaxWidth(),
+                        definition = definition.definition,
+                        wordType = definition.wordType.name,
+                        onClick = { onEvent(DefinitionEvent.SelecteDefinition(index)) },
+                        isSelected = index == state.selectedDefinitionIndex
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun HeaderComponent (onBack: () -> Unit, onNewCard: () -> Unit = {}) {
+private fun HeaderComponent(onBack: () -> Unit, onNewCard: () -> Unit = {}) {
     var menuExpanded by remember { mutableStateOf(false) }
     Column(
         Modifier.fillMaxWidth().padding(16.dp),
@@ -57,7 +66,7 @@ private fun HeaderComponent (onBack: () -> Unit, onNewCard: () -> Unit = {}) {
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box (modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
+            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                 IconButton(onClick = { onBack() }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
@@ -67,9 +76,9 @@ private fun HeaderComponent (onBack: () -> Unit, onNewCard: () -> Unit = {}) {
                 }
             }
 
-            Box (modifier = Modifier.weight(8f), contentAlignment = Alignment.CenterStart) {
+            Box(modifier = Modifier.weight(8f), contentAlignment = Alignment.CenterStart) {
                 Text(
-                    modifier = Modifier.offset (y = (-2).dp),
+                    modifier = Modifier.offset(y = (-2).dp),
                     text = "Definition",
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleLarge,
@@ -120,17 +129,28 @@ private fun Term(
 @Composable
 private fun Definition(
     modifier: Modifier = Modifier,
-    definition: String
+    definition: String,
+    wordType: String,
+    onClick: () -> Unit,
+    isSelected: Boolean
 ) {
     Column(
         modifier = modifier.padding(8.dp).clip(MaterialTheme.shapes.large)
+            .clickable { onClick() }
             .background(MaterialTheme.colorScheme.background)
+            .then(
+                if (isSelected) Modifier.border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.large
+                ) else Modifier
+            )
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = "Definition",
+            text = "Definition ($wordType)",
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary
         )

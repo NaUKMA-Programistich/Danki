@@ -12,6 +12,7 @@ class DefinitionViewModel(term: String, dictionaryRepository: DictionaryReposito
         when (viewEvent) {
             DefinitionEvent.GoBack -> processGoBack()
             is DefinitionEvent.OnNewCardClick -> processOnNewCard(newCard = viewEvent.newCard)
+            is DefinitionEvent.SelecteDefinition -> processSelectDefinition(index = viewEvent.index)
         }
     }
 
@@ -22,15 +23,23 @@ class DefinitionViewModel(term: String, dictionaryRepository: DictionaryReposito
                     term = term
                 )
             )
-            // TODO: make this display multiple defintions
-            val definition = termDefinition?.term?.data?.first()?.definition ?: ""
-            setViewState(DefinitionState.TermDefinition(term, definition))
+            val definitions = termDefinition?.term?.data ?: emptyList()
+            setViewState(DefinitionState.TermDefinition(term, definitions))
         }
     }
 
-    private fun processOnNewCard(newCard : CardDTO) {
+    private fun processOnNewCard(newCard: CardDTO) {
         withViewModelScope {
             setViewAction(DefinitionAction.OnNewCard(newCard))
+        }
+    }
+
+    private fun processSelectDefinition(index: Int) {
+        withViewModelScope {
+            val state = viewStates().value
+            if (state !is DefinitionState.TermDefinition) return@withViewModelScope
+
+            setViewState(DefinitionState.TermDefinition(state.term, state.definitions, index))
         }
     }
 
