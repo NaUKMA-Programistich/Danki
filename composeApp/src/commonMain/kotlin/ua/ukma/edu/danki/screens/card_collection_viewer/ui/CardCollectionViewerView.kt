@@ -35,6 +35,7 @@ fun CardCollectionViewerView(
                 HeaderComponent(
                     collectionName = state.collection.name,
                     onBack = { onEvent(CardCollectionViewerEvent.GoBack) },
+                    onShare = { onEvent(CardCollectionViewerEvent.ShareCollection) },
                     onDelete = { onEvent(CardCollectionViewerEvent.DeleteCollection(collection = state.collection)) })
                 CardList(
                     cardList = state.cardList,
@@ -45,7 +46,12 @@ fun CardCollectionViewerView(
 }
 
 @Composable
-private fun HeaderComponent(onBack: () -> Unit, onDelete: () -> Unit = {}, collectionName: String) {
+private fun HeaderComponent(
+    onBack: () -> Unit,
+    onDelete: () -> Unit = {},
+    onShare: () -> Unit = {},
+    collectionName: String
+) {
     var menuExpanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -87,6 +93,13 @@ private fun HeaderComponent(onBack: () -> Unit, onDelete: () -> Unit = {}, colle
                         menuExpanded = false
                     },
                     text = { Text("Delete") }
+                )
+                DropdownMenuItem(
+                    onClick = {
+                        onShare()
+                        menuExpanded = false
+                    },
+                    text = { Text("Share") }
                 )
             }
         }

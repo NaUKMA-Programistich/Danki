@@ -12,7 +12,9 @@ import ua.ukma.edu.danki.core.composable.ComposableLoading
 import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.collections.ui.CollectionViewList
 import ua.ukma.edu.danki.screens.collections.ui.CreateCollectionDialog
+import ua.ukma.edu.danki.screens.collections.ui.GetSharedCodeDialog
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionAction
+import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionViewModel
 
@@ -55,6 +57,15 @@ internal fun CollectionsScreen() {
                     action.collection,
                     onCloseClick = { modalController.popBackStack(key) },
                     onEvent = { viewModel.obtainEvent(it) }
+                )
+            }
+
+            is CollectionAction.ShowGetSharedCodeDialog -> modalController.present(alertConfiguration) { key ->
+                GetSharedCodeDialog(
+                    onSubmit = {
+                        viewModel.obtainEvent(CollectionEvent.GetSharedCode(it))
+                        modalController.popBackStack(key)
+                    }
                 )
             }
 

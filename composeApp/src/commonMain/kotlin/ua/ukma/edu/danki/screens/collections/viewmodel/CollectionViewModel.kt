@@ -65,6 +65,25 @@ class CollectionViewModel(
             is CollectionEvent.DeleteSelected -> processDeleteSelected()
             is CollectionEvent.ShowCreateCollectionDialog -> processShowCreateCollectionDialog()
             is CollectionEvent.ToggleSelectCollection -> processToggleSelectCollection(viewEvent.collectionId)
+            is CollectionEvent.OpenGetSharedCodeDialog -> processOpenGetSharedCodeDialog()
+            is CollectionEvent.GetSharedCode -> processGetSharedCode(viewEvent.code)
+        }
+    }
+
+    private fun processOpenGetSharedCodeDialog() {
+        withViewModelScope {
+            setViewAction(CollectionAction.ShowGetSharedCodeDialog)
+        }
+    }
+
+    private fun processGetSharedCode(code: Long) {
+        withViewModelScope {
+            val result = cardCollectionsRepository.getSharedCollection(
+                ReadSharedCollectionRequest(id = code)
+            )
+            if (result != null) {
+                getCollections()
+            }
         }
     }
 

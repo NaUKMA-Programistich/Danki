@@ -7,5 +7,6 @@ sealed class CardCollectionViewerEvent {
     data class OnCardClick(val card: CardDTO) : CardCollectionViewerEvent()
     data object GoBack : CardCollectionViewerEvent()
     data class DeleteCollection(val collection: UserCardCollectionDTO) : CardCollectionViewerEvent()
+    data object ShareCollection : CardCollectionViewerEvent()
     data object PlayGame : CardCollectionViewerEvent()
 }
