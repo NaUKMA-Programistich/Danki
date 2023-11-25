@@ -7,6 +7,7 @@ import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.animations.AnimationType
+import ua.ukma.edu.danki.core.composable.ComposableLoading
 import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.game.ui.GameView
 import ua.ukma.edu.danki.screens.game.viewmodel.GameAction
@@ -26,7 +27,9 @@ internal fun GameScreen(collectionId: String) {
                 onEvent = { viewModel.obtainEvent(it) }
             )
 
-            GameState.Loading -> {}
+            GameState.Loading -> {
+                ComposableLoading()
+            }
         }
 
         when (val action = viewAction) {

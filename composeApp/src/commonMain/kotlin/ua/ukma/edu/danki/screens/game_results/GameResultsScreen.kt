@@ -5,7 +5,9 @@ import androidx.compose.runtime.getValue
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ua.ukma.edu.danki.core.composable.ComposableLoading
 import ua.ukma.edu.danki.models.CardDTO
+import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.game_results.ui.GameResultsView
 import ua.ukma.edu.danki.screens.game_results.viewmodel.GameResultsAction
 import ua.ukma.edu.danki.screens.game_results.viewmodel.GameResultsState
@@ -24,12 +26,14 @@ internal fun GameResultsScreen(cards: List<CardDTO>, gameResults: List<Boolean>)
                 onEvent = { viewModel.obtainEvent(it) }
             )
 
-            GameResultsState.Loading -> {}
+            GameResultsState.Loading -> {
+                ComposableLoading()
+            }
         }
 
         when (val action = viewAction) {
             is GameResultsAction.CloseResults -> {
-                //TODO navigate back twice
+                navController.backToScreen(NavigationRoute.CardCollectionViewer.name)
             }
 
             else -> {
