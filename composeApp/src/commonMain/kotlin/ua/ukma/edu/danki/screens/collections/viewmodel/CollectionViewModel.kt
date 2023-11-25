@@ -70,7 +70,15 @@ class CollectionViewModel(
 
     private fun getCollections() {
         withViewModelScope {
-            val listOfUserCollections = cardCollectionsRepository.getUserCollections(GetUserCollections())
+            val listOfUserCollections = cardCollectionsRepository.getUserCollections(
+                GetUserCollections(
+                    CollectionSortParam.ByName,
+                    favorite = false,
+                    offset = 0,
+                    limit = Int.MAX_VALUE,
+                    ascending = true
+                )
+            )
             val collections = listOfUserCollections?.cardCollections ?: emptyList()
 
             setViewState(
