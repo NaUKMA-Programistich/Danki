@@ -19,27 +19,33 @@ import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollection
 import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollectionViewerState
 
 @Composable
-fun CardCollectionViewerView (
+fun CardCollectionViewerView(
     state: CardCollectionViewerState.CollectionCards,
     onEvent: (CardCollectionViewerEvent) -> Unit,
 ) {
-    Surface(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            HeaderComponent(
-                collectionName = state.collection.name,
-                onBack = { onEvent(CardCollectionViewerEvent.GoBack) },
-                onDelete = { onEvent(CardCollectionViewerEvent.DeleteCollection(collection = state.collection)) })
-            CardList(cardList = state.cardList , onCard = { onEvent(CardCollectionViewerEvent.OnCardClick(card = it)) })
+    Scaffold(
+        floatingActionButton = { PlayFAB(onEvent = onEvent) }
+    ) {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier.padding(16.dp).padding(bottom = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
+                HeaderComponent(
+                    collectionName = state.collection.name,
+                    onBack = { onEvent(CardCollectionViewerEvent.GoBack) },
+                    onDelete = { onEvent(CardCollectionViewerEvent.DeleteCollection(collection = state.collection)) })
+                CardList(
+                    cardList = state.cardList,
+                    onCard = { onEvent(CardCollectionViewerEvent.OnCardClick(card = it)) })
+            }
         }
     }
 }
 
 @Composable
-private fun HeaderComponent (onBack: () -> Unit, onDelete: () -> Unit = {}, collectionName: String) {
+private fun HeaderComponent(onBack: () -> Unit, onDelete: () -> Unit = {}, collectionName: String) {
     var menuExpanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -47,7 +53,7 @@ private fun HeaderComponent (onBack: () -> Unit, onDelete: () -> Unit = {}, coll
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Box (modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
+        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
             IconButton(modifier = Modifier, onClick = { onBack() }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
@@ -57,9 +63,9 @@ private fun HeaderComponent (onBack: () -> Unit, onDelete: () -> Unit = {}, coll
             }
         }
 
-        Box (modifier = Modifier.weight(8f), contentAlignment = Alignment.CenterStart) {
+        Box(modifier = Modifier.weight(8f), contentAlignment = Alignment.CenterStart) {
             Text(
-                modifier = Modifier.offset (y = (-2).dp),
+                modifier = Modifier.offset(y = (-2).dp),
                 text = collectionName,
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.titleLarge,
@@ -67,7 +73,7 @@ private fun HeaderComponent (onBack: () -> Unit, onDelete: () -> Unit = {}, coll
             )
         }
 
-        Box (modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
             IconButton(onClick = { menuExpanded = true }) {
                 Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu")
             }
@@ -88,7 +94,7 @@ private fun HeaderComponent (onBack: () -> Unit, onDelete: () -> Unit = {}, coll
 }
 
 @Composable
-private fun CardList (
+private fun CardList(
     cardList: List<CardDTO>,
     onCard: (CardDTO) -> Unit
 ) {
@@ -101,7 +107,7 @@ private fun CardList (
     ) {
         cardList.forEach { card ->
             item {
-                CardComponent(card = card , onCard = onCard)
+                CardComponent(card = card, onCard = onCard)
             }
         }
     }
@@ -112,9 +118,12 @@ private fun CardComponent(
     card: CardDTO,
     onCard: (CardDTO) -> Unit
 ) {
-    Column (modifier = Modifier.padding(8.dp).fillMaxWidth().clip(MaterialTheme.shapes.large).clickable { onCard(card) }.padding(12.dp),
+    Column(
+        modifier = Modifier.padding(8.dp).fillMaxWidth().clip(MaterialTheme.shapes.large).clickable { onCard(card) }
+            .padding(12.dp),
         verticalArrangement = Arrangement.SpaceAround,
-        horizontalAlignment = Alignment.Start) {
+        horizontalAlignment = Alignment.Start
+    ) {
         Text(
             modifier = Modifier,
             text = card.term,
@@ -128,6 +137,15 @@ private fun CardComponent(
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.bodySmall
         )
+    }
+}
+
+@Composable
+private fun PlayFAB(onEvent: (CardCollectionViewerEvent) -> Unit) {
+    FloatingActionButton(
+        onClick = { onEvent(CardCollectionViewerEvent.PlayGame) }
+    ) {
+        Text("Play")
     }
 }
 

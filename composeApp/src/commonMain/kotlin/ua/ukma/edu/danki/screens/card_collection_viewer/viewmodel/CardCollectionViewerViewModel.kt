@@ -8,6 +8,7 @@ import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.models.DeleteCollectionsRequest
 import ua.ukma.edu.danki.models.GetCardsOfCollection
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
+import ua.ukma.edu.danki.screens.game.viewmodel.GameState
 
 
 class CardCollectionViewerViewModel(
@@ -84,6 +85,7 @@ class CardCollectionViewerViewModel(
             CardCollectionViewerEvent.GoBack -> processGoBack()
             is CardCollectionViewerEvent.OnCardClick -> processOnCardClick(viewEvent.card)
             is CardCollectionViewerEvent.DeleteCollection -> processDeletingCollection(collection = viewEvent.collection)
+            CardCollectionViewerEvent.PlayGame -> processPlayGame()
         }
     }
 
@@ -129,4 +131,12 @@ class CardCollectionViewerViewModel(
         }
     }
 
+    private fun processPlayGame() {
+        withViewModelScope {
+            val state = viewStates().value
+            if (state !is CardCollectionViewerState.CollectionCards) return@withViewModelScope
+
+            setViewAction(CardCollectionViewerAction.PlayGame(state.collection.id))
+        }
+    }
 }
