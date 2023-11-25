@@ -7,6 +7,8 @@ class GameResultsViewModel(cards: List<CardDTO>, gameResults: List<Boolean>) :
     ViewModel<GameResultsState, GameResultsAction, GameResultsEvent>(initialState = GameResultsState.Loading) {
     init {
         withViewModelScope {
+            if (cards.isEmpty() || gameResults.isEmpty())
+                onCloseResults()
             setViewState(
                 GameResultsState.ShowGameResults(cards zip gameResults)
             )
