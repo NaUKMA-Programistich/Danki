@@ -1,8 +1,13 @@
 package ua.ukma.edu.danki.screens.search.viewmodel
 
 import ua.ukma.edu.danki.core.viewmodel.ViewModel
+import ua.ukma.edu.danki.data.Injection
+import ua.ukma.edu.danki.data.dictionary.DictionaryRepository
+import ua.ukma.edu.danki.models.dictionary.GetDictionarySuggestions
 
-class SearchViewModel() : ViewModel<SearchState, SearchAction, SearchEvent>(initialState = SearchState.Loading) {
+class SearchViewModel(
+    private val dictionaryRepository: DictionaryRepository = Injection.dictionaryRepository
+) : ViewModel<SearchState, SearchAction, SearchEvent>(initialState = SearchState.Loading) {
     override fun obtainEvent(viewEvent: SearchEvent) {
         when (viewEvent) {
             is SearchEvent.ChangeInput -> processChangeInput(viewEvent.newInput)
@@ -22,8 +27,23 @@ class SearchViewModel() : ViewModel<SearchState, SearchAction, SearchEvent>(init
             val state = viewStates().value
             if (state !is SearchState.SearchResults) return@withViewModelScope
 
-            val results = List(newInput.length) { ('a'..'z').random().toString() }  // TODO("get real results")
-            setViewState(SearchState.SearchResults(newInput, results))
+            setViewState(SearchState.SearchResults(newInput, state.results))
+
+            val dictionarySuggestions = dictionaryRepository.getDictionarySuggestion(
+                GetDictionarySuggestions(
+                    input = newInput,
+                    count = 5
+                )
+            )
+            setResults(dictionarySuggestions?.suggestions?.map { it.term } ?: emptyList())
+        }
+    }
+
+    private fun setResults(results: List<String>) {
+        withViewModelScope {
+            val state = viewStates().value
+            if (state !is SearchState.SearchResults) return@withViewModelScope
+            setViewState(SearchState.SearchResults(state.input, results))
         }
     }
 

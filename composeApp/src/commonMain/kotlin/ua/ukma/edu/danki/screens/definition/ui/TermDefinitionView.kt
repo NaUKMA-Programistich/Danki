@@ -5,12 +5,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.MutableSharedFlow
+import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.screens.definition.viewmodel.DefinitionEvent
 import ua.ukma.edu.danki.screens.definition.viewmodel.DefinitionState
 
@@ -21,7 +26,16 @@ internal fun TermDefinitionView(
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Header(onBack = { onEvent(DefinitionEvent.GoBack) })
+            HeaderComponent(onBack = { onEvent(DefinitionEvent.GoBack) }, onNewCard = {
+                onEvent(
+                    DefinitionEvent.OnNewCardClick(
+                        CardDTO(
+                            term = state.term,
+                            definition = state.definition,
+                        )
+                    )
+                )
+            })
             LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(5.dp)) {
                 item { Term(modifier = Modifier.fillMaxWidth(), term = state.term) }
                 item { Definition(modifier = Modifier.fillMaxWidth(), definition = state.definition) }
@@ -31,26 +45,60 @@ internal fun TermDefinitionView(
 }
 
 @Composable
-private fun Header(onBack: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
+private fun HeaderComponent (onBack: () -> Unit, onNewCard: () -> Unit = {}) {
+    var menuExpanded by remember { mutableStateOf(false) }
+    Column(
+        Modifier.fillMaxWidth().padding(16.dp),
+        verticalArrangement = Arrangement.SpaceAround,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IconButton(onClick = { onBack() }) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Back",
-                tint = MaterialTheme.colorScheme.primary
-            )
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box (modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
+                IconButton(onClick = { onBack() }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            Box (modifier = Modifier.weight(8f), contentAlignment = Alignment.CenterStart) {
+                Text(
+                    modifier = Modifier.offset (y = (-2).dp),
+                    text = "Definition",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Start
+                )
+            }
+
+            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                IconButton(onClick = { menuExpanded = true }) {
+                    Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu")
+                }
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false }
+                ) {
+                    DropdownMenuItem(
+                        onClick = {
+                            onNewCard()
+                            menuExpanded = false
+                        },
+                        text = { Text("Create") }
+                    )
+                }
+            }
         }
-        Text(
-            text = "Definition",
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.titleLarge
-        )
+        Divider(modifier = Modifier.fillMaxWidth().height(1.dp).background(MaterialTheme.colorScheme.secondary))
     }
 }
+
 
 @Composable
 private fun Term(

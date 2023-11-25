@@ -58,18 +58,18 @@ private fun Header(
             IconButton(onClick = { menuExpanded = true }) {
                 Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu")
             }
-            DropdownMenu(
-                expanded = menuExpanded,
-                onDismissRequest = { menuExpanded = false }
-            ) {
-                DropdownMenuItem(
-                    onClick = {
-                        onOpenHistory()
-                        menuExpanded = false
-                    },
-                    text = { Text("History") }
-                )
-            }
+//            DropdownMenu(
+//                expanded = menuExpanded,
+//                onDismissRequest = { menuExpanded = false }
+//            ) {
+//                DropdownMenuItem(
+//                    onClick = {
+//                        onOpenHistory()
+//                        menuExpanded = false
+//                    },
+//                    text = { Text("History") }
+//                )
+//            }
         }
     }
 }

@@ -5,6 +5,7 @@ import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
 import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.card_collection_viewer.ui.CardCollectionViewerView
@@ -39,7 +40,11 @@ fun CardCollectionViewerScreen (
                 navController.popBackStack()
             }
             is CardCollectionViewerAction.OpenCardToEdit -> {
-                navController.push(NavigationRoute.EditCard.name, action.card)
+                navController.launch(
+                    screen = NavigationRoute.EditCard.name,
+                    params = action.card,
+                    animationType = AnimationType.Present(animationTime = 500)
+                )
             }
             else -> {
 

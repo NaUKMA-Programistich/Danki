@@ -12,12 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
+import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ua.ukma.edu.danki.core.composable.ComposableLoading
+import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.definition.ui.TermDefinitionView
 import ua.ukma.edu.danki.screens.definition.viewmodel.DefinitionAction
 import ua.ukma.edu.danki.screens.definition.viewmodel.DefinitionState
 import ua.ukma.edu.danki.screens.definition.viewmodel.DefinitionViewModel
+import ua.ukma.edu.danki.screens.game.viewmodel.GameState
 
 @Composable
 internal fun DefinitionScreen(term: String) {
@@ -40,6 +44,14 @@ internal fun DefinitionScreen(term: String) {
         when (val action = viewAction) {
             is DefinitionAction.NavigateBack -> {
                 navController.popBackStack()
+            }
+
+            is DefinitionAction.OnNewCard -> {
+                navController.launch(
+                    screen = NavigationRoute.AddCard.name,
+                    params = action.newCard,
+                    animationType = AnimationType.Present(animationTime = 500)
+                )
             }
 
             null -> {}
