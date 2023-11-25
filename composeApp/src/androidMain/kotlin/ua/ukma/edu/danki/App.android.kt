@@ -2,20 +2,13 @@ package ua.ukma.edu.danki
 
 import android.app.Application
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalView
-import io.ktor.client.*
-import io.ktor.client.engine.android.*
 import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
 import ru.alexgladkov.odyssey.core.configuration.DisplayType
 import ua.ukma.edu.danki.theme.mColors
-import java.net.InetSocketAddress
-import java.net.Proxy
 
 class AndroidApp : Application() {
     companion object {
