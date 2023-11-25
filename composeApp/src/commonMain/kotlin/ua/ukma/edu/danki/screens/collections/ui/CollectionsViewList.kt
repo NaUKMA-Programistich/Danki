@@ -64,6 +64,13 @@ internal fun Header(
                         },
                         text = { Text("Delete selected") }
                     )
+                    DropdownMenuItem(
+                        onClick = {
+                            onEvent(CollectionEvent.OpenGetSharedCodeDialog)
+                            menuExpanded = false
+                        },
+                        text = { Text("Get shared collection") }
+                    )
                 }
             }
         }

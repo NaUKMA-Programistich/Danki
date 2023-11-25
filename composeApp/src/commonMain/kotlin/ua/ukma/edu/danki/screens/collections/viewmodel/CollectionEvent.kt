@@ -17,4 +17,6 @@ sealed class CollectionEvent {
     data object DeleteSelected : CollectionEvent()
     data object ShowCreateCollectionDialog : CollectionEvent()
     data class ToggleSelectCollection(val collectionId: String) : CollectionEvent()
+    data object OpenGetSharedCodeDialog : CollectionEvent()
+    data class GetSharedCode(val code: Long) : CollectionEvent()
 }
