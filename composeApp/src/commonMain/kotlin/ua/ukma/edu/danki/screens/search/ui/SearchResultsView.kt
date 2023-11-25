@@ -117,7 +117,7 @@ private fun SearchField(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text(text = it)
+                        Text(text = it.replace("_", " "))
                     }
                 }
             }

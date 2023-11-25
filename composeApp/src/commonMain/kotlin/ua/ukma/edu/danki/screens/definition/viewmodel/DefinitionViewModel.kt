@@ -24,7 +24,7 @@ class DefinitionViewModel(term: String, dictionaryRepository: DictionaryReposito
                 )
             )
             val definitions = termDefinition?.term?.data ?: emptyList()
-            setViewState(DefinitionState.TermDefinition(term, definitions))
+            setViewState(DefinitionState.TermDefinition(term.replace("_", " "), definitions))
         }
     }
 
