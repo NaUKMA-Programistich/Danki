@@ -4,11 +4,7 @@ import ua.ukma.edu.danki.core.viewmodel.ViewModel
 import ua.ukma.edu.danki.data.Injection
 import ua.ukma.edu.danki.data.card.CardRepository
 import ua.ukma.edu.danki.data.card_collections.CardCollectionsRepository
-import ua.ukma.edu.danki.models.CardDTO
-import ua.ukma.edu.danki.models.DeleteCollectionsRequest
-import ua.ukma.edu.danki.models.GetCardsOfCollection
-import ua.ukma.edu.danki.models.UserCardCollectionDTO
-import ua.ukma.edu.danki.screens.game.viewmodel.GameState
+import ua.ukma.edu.danki.models.*
 
 
 class CardCollectionViewerViewModel(
@@ -85,6 +81,7 @@ class CardCollectionViewerViewModel(
             CardCollectionViewerEvent.GoBack -> processGoBack()
             is CardCollectionViewerEvent.OnCardClick -> processOnCardClick(viewEvent.card)
             is CardCollectionViewerEvent.DeleteCollection -> processDeletingCollection(collection = viewEvent.collection)
+            CardCollectionViewerEvent.ShareCollection -> processShareCollection()
             CardCollectionViewerEvent.PlayGame -> processPlayGame()
         }
     }
@@ -116,6 +113,17 @@ class CardCollectionViewerViewModel(
                 DeleteCollectionsRequest(collections = listOf(collection.id))
             )
             setViewAction(CardCollectionViewerAction.NavigateBack)
+        }
+    }
+
+    private fun processShareCollection() {
+        withViewModelScope {
+            val code = cardCollectionsRepository.shareCollection(
+                ShareCollectionRequest(uuid = collection.id)
+            )?.id
+            if (code != null) {
+                setViewAction(CardCollectionViewerAction.ShowSharedCode(code))
+            }
         }
     }
 
