@@ -6,6 +6,7 @@ import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.animations.AnimationType
+import ua.ukma.edu.danki.core.composable.ComposableLoading
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
 import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.card_collection_viewer.ui.CardCollectionViewerView
@@ -31,7 +32,7 @@ fun CardCollectionViewerScreen (
             }
 
             is CardCollectionViewerState.Loading -> {
-
+                ComposableLoading()
             }
         }
 
@@ -43,6 +44,13 @@ fun CardCollectionViewerScreen (
                 navController.launch(
                     screen = NavigationRoute.EditCard.name,
                     params = action.card,
+                    animationType = AnimationType.Present(animationTime = 500)
+                )
+            }
+            is CardCollectionViewerAction.PlayGame -> {
+                navController.launch(
+                    screen = NavigationRoute.Game.name,
+                    params = action.collectionId,
                     animationType = AnimationType.Present(animationTime = 500)
                 )
             }
