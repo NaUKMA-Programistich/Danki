@@ -32,8 +32,7 @@ class LoginViewModel(
         withViewModelScope {
             if (Cache.jwt.isEmpty()) {
                 setViewState(LoginState.Entry("", ""))
-            }
-            else {
+            } else {
                 setViewAction(LoginAction.GoToStartScreen)
             }
         }
@@ -47,22 +46,25 @@ class LoginViewModel(
                 if (localState !is LoginState.Entry) return@withViewModelScope
                 setViewState(localState.copy(email = viewEvent.email))
             }
+
             is LoginEvent.SetPassword -> withViewModelScope {
                 if (localState !is LoginState.Entry) return@withViewModelScope
                 setViewState(localState.copy(password = viewEvent.password))
             }
+
             is LoginEvent.Login -> withViewModelScope {
                 if (localState !is LoginState.Entry) return@withViewModelScope
 
                 setViewState(LoginState.Loading)
-                val response = authRepository.login(UserAuthRequest(
-                    email = localState.email,
-                    password = localState.password
-                ))
+                val response = authRepository.login(
+                    UserAuthRequest(
+                        email = localState.email,
+                        password = localState.password
+                    )
+                )
                 if (response != null) {
                     setViewAction(LoginAction.GoToStartScreen)
-                }
-                else {
+                } else {
                     setViewAction(LoginAction.ShowError)
                     setViewState(LoginState.Entry(localState.email, localState.password))
                 }
