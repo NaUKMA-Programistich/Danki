@@ -2,6 +2,7 @@ package ua.ukma.edu.danki.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Refresh
@@ -32,40 +33,104 @@ import ua.ukma.edu.danki.screens.search_history.SearchHistoryScreen
 
 @Composable
 private fun SideNavigation(selectedElem: MutableState<Int>, content: @Composable () -> Unit) {
-    Row (modifier = Modifier.fillMaxSize(),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.Start) {
-        val navController = LocalRootController.current
-        NavigationRail(modifier = Modifier.background(MaterialTheme.colorScheme.surface).padding(top = 44.dp, bottom = 56.dp).fillMaxHeight()) {
-            FloatingActionButton(
-                onClick = {  navController.launch(
-                    screen = NavigationRoute.NewCardViewer.name,
-                    animationType = AnimationType.Present(animationTime = 500)
-                ); selectedElem.value = 0}
+    BoxWithConstraints {
+        if (maxWidth < 400.dp) {
+            val navController = LocalRootController.current
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                floatingActionButton = {
+                    ExtendedFloatingActionButton(
+                        onClick = {
+                            navController.launch(
+                                screen = NavigationRoute.NewCardViewer.name,
+                                animationType = AnimationType.Present(animationTime = 500)
+                            ); selectedElem.value = 0
+                        },
+                        text = { Text("Recents") }, icon = { Icon(Icons.Filled.Refresh, "New Cards") },
+                        shape = CircleShape
+
+                    )
+                },
+                floatingActionButtonPosition = FabPosition.Center,
+                bottomBar = {
+                    NavigationBar {
+                        NavigationBarItem(
+                            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Search Screen") },
+                            label = { Text("Search") },
+                            selected = selectedElem.value == 1,
+                            onClick = {
+                                navController.launch(
+                                    screen = NavigationRoute.Search.name,
+                                    animationType = AnimationType.Present(animationTime = 500)
+                                ); selectedElem.value = 1
+                            }
+                        )
+                        NavigationBarItem(
+                            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Collections") },
+                            label = { Text("Collections") },
+                            selected = selectedElem.value == 2,
+                            onClick = {
+                                navController.launch(
+                                    screen = NavigationRoute.Collections.name,
+                                    animationType = AnimationType.Present(animationTime = 500)
+                                ); selectedElem.value = 2
+                            }
+                        )
+                    }
+                }
             ) {
-                Icon(Icons.Filled.Refresh, "New Cards")
+                content()
             }
-            Spacer(modifier = Modifier.size(20.dp))
-            NavigationRailItem(
-                icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Search Screen") },
-                label = { Text("Search") },
-                selected = selectedElem.value == 1,
-                onClick = { navController.launch(
-                    screen = NavigationRoute.Search.name,
-                    animationType = AnimationType.Present(animationTime = 500)
-                ); selectedElem.value = 1 }
-            )
-            NavigationRailItem(
-                icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Collections") },
-                label = { Text("Collections") },
-                selected = selectedElem.value == 2,
-                onClick = { navController.launch(
-                    screen = NavigationRoute.Collections.name,
-                    animationType = AnimationType.Present(animationTime = 500)
-                ); selectedElem.value = 2 }
-            )
+        } else {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                val navController = LocalRootController.current
+                NavigationRail(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+                        .padding(top = 44.dp, bottom = 56.dp)
+                        .fillMaxHeight(),
+
+                    ) {
+                    FloatingActionButton(
+                        onClick = {
+                            navController.launch(
+                                screen = NavigationRoute.NewCardViewer.name,
+                                animationType = AnimationType.Present(animationTime = 500)
+                            ); selectedElem.value = 0
+                        }
+                    ) {
+                        Icon(Icons.Filled.Refresh, "New Cards")
+                    }
+                    Spacer(modifier = Modifier.size(20.dp))
+                    NavigationRailItem(
+                        icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Search Screen") },
+                        label = { Text("Search") },
+                        selected = selectedElem.value == 1,
+                        onClick = {
+                            navController.launch(
+                                screen = NavigationRoute.Search.name,
+                                animationType = AnimationType.Present(animationTime = 500)
+                            ); selectedElem.value = 1
+                        }
+                    )
+                    NavigationRailItem(
+                        icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Collections") },
+                        label = { Text("Collections") },
+                        selected = selectedElem.value == 2,
+                        onClick = {
+                            navController.launch(
+                                screen = NavigationRoute.Collections.name,
+                                animationType = AnimationType.Present(animationTime = 500)
+                            ); selectedElem.value = 2
+                        }
+                    )
+                }
+                content()
+            }
         }
-        content()
     }
 }
 
