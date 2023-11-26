@@ -27,6 +27,7 @@ import ua.ukma.edu.danki.screens.game.GameScreen
 import ua.ukma.edu.danki.screens.game_results.GameResultsScreen
 import ua.ukma.edu.danki.screens.collections.CollectionsScreen
 import ua.ukma.edu.danki.screens.edit_add_card_screen.EditAddCardScreen
+import ua.ukma.edu.danki.screens.register.RegistrationScreen
 import ua.ukma.edu.danki.screens.search.SearchScreen
 import ua.ukma.edu.danki.screens.search_history.SearchHistoryScreen
 
@@ -146,6 +147,10 @@ internal fun RootComposeBuilder.NavigationGraph() {
         LoginScreen()
     }
 
+    screen(NavigationRoute.Registration.name) {
+        RegistrationScreen()
+    }
+
     screen(NavigationRoute.NewCardViewer.name) {
         SideNavigation(selectedElem = selectedElem) {
             NewCardViewerScreen()
@@ -210,5 +215,5 @@ internal fun RootComposeBuilder.NavigationGraph() {
 }
 
 internal enum class NavigationRoute {
-    Login, Collections, Game, GameResults, Search, SearchHistory, Definition, EditCard, CardCollectionViewer, NewCardViewer, AddCard
+    Login, Collections, Game, GameResults, Search, SearchHistory, Definition, EditCard, CardCollectionViewer, NewCardViewer, AddCard, Registration
 }

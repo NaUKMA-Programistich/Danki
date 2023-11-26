@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,7 +13,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-        A93A953729CC810C00F8E227 /* Danki.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Danki.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A93A953729CC810C00F8E227 /* Danki.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Danki.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A93A953A29CC810C00F8E227 /* iosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosApp.swift; sourceTree = "<group>"; };
 		A93A953E29CC810D00F8E227 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A93A954129CC810D00F8E227 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -30,12 +30,54 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		41AEE05377A609163CBF1EDE /* xcschemes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = xcschemes;
+			sourceTree = "<group>";
+		};
+		41AEE05F9CE37BB5BD3D9115 /* programistich.xcuserdatad */ = {
+			isa = PBXGroup;
+			children = (
+				41AEE0B3E9A33FD57A0C5000 /* xcschemes */,
+			);
+			name = programistich.xcuserdatad;
+			path = iosApp.xcodeproj/xcuserdata/programistich.xcuserdatad;
+			sourceTree = "<group>";
+		};
+		41AEE0B3E9A33FD57A0C5000 /* xcschemes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = xcschemes;
+			sourceTree = "<group>";
+		};
+		41AEE80278B831A5528EE336 /* programistich.xcuserdatad */ = {
+			isa = PBXGroup;
+			children = (
+				41AEE05377A609163CBF1EDE /* xcschemes */,
+			);
+			path = programistich.xcuserdatad;
+			sourceTree = "<group>";
+		};
+		41AEE9E8970132829EC4E78B /* xcuserdata */ = {
+			isa = PBXGroup;
+			children = (
+				41AEE80278B831A5528EE336 /* programistich.xcuserdatad */,
+			);
+			name = xcuserdata;
+			path = iosApp.xcodeproj/project.xcworkspace/xcuserdata;
+			sourceTree = "<group>";
+		};
 		A93A952E29CC810C00F8E227 = {
 			isa = PBXGroup;
 			children = (
 				A93A953929CC810C00F8E227 /* iosApp */,
 				A93A953829CC810C00F8E227 /* Products */,
 				C4127409AE3703430489E7BC /* Frameworks */,
+				41AEE9E8970132829EC4E78B /* xcuserdata */,
+				41AEE05F9CE37BB5BD3D9115 /* programistich.xcuserdatad */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,8 +141,9 @@
 		A93A952F29CC810C00F8E227 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					A93A953629CC810C00F8E227 = {
 						CreatedOnToolsVersion = 14.2;
@@ -205,6 +248,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -265,6 +309,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -291,11 +336,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
+				DEVELOPMENT_TEAM = VNU8KKW4GG;
 				ENABLE_PREVIEWS = YES;
-                FRAMEWORK_SEARCH_PATHS = (
-    	"${inherited}",
-    	"$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
-    );
+				FRAMEWORK_SEARCH_PATHS = (
+					"${inherited}",
+					"$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -307,13 +353,13 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-                OTHER_LDFLAGS = (
-       	"${inherited}",
-       	"-framework",
-       	ComposeApp,
-       );
+				OTHER_LDFLAGS = (
+					"${inherited}",
+					"-framework",
+					ComposeApp,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = ua.ukma.edu.danki.iosApp;
-				PRODUCT_NAME = "Danki";
+				PRODUCT_NAME = Danki;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -328,11 +374,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
+				DEVELOPMENT_TEAM = VNU8KKW4GG;
 				ENABLE_PREVIEWS = YES;
-                FRAMEWORK_SEARCH_PATHS = (
-    	"${inherited}",
-    	"$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
-    );
+				FRAMEWORK_SEARCH_PATHS = (
+					"${inherited}",
+					"$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -344,13 +391,13 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-                OTHER_LDFLAGS = (
-       	"${inherited}",
-       	"-framework",
-       	ComposeApp,
-       );
+				OTHER_LDFLAGS = (
+					"${inherited}",
+					"-framework",
+					ComposeApp,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = ua.ukma.edu.danki.iosApp;
-				PRODUCT_NAME = "Danki";
+				PRODUCT_NAME = Danki;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

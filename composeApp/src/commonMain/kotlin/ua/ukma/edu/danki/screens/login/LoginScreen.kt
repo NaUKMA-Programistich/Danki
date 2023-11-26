@@ -4,6 +4,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
+import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ua.ukma.edu.danki.core.composable.ComposableLoading
@@ -30,9 +31,7 @@ internal fun LoginScreen() {
                     onEmailChanged = { viewModel.obtainEvent(LoginEvent.SetEmail(it)) },
                     onPasswordChanged = { viewModel.obtainEvent(LoginEvent.SetPassword(it)) },
                     onLoginClicked = { viewModel.obtainEvent(LoginEvent.Login) },
-                    onRegisterClicked = {
-                        // TODO
-                    }
+                    onRegisterClicked = { navController.push(NavigationRoute.Registration.name) }
                 )
             }
             LoginState.Loading -> ComposableLoading()
