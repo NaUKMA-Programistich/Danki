@@ -21,28 +21,43 @@ import ua.ukma.edu.danki.screens.edit_add_card_screen.viewmodel.EditAddCardEvent
 import ua.ukma.edu.danki.screens.edit_add_card_screen.viewmodel.EditAddCardState
 
 @Composable
-fun CardToEditAddView (
+fun CardToEditAddView(
     state: EditAddCardState.CardToEdit,
     onEvent: (EditAddCardEvent) -> Unit,
-    isNew : Boolean
+    isNew: Boolean
 ) {
     val onSaveFlow = remember { MutableSharedFlow<Unit>(replay = 1) }
     Surface(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.padding(16.dp),
+        Column(
+            modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top) {
+            verticalArrangement = Arrangement.Top
+        ) {
             HeaderComponent(
                 onCancel = { onEvent(EditAddCardEvent.Cancel) },
                 onDelete = { onEvent(EditAddCardEvent.DeleteCard(state.card)) },
-                onSave = {onSaveFlow.tryEmit(Unit)},
-                isNew = isNew)
-            EditAddForm(onSaveFlow = onSaveFlow,EditAddCard = state.card, collectionList = state.collectionList, onSave = { card, collectionId -> onEvent(EditAddCardEvent.SaveCard(card = card,collectionId = collectionId,isNew = isNew))})
+                onSave = { onSaveFlow.tryEmit(Unit) },
+                isNew = isNew
+            )
+            EditAddForm(
+                onSaveFlow = onSaveFlow,
+                EditAddCard = state.card,
+                collectionList = state.collectionList,
+                onSave = { card, collectionId ->
+                    onEvent(
+                        EditAddCardEvent.SaveCard(
+                            card = card,
+                            collectionId = collectionId,
+                            isNew = isNew
+                        )
+                    )
+                })
         }
     }
 }
 
 @Composable
-private fun HeaderComponent (onCancel: () -> Unit, onDelete: () -> Unit = {}, onSave: () -> Unit = {}, isNew: Boolean) {
+private fun HeaderComponent(onCancel: () -> Unit, onDelete: () -> Unit = {}, onSave: () -> Unit = {}, isNew: Boolean) {
     var menuExpanded by remember { mutableStateOf(false) }
     Column(
         Modifier.fillMaxWidth().padding(16.dp),
@@ -112,15 +127,19 @@ private fun EditAddForm(
     EditAddCard: CardDTO,
     onSaveFlow: MutableSharedFlow<Unit>,
     collectionList: List<UserCardCollectionDTO>,
-    onSave: (CardDTO,String?) -> Unit,
+    onSave: (CardDTO, String?) -> Unit,
 ) {
     var term by remember { mutableStateOf(EditAddCard.term) }
     var definition by remember { mutableStateOf(EditAddCard.definition) }
     var collection = remember { mutableStateOf<UserCardCollectionDTO?>(null) }
 
     Column(
-        modifier = Modifier.fillMaxWidth(0.8f).fillMaxHeight().padding(16.dp).clip(MaterialTheme.shapes.large)
-            .background(MaterialTheme.colorScheme.background)
+        modifier = Modifier
+            .sizeIn(
+                maxWidth = 612.dp
+            )
+            .fillMaxWidth()
+            .fillMaxHeight().padding(16.dp).clip(MaterialTheme.shapes.large)
             .padding(8.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -173,10 +192,10 @@ private fun CollectionsList(
 
     var menuExpanded by remember { mutableStateOf(false) }
 
-    Box (modifier = Modifier.padding(8.dp).fillMaxWidth().fillMaxHeight(0.12f), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.padding(8.dp).fillMaxWidth().fillMaxHeight(0.12f), contentAlignment = Alignment.Center) {
         Text(
             modifier = Modifier.clickable { menuExpanded = true }.align(Alignment.CenterStart),
-            text = ("Collections: " + (collection.value?.name?: "")),
+            text = ("Collections: " + (collection.value?.name ?: "")),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.titleLarge
         )
