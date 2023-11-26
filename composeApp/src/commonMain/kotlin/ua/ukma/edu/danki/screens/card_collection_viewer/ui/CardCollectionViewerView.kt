@@ -5,8 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,8 +14,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ua.ukma.edu.danki.models.CardDTO
+import ua.ukma.edu.danki.models.CardSortParam
+import ua.ukma.edu.danki.models.CollectionSortParam
 import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollectionViewerEvent
 import ua.ukma.edu.danki.screens.card_collection_viewer.viewmodel.CardCollectionViewerState
+import ua.ukma.edu.danki.screens.collections.ui.paramToString
+import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
+import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionState
 
 @Composable
 fun CardCollectionViewerView(
@@ -37,6 +41,8 @@ fun CardCollectionViewerView(
                     onBack = { onEvent(CardCollectionViewerEvent.GoBack) },
                     onShare = { onEvent(CardCollectionViewerEvent.ShareCollection) },
                     onDelete = { onEvent(CardCollectionViewerEvent.DeleteCollection(collection = state.collection)) })
+
+                FavoriteAndSortButtonsRow(state = state, onEvent = onEvent)
                 CardList(
                     cardList = state.cardList,
                     onCard = { onEvent(CardCollectionViewerEvent.OnCardClick(card = it)) })
@@ -152,6 +158,84 @@ private fun CardComponent(
         )
     }
 }
+
+
+@Composable
+private fun FavoriteAndSortButtonsRow(
+    state:CardCollectionViewerState.CollectionCards,
+    onEvent: (CardCollectionViewerEvent) -> Unit,
+) {
+    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        SortMenu(state, onEvent)
+        OrderButton(state.orderIsAscending, onClick = { onEvent(CardCollectionViewerEvent.ChangeSortingOrder(!state.orderIsAscending)) })
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SortMenu(
+    state: CardCollectionViewerState.CollectionCards,
+    onEvent: (CardCollectionViewerEvent) -> Unit,
+) {
+    var menuExpanded by remember { mutableStateOf(false) }
+
+    Box {
+        ElevatedFilterChip(
+            onClick = { menuExpanded = true },
+            shape = MaterialTheme.shapes.medium,
+            label = { Text(state.sortingParam.paramToString(), color = MaterialTheme.colorScheme.onSurfaceVariant) },
+            selected = false,
+            trailingIcon = { Icon(Icons.Default.ArrowDropDown, "arrow down icon") },
+        )
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { menuExpanded = false }
+        ) {
+            enumValues<CardSortParam>().forEach { sortParam ->
+                DropdownMenuItem(
+                    onClick = {
+                        onEvent(CardCollectionViewerEvent.SortList(sortParam))
+                        menuExpanded = false
+                    },
+                    text = { Text(sortParam.paramToString()) },
+                    enabled = state.sortingParam != sortParam,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun OrderButton(
+    isAscending: Boolean,
+    onClick: () -> Unit
+) {
+    IconToggleButton(checked = isAscending, onCheckedChange = { onClick() }) {
+        Icon(
+            if (isAscending) Icons.Default.KeyboardArrowUp
+            else Icons.Default.KeyboardArrowDown,
+            "ascending order is $isAscending"
+        )
+    }
+}
+
+fun CardSortParam.paramToString(): String {
+    return when (this) {
+        CardSortParam.ByLastModified -> {
+            "By last modified"
+        }
+        CardSortParam.ByTimeAdded -> {
+            "By time added"
+        }
+        CardSortParam.ByTerm -> {
+            "By term"
+        }
+        else  -> { "..." }
+    }
+}
+
+
 
 @Composable
 private fun PlayFAB(onEvent: (CardCollectionViewerEvent) -> Unit) {
