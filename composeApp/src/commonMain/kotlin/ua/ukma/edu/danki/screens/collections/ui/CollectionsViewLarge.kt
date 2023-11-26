@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
@@ -70,7 +71,7 @@ private fun CollectionAsSurface(
     var collectionSelected by mutableStateOf(state.selected.contains(collection.id))
 
     Surface(
-        modifier = Modifier.fillMaxSize().combinedClickable(
+        modifier = Modifier.fillMaxSize().clip(MaterialTheme.shapes.large).combinedClickable(
             onClick = {
                 if (state.selectionMode) {
                     onEvent(CollectionEvent.ToggleSelectCollection(collection.id))
@@ -79,7 +80,6 @@ private fun CollectionAsSurface(
             },
             onLongClick = onOpenMenu
         ),
-        shape = MaterialTheme.shapes.large,
         color = if (collectionSelected) MaterialTheme.colorScheme.outlineVariant
         else MaterialTheme.colorScheme.surfaceContainer
     ) {
