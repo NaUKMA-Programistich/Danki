@@ -28,7 +28,10 @@ internal fun LoginScreen() {
                     password = localState.password,
                     onEmailChanged = { viewModel.obtainEvent(LoginEvent.SetEmail(it)) },
                     onPasswordChanged = { viewModel.obtainEvent(LoginEvent.SetPassword(it)) },
-                    onLoginClicked = { viewModel.obtainEvent(LoginEvent.Login) }
+                    onLoginClicked = { viewModel.obtainEvent(LoginEvent.Login) },
+                    onRegisterClicked = {
+                        // TODO
+                    }
                 )
             }
             LoginState.Loading -> CircularProgressIndicator()

@@ -1,15 +1,11 @@
 package ua.ukma.edu.danki.screens.login.ui
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -18,7 +14,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -32,10 +27,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import ua.ukma.edu.danki.models.SimpleDto
-import ua.ukma.edu.danki.rememberDarkMode
-import ua.ukma.edu.danki.rememberLightMode
-import ua.ukma.edu.danki.theme.LocalThemeIsDark
 
 
 @Composable
@@ -44,35 +35,11 @@ fun LoginScreenEntry(
     password: String,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
-    onLoginClicked: () -> Unit
+    onLoginClicked: () -> Unit,
+    onRegisterClicked: () -> Unit
 ) {
     var passwordVisibility by remember { mutableStateOf(false) }
-    val dto by remember { mutableStateOf(SimpleDto(test = "test")) }
-
     Column(modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
-        Row(
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Login " + dto.test,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(16.dp)
-            )
-
-            Spacer(modifier = Modifier.weight(1.0f))
-
-            var isDark by LocalThemeIsDark.current
-            IconButton(
-                onClick = { isDark = !isDark }
-            ) {
-                Icon(
-                    modifier = Modifier.padding(8.dp).size(20.dp),
-                    imageVector = if (isDark) rememberLightMode() else rememberDarkMode(),
-                    contentDescription = null
-                )
-            }
-        }
-
         OutlinedTextField(
             value = email,
             onValueChange = onEmailChanged,
@@ -110,10 +77,10 @@ fun LoginScreenEntry(
         }
 
         TextButton(
-            onClick = {},
+            onClick = onRegisterClicked,
             modifier = Modifier.fillMaxWidth().padding(16.dp)
         ) {
-            Text("Open github")
+            Text("Not registered yet?")
         }
     }
 }
