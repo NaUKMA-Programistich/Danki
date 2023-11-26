@@ -39,17 +39,19 @@ private fun SideNavigation(selectedElem: MutableState<Int>, content: @Composable
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 floatingActionButton = {
-                    ExtendedFloatingActionButton(
-                        onClick = {
-                            navController.launch(
-                                screen = NavigationRoute.NewCardViewer.name,
-                                animationType = AnimationType.Present(animationTime = 500)
-                            ); selectedElem.value = 0
-                        },
-                        text = { Text("Recents") }, icon = { Icon(Icons.Filled.Refresh, "New Cards") },
-                        shape = CircleShape
+                    if (navController.currentScreen.value?.screen?.realKey == NavigationRoute.Search.name || navController.currentScreen.value?.screen?.realKey == NavigationRoute.Collections.name) {
+                        ExtendedFloatingActionButton(
+                            onClick = {
+                                navController.launch(
+                                    screen = NavigationRoute.NewCardViewer.name,
+                                    animationType = AnimationType.Present(animationTime = 500)
+                                ); selectedElem.value = 0
+                            },
+                            text = { Text("Recents") }, icon = { Icon(Icons.Filled.Refresh, "New Cards") },
+                            shape = CircleShape
 
-                    )
+                        )
+                    }
                 },
                 floatingActionButtonPosition = FabPosition.Center,
                 bottomBar = {
@@ -96,17 +98,15 @@ private fun SideNavigation(selectedElem: MutableState<Int>, content: @Composable
                         .fillMaxHeight(),
 
                     ) {
-                    if (navController.currentScreen.value?.screen?.realKey == NavigationRoute.Search.name) {
-                        FloatingActionButton(
-                            onClick = {
-                                navController.launch(
-                                    screen = NavigationRoute.NewCardViewer.name,
-                                    animationType = AnimationType.Present(animationTime = 500)
-                                ); selectedElem.value = 0
-                            }
-                        ) {
-                            Icon(Icons.Filled.Refresh, "New Cards")
+                    FloatingActionButton(
+                        onClick = {
+                            navController.launch(
+                                screen = NavigationRoute.NewCardViewer.name,
+                                animationType = AnimationType.Present(animationTime = 500)
+                            ); selectedElem.value = 0
                         }
+                    ) {
+                        Icon(Icons.Filled.Refresh, "New Cards")
                     }
 
                     Spacer(modifier = Modifier.size(20.dp))
