@@ -54,6 +54,7 @@ class LoginViewModel(
             is LoginEvent.Login -> withViewModelScope {
                 if (localState !is LoginState.Entry) return@withViewModelScope
 
+                setViewState(LoginState.Loading)
                 val response = authRepository.login(UserAuthRequest(
                     email = localState.email,
                     password = localState.password
@@ -63,6 +64,7 @@ class LoginViewModel(
                 }
                 else {
                     setViewAction(LoginAction.ShowError)
+                    setViewState(LoginState.Entry(localState.email, localState.password))
                 }
             }
         }
