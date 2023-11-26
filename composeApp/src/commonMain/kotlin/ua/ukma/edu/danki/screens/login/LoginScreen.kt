@@ -6,6 +6,7 @@ import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.animations.AnimationType
+import ua.ukma.edu.danki.core.composable.ComposableLoading
 import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.login.ui.LoginScreenEntry
 import ua.ukma.edu.danki.screens.login.viewmodel.LoginAction
@@ -34,7 +35,7 @@ internal fun LoginScreen() {
                     }
                 )
             }
-            LoginState.Loading -> CircularProgressIndicator()
+            LoginState.Loading -> ComposableLoading()
         }
 
         when (viewAction) {

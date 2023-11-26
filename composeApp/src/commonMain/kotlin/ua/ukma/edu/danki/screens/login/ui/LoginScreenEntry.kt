@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -38,49 +39,52 @@ fun LoginScreenEntry(
     onLoginClicked: () -> Unit,
     onRegisterClicked: () -> Unit
 ) {
-    var passwordVisibility by remember { mutableStateOf(false) }
-    Column(modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
-        OutlinedTextField(
-            value = email,
-            onValueChange = onEmailChanged,
-            label = { Text("Email") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-        )
+    Surface(modifier = Modifier.fillMaxSize()) {
+        var passwordVisibility by remember { mutableStateOf(false) }
+        Column(modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
+            OutlinedTextField(
+                value = email,
+                onValueChange = onEmailChanged,
+                label = { Text("Email") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            )
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = onPasswordChanged,
-            label = { Text("Password") },
-            singleLine = true,
-            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password
-            ),
-            trailingIcon = {
-                IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                    val imageVector = if (passwordVisibility) Icons.Default.Close else Icons.Default.Edit
-                    Icon(
-                        imageVector,
-                        contentDescription = if (passwordVisibility) "Hide password" else "Show password"
-                    )
+            OutlinedTextField(
+                value = password,
+                onValueChange = onPasswordChanged,
+                label = { Text("Password") },
+                singleLine = true,
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password
+                ),
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                        val imageVector =
+                            if (passwordVisibility) Icons.Default.Close else Icons.Default.Edit
+                        Icon(
+                            imageVector,
+                            contentDescription = if (passwordVisibility) "Hide password" else "Show password"
+                        )
+                    }
                 }
+            )
+
+            Button(
+                onClick = onLoginClicked,
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            ) {
+                Text("Login")
             }
-        )
 
-        Button(
-            onClick = onLoginClicked,
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-        ) {
-            Text("Login")
-        }
-
-        TextButton(
-            onClick = onRegisterClicked,
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-        ) {
-            Text("Not registered yet?")
+            TextButton(
+                onClick = onRegisterClicked,
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            ) {
+                Text("Not registered yet?")
+            }
         }
     }
 }
