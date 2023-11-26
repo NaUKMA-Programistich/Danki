@@ -1,25 +1,23 @@
 package ua.ukma.edu.danki.screens.new_cards_viewer.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ua.ukma.edu.danki.models.CardDTO
-import ua.ukma.edu.danki.models.UserCardCollectionDTO
 import ua.ukma.edu.danki.screens.new_cards_viewer.viewmodel.NewCardViewerEvent
 import ua.ukma.edu.danki.screens.new_cards_viewer.viewmodel.NewCardViewerState
 
 @Composable
-fun NewCardViewerView (
+fun NewCardViewerView(
     state: NewCardViewerState.NewCardCards,
     onEvent: (NewCardViewerEvent) -> Unit,
 ) {
@@ -30,20 +28,20 @@ fun NewCardViewerView (
             verticalArrangement = Arrangement.Top
         ) {
             HeaderComponent(onBack = { onEvent(NewCardViewerEvent.GoBack) })
-            CardList(newCards = state.newCards , onCard = { onEvent(NewCardViewerEvent.OnCardClick(newCard = it)) })
+            CardList(newCards = state.newCards, onCard = { onEvent(NewCardViewerEvent.OnCardClick(newCard = it)) })
         }
     }
 }
 
 @Composable
-private fun HeaderComponent (onBack: () -> Unit) {
+private fun HeaderComponent(onBack: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Box (modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
+        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
             IconButton(modifier = Modifier, onClick = { onBack() }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
@@ -53,9 +51,9 @@ private fun HeaderComponent (onBack: () -> Unit) {
             }
         }
 
-        Box (modifier = Modifier.weight(8f), contentAlignment = Alignment.CenterStart) {
+        Box(modifier = Modifier.weight(8f), contentAlignment = Alignment.CenterStart) {
             Text(
-                modifier = Modifier.offset (y = (-2).dp),
+                modifier = Modifier.offset(y = (-2).dp),
                 text = "New Cards",
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.titleLarge,
@@ -66,14 +64,17 @@ private fun HeaderComponent (onBack: () -> Unit) {
 }
 
 @Composable
-private fun CardList (
+private fun CardList(
     newCards: List<CardDTO>,
     onCard: (CardDTO) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxWidth(0.8f).fillMaxHeight().padding(16.dp).clip(MaterialTheme.shapes.large)
-            .background(MaterialTheme.colorScheme.background)
-            .padding(8.dp),
+        modifier = Modifier
+            .sizeIn(
+                maxWidth = 612.dp
+            )
+            .fillMaxWidth()
+            .fillMaxHeight().padding(16.dp).clip(MaterialTheme.shapes.large),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -85,7 +86,7 @@ private fun CardList (
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleMedium
                 )
-                CardComponent(card = card , onCard = onCard)
+                CardComponent(card = card, onCard = onCard)
             }
         }
     }
@@ -96,9 +97,12 @@ private fun CardComponent(
     card: CardDTO,
     onCard: (CardDTO) -> Unit
 ) {
-    Column (modifier = Modifier.padding(8.dp).fillMaxWidth().clip(MaterialTheme.shapes.large).clickable { onCard(card) }.padding(12.dp),
+    Column(
+        modifier = Modifier.padding(8.dp).fillMaxWidth().clip(MaterialTheme.shapes.large).clickable { onCard(card) }
+            .padding(12.dp),
         verticalArrangement = Arrangement.SpaceAround,
-        horizontalAlignment = Alignment.Start) {
+        horizontalAlignment = Alignment.Start
+    ) {
 
         Text(
             modifier = Modifier,

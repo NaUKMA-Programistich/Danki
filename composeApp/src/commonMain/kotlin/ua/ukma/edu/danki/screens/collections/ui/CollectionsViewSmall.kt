@@ -5,11 +5,12 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import ua.ukma.edu.danki.models.UserCardCollectionDTO
 import ua.ukma.edu.danki.screens.collections.viewmodel.CollectionEvent
@@ -23,15 +24,6 @@ internal fun CollectionViewSmall(
 ) {
     Scaffold(
         topBar = { Header(onEvent) },
-        floatingActionButtonPosition = FabPosition.Center,
-//        floatingActionButton = {
-//            ExtendedFloatingActionButton(onClick = {}) {
-//                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-//                    Icon(Icons.Default.Refresh, "Recents")
-//                    Text("Recents")
-//                }
-//            }
-//        }
     ) { innerPadding ->
         Surface(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -76,7 +68,7 @@ private fun CollectionAsSurface(
     var collectionSelected by mutableStateOf(state.selected.contains(collection.id))
 
     Surface(
-        modifier = Modifier.fillMaxSize().combinedClickable(
+        modifier = Modifier.fillMaxSize().clip(MaterialTheme.shapes.large).combinedClickable(
             onClick = {
                 if (state.selectionMode) {
                     onEvent(CollectionEvent.ToggleSelectCollection(collection.id))
@@ -85,7 +77,6 @@ private fun CollectionAsSurface(
             },
             onLongClick = onOpenMenu
         ),
-        shape = MaterialTheme.shapes.large,
         color = if (collectionSelected) MaterialTheme.colorScheme.surfaceContainerHighest
         else MaterialTheme.colorScheme.surface
     ) {

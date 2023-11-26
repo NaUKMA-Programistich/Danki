@@ -1,169 +1,51 @@
 package ua.ukma.edu.danki.screens.login
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.animations.AnimationType
-import ua.ukma.edu.danki.core.viewmodel.ViewModel
-import ua.ukma.edu.danki.data.Injection
-import ua.ukma.edu.danki.data.auth.AuthRepository
-import ua.ukma.edu.danki.models.SimpleDto
-import ua.ukma.edu.danki.models.auth.UserAuthRequest
 import ua.ukma.edu.danki.navigation.NavigationRoute
-import ua.ukma.edu.danki.rememberDarkMode
-import ua.ukma.edu.danki.rememberLightMode
-import ua.ukma.edu.danki.theme.LocalThemeIsDark
-
-
-data class AppState(
-    val email: String,
-    val password: String
-)
-
-sealed interface AppEvent {
-    data class SetEmail(val email: String) : AppEvent
-    data class SetPassword(val password: String) : AppEvent
-
-    data object Login : AppEvent
-}
-
-sealed interface AppAction {
-
-    data object GoToStartScreen : AppAction
-}
-
-class AppViewModel(
-    private val authRepository: AuthRepository = Injection.authRepository
-) : ViewModel<AppState, AppAction, AppEvent>(
-    AppState("", "")
-) {
-
-    override fun obtainEvent(viewEvent: AppEvent) {
-        when (viewEvent) {
-            is AppEvent.SetEmail -> withViewModelScope {
-                setViewState(viewStates().value.copy(email = viewEvent.email))
-            }
-
-            is AppEvent.SetPassword -> withViewModelScope {
-                setViewState(viewStates().value.copy(password = viewEvent.password))
-            }
-
-            is AppEvent.Login -> withViewModelScope {
-                val value = viewStates().value
-                val response = authRepository.login(UserAuthRequest(email = value.email, password = value.password))
-                if (response != null) {
-                    setViewAction(AppAction.GoToStartScreen)
-                }
-            }
-        }
-    }
-}
-
+import ua.ukma.edu.danki.screens.login.ui.LoginScreenEntry
+import ua.ukma.edu.danki.screens.login.viewmodel.LoginAction
+import ua.ukma.edu.danki.screens.login.viewmodel.LoginEvent
+import ua.ukma.edu.danki.screens.login.viewmodel.LoginState
+import ua.ukma.edu.danki.screens.login.viewmodel.LoginViewModel
 
 @Composable
 internal fun LoginScreen() {
-    StoredViewModel(factory = { AppViewModel() }) { viewModel ->
+    StoredViewModel(factory = { LoginViewModel() }) { viewModel ->
         val viewState = viewModel.viewStates().observeAsState()
         val viewAction by viewModel.viewActions().observeAsState()
-        var passwordVisibility by remember { mutableStateOf(false) }
         val navController = LocalRootController.current
 
-        val dto by remember { mutableStateOf(SimpleDto(test = "test")) }
 
-        Column(modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
-
-            Row(
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "Login " + dto.test,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(16.dp)
-                )
-
-                Spacer(modifier = Modifier.weight(1.0f))
-
-                var isDark by LocalThemeIsDark.current
-                IconButton(
-                    onClick = { isDark = !isDark }
-                ) {
-                    Icon(
-                        modifier = Modifier.padding(8.dp).size(20.dp),
-                        imageVector = if (isDark) rememberLightMode() else rememberDarkMode(),
-                        contentDescription = null
-                    )
-                }
-            }
-
-            OutlinedTextField(
-                value = viewState.value.email,
-                onValueChange = { viewModel.obtainEvent(AppEvent.SetEmail(it)) },
-                label = { Text("Email") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
-            )
-
-            OutlinedTextField(
-                value = viewState.value.password,
-                onValueChange = { viewModel.obtainEvent(AppEvent.SetPassword(it)) },
-                label = { Text("Password") },
-                singleLine = true,
-                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password
-                ),
-                trailingIcon = {
-                    IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                        val imageVector = if (passwordVisibility) Icons.Default.Close else Icons.Default.Edit
-                        Icon(
-                            imageVector,
-                            contentDescription = if (passwordVisibility) "Hide password" else "Show password"
-                        )
+        when (val localState = viewState.value) {
+            is LoginState.Entry -> {
+                LoginScreenEntry(
+                    email = localState.email,
+                    password = localState.password,
+                    onEmailChanged = { viewModel.obtainEvent(LoginEvent.SetEmail(it)) },
+                    onPasswordChanged = { viewModel.obtainEvent(LoginEvent.SetPassword(it)) },
+                    onLoginClicked = { viewModel.obtainEvent(LoginEvent.Login) },
+                    onRegisterClicked = {
+                        // TODO
                     }
-                }
-            )
-
-            Button(
-                onClick = {
-                    viewModel.obtainEvent(AppEvent.Login)
-                },
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
-            ) {
-                Text("Login")
+                )
             }
-
-            TextButton(
-                onClick = {},
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
-            ) {
-                Text("Open github")
-            }
-
+            LoginState.Loading -> CircularProgressIndicator()
         }
 
         when (viewAction) {
-            is AppAction.GoToStartScreen -> {
+            is LoginAction.GoToStartScreen -> {
                 navController.launch(
                     screen = NavigationRoute.Search.name,
                     animationType = AnimationType.Present(animationTime = 500)
                 )
             }
-
+            LoginAction.ShowError -> {}
             null -> {}
-
         }
     }
 }
