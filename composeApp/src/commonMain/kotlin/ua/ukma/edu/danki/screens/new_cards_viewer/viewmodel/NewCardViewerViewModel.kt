@@ -12,9 +12,6 @@ class NewCardViewerViewModel(
     private val cardRepository: CardRepository = Injection.cardRepository
 ) : ViewModel<NewCardViewerState, NewCardViewerAction, NewCardViewerEvent>(initialState = NewCardViewerState.Loading) {
 
-    init {
-        val sd = 0
-    }
 
     override fun obtainEvent(viewEvent: NewCardViewerEvent) {
         when (viewEvent) {
