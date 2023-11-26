@@ -79,7 +79,9 @@ private fun SideNavigation(selectedElem: MutableState<Int>, content: @Composable
                     }
                 }
             ) {
-                content()
+                Box(modifier = Modifier.padding(it)) {
+                    content()
+                }
             }
         } else {
             Row(
