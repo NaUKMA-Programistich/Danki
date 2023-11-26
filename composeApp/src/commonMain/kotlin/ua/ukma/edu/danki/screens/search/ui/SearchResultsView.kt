@@ -26,7 +26,7 @@ internal fun SearchResultsView(
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Header(onOpenHistory = { onEvent(SearchEvent.DisplayHistory) })
+            Header(onNewCard = { onEvent(SearchEvent.CreateNewCardHistory) })
             Box(modifier = Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
                 SearchField(
                     input = state.input,
@@ -41,7 +41,7 @@ internal fun SearchResultsView(
 
 @Composable
 private fun Header(
-    onOpenHistory: () -> Unit
+    onNewCard: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     Row(
@@ -58,18 +58,18 @@ private fun Header(
             IconButton(onClick = { menuExpanded = true }) {
                 Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Menu")
             }
-//            DropdownMenu(
-//                expanded = menuExpanded,
-//                onDismissRequest = { menuExpanded = false }
-//            ) {
-//                DropdownMenuItem(
-//                    onClick = {
-//                        onOpenHistory()
-//                        menuExpanded = false
-//                    },
-//                    text = { Text("History") }
-//                )
-//            }
+            DropdownMenu(
+                expanded = menuExpanded,
+                onDismissRequest = { menuExpanded = false }
+            ) {
+                DropdownMenuItem(
+                    onClick = {
+                        onNewCard()
+                        menuExpanded = false
+                    },
+                    text = { Text("Create Card") }
+                )
+            }
         }
     }
 }

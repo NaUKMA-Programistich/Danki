@@ -14,6 +14,8 @@ import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
+import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.navigation.NavigationRoute
 import ua.ukma.edu.danki.screens.search.ui.SearchResultsView
 import ua.ukma.edu.danki.screens.search.viewmodel.SearchAction
@@ -49,12 +51,20 @@ internal fun SearchScreen() {
         }
 
         when (val action = viewAction) {
-            is SearchAction.OpenHistory -> {
-                navController.push(NavigationRoute.SearchHistory.name)
+            is SearchAction.CreateNewCard -> {
+                navController.launch(
+                    screen = NavigationRoute.AddCard.name,
+                    params = action.newCard,
+                    animationType = AnimationType.Present(animationTime = 500)
+                )
             }
 
             is SearchAction.OpenDefinition -> {
-                navController.push(NavigationRoute.Definition.name, action.word)
+                navController.launch(
+                    screen = NavigationRoute.Definition.name,
+                    params = action.word,
+                    animationType = AnimationType.Present(animationTime = 500)
+                )
             }
 
             null -> {}

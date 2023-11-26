@@ -23,7 +23,7 @@ internal fun CollectionsScreen() {
     StoredViewModel(factory = { CollectionViewModel() }) { viewModel ->
         val navController = LocalRootController.current
         val modalController = navController.findModalController()
-        val alertConfiguration = AlertConfiguration(maxHeight = 0.5f, maxWidth = 0.7f, cornerRadius = 8)
+        val alertConfiguration = AlertConfiguration(maxHeight = 0.45f, maxWidth = 0.6f, cornerRadius = 8)
         val viewState by viewModel.viewStates().observeAsState()
         val viewAction by viewModel.viewActions().observeAsState()
 

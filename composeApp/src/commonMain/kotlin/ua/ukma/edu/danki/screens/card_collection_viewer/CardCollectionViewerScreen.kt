@@ -24,7 +24,7 @@ fun CardCollectionViewerScreen(
     StoredViewModel(factory = { CardCollectionViewerViewModel(collection = collection) }) { viewModel ->
         val navController = LocalRootController.current
         val modalController = navController.findModalController()
-        val alertConfiguration = AlertConfiguration(maxHeight = 0.25f, maxWidth = 0.4f, cornerRadius = 8)
+        val alertConfiguration = AlertConfiguration(maxHeight = 0.3f, maxWidth = 0.5f, cornerRadius = 8)
         val viewState by viewModel.viewStates().observeAsState()
         val viewAction by viewModel.viewActions().observeAsState()
 

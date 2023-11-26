@@ -3,6 +3,7 @@ package ua.ukma.edu.danki.screens.search.viewmodel
 import ua.ukma.edu.danki.core.viewmodel.ViewModel
 import ua.ukma.edu.danki.data.Injection
 import ua.ukma.edu.danki.data.dictionary.DictionaryRepository
+import ua.ukma.edu.danki.models.CardDTO
 import ua.ukma.edu.danki.models.dictionary.GetDictionarySuggestions
 
 class SearchViewModel(
@@ -12,7 +13,7 @@ class SearchViewModel(
         when (viewEvent) {
             is SearchEvent.ChangeInput -> processChangeInput(viewEvent.newInput)
             is SearchEvent.SelectWord -> processSelectWord(viewEvent.word)
-            is SearchEvent.DisplayHistory -> processDisplayHistory()
+            is SearchEvent.CreateNewCardHistory -> processCreateNewCard()
         }
     }
 
@@ -53,9 +54,9 @@ class SearchViewModel(
         }
     }
 
-    private fun processDisplayHistory() {
+    private fun processCreateNewCard() {
         withViewModelScope {
-            setViewAction(SearchAction.OpenHistory)
+            setViewAction(SearchAction.CreateNewCard (CardDTO (term = "", definition = "")))
         }
     }
 

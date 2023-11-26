@@ -1,9 +1,6 @@
 package ua.ukma.edu.danki.screens.collections.ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,17 +22,13 @@ fun GetSharedCodeDialog(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize().padding(24.dp),
         ) {
-            Text(
-                text = "Share this code with your friends",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineSmall
-            )
             OutlinedTextField(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(8.dp).fillMaxWidth(0.9f),
                 value = code,
                 onValueChange = {
                     code = it
                 },
+                placeholder = { Text("Create invite code to share collection") },
                 shape = MaterialTheme.shapes.extraLarge,
                 singleLine = true,
             )
@@ -44,7 +37,11 @@ fun GetSharedCodeDialog(
                     onSubmit(it)
                 }
             }) {
-                Text("Get")
+                Text(
+                    text = "Get",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall
+                )
             }
         }
 

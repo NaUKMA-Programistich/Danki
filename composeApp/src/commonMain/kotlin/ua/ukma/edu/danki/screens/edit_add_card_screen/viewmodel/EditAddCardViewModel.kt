@@ -15,7 +15,7 @@ class EditAddCardViewModel(
 
     override fun obtainEvent(viewEvent: EditAddCardEvent) {
         when (viewEvent) {
-            EditAddCardEvent.Cancel -> processCancel()
+            EditAddCardEvent.Cancel -> processNavigateBack()
             is EditAddCardEvent.SaveCard -> processSavingCard(
                 card = viewEvent.card,
                 collectionId = viewEvent.collectionId,
@@ -42,7 +42,6 @@ class EditAddCardViewModel(
                 } ?: run {
                     cardRepository.createNewCard(card)
                 }
-                processToSearch()
             } else {
                 cardRepository.updateCard(card)
                 collectionId?.let { collection ->
@@ -58,6 +57,7 @@ class EditAddCardViewModel(
                     }
                 }
             }
+            processNavigateBack()
         }
     }
 
@@ -80,13 +80,7 @@ class EditAddCardViewModel(
         }
     }
 
-    private fun processToSearch() {
-        withViewModelScope {
-            setViewAction(EditAddCardAction.NavigateToSearch)
-        }
-    }
-
-    private fun processCancel() {
+    private fun processNavigateBack() {
         withViewModelScope {
             setViewAction(EditAddCardAction.NavigateBack)
         }
